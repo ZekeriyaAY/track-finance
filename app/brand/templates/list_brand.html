@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>List Brands</h2>
+{% if brands %}
+{% for brand in brands %}
+{% include '_brand.html' %}
+{% endfor %}
+{% else %}
+<p>No brands found.
+    <a href="{{ url_for('brand.add_brand') }}">Create a new brand!</a>
+</p>
+{% endif %}
+{% endblock %}
