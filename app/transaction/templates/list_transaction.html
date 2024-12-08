@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>List Transaction</h2>
+{% if transactions %}
+{% for transaction in transactions %}
+{% include '_transaction.html' %}
+{% endfor %}
+{% else %}
+<p>No transactions found.
+    <a href="{{ url_for('transaction.add_transaction') }}">Create a new transaction!</a>
+</p>
+{% endif %}
+{% endblock %}

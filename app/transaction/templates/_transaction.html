@@ -1,0 +1,11 @@
+<div class="card">
+    <div class="card-body">
+        <p class="card-text">{{ transaction.name }}</p>
+        <p class="card-text">{{ transaction.amount }}</p>
+        <p class="card-text">{{ transaction.timestamp }}</p>
+        <p class="card-text">{{ transaction.category.name }}</p>
+        <p class="card-text">{{ transaction.brand.name }}</p>
+        <a href="{{ url_for('transaction.edit_transaction', id=transaction.id) }}" class="btn btn-primary">Edit</a>
+        <a href="{{ url_for('transaction.delete_transaction', id=transaction.id) }}" class="btn btn-danger">Delete</a>
+    </div>
+</div>
