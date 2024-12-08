@@ -1,0 +1,7 @@
+<div class="card">
+    <div class="card-body">
+        <p class="card-text">{{ category.name }}</p>
+        <a href="{{ url_for('category.edit_category', id=category.id) }}" class="btn btn-primary">Edit</a>
+        <a href="{{ url_for('category.delete_category', id=category.id) }}" class="btn btn-danger">Delete</a>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+
+{% if request.endpoint == 'category.add_category' %}
+<h2>Add Category</h2>
+{% elif request.endpoint == 'category.edit_category' %}
+<h2>Edit Category</h2>
+{% endif %}
+
+{{ wtf.quick_form(form) }}
+{% endblock %}
