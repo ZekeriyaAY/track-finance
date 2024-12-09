@@ -1,0 +1,19 @@
+.nav-link.logout:hover {
+    color: var(--bs-red);
+}
+
+html,
+body {
+    height: 100%;
+    /* Ensure the body takes full height of the viewport */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    flex-shrink: 0;
+    /* Footer stays at the bottom */
+}
