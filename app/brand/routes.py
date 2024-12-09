@@ -17,7 +17,7 @@ def add_brand():
         db.session.commit()
         flash('Brand added. {}#{}'.format(brand.name, brand.id))
         return redirect(url_for('brand.add_brand'))
-    return render_template('addit_brand.html', form=form)
+    return render_template('addit_brand.html', title='Add New Brand' , form=form)
 
 
 @bp.route('/brand/<int:id>/delete', methods=['POST'])
@@ -36,7 +36,7 @@ def delete_brand(id):
 def list_brand():
     brands = db.session.scalars(
         sa.select(Brand).where(Brand.user_id == current_user.id))
-    return render_template('list_brand.html', brands=brands)
+    return render_template('list_brand.html', title='Brands', brands=brands)
 
 
 @bp.route('/brand/<int:id>/edit', methods=['GET', 'POST'], endpoint='edit_brand')
@@ -50,4 +50,4 @@ def edit_brand(id):
         db.session.commit()
         flash('Brand updated. {}#{}'.format(brand.name, brand.id))
         return redirect(url_for('brand.list_brand'))
-    return render_template('addit_brand.html', form=form)
+    return render_template('addit_brand.html', title='Edit Brand', form=form)

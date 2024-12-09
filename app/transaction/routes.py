@@ -24,7 +24,7 @@ def add_transaction():
         flash('Transaction added. {}#{}'.format(
             transaction.name, transaction.id))
         return redirect(url_for('transaction.add_transaction'))
-    return render_template('addit_transaction.html', form=form)
+    return render_template('addit_transaction.html', title='Add New Transaction', form=form)
 
 
 @bp.route('/transaction/<int:id>/delete', methods=['POST'])
@@ -44,7 +44,7 @@ def delete_transaction(id):
 def list_transaction():
     transactions = db.session.scalars(
         sa.select(Transaction).where(Transaction.user_id == current_user.id))
-    return render_template('list_transaction.html', transactions=transactions)
+    return render_template('list_transaction.html', title='Transactions', transactions=transactions)
 
 
 @bp.route('/transaction/<int:id>/edit', methods=['GET', 'POST'], endpoint='edit_transaction')
@@ -66,4 +66,4 @@ def edit_transaction(id):
         flash('Transaction updated. {}#{}'.format(
             transaction.name, transaction.id))
         return redirect(url_for('transaction.list_transaction'))
-    return render_template('addit_transaction.html', form=form)
+    return render_template('addit_transaction.html', title='Edit Transaction', form=form)

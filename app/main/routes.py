@@ -26,7 +26,7 @@ def index():
 @login_required
 def user(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
-    return render_template('user.html', user=user)
+    return render_template('user.html', title='Profile', user=user)
 
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])

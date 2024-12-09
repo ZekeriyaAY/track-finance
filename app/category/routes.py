@@ -17,7 +17,7 @@ def add_category():
         db.session.commit()
         flash('Category added. {}#{}'.format(category.name, category.id))
         return redirect(url_for('category.add_category'))
-    return render_template('addit_category.html', form=form)
+    return render_template('addit_category.html', title='Add New Category', form=form)
 
 
 @bp.route('/category/<int:id>/delete', methods=['POST'])
@@ -36,7 +36,7 @@ def delete_category(id):
 def list_category():
     categories = db.session.scalars(
         sa.select(Category).where(Category.user_id == current_user.id))
-    return render_template('list_category.html', categories=categories)
+    return render_template('list_category.html', title='Categories', categories=categories)
 
 
 @bp.route('/category/<int:id>/edit', methods=['GET', 'POST'], endpoint='edit_category')
@@ -50,4 +50,4 @@ def edit_category(id):
         db.session.commit()
         flash('Category updated. {}#{}'.format(category.name, category.id))
         return redirect(url_for('category.list_category'))
-    return render_template('addit_category.html', form=form)
+    return render_template('addit_category.html', title='Edit Category', form=form)
