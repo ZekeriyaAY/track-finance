@@ -2,12 +2,21 @@
 {% import 'bootstrap_wtf.html' as wtf %}
 
 {% block content %}
-
-{% if request.endpoint == 'brand.add_brand' %}
-<h2>Add Brand</h2>
-{% elif request.endpoint == 'brand.edit_brand' %}
-<h2>Edit Brand</h2>
-{% endif %}
-
-{{ wtf.quick_form(form) }}
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between">
+            <h2 class="mb-0">
+                {% if request.endpoint == 'brand.add_brand' %}
+                Add Brand
+                {% elif request.endpoint == 'brand.edit_brand' %}
+                Edit Brand
+                {% endif %}
+            </h2>
+            <a href="{{ url_for('brand.list_brand') }}" class="btn btn-warning">Back</a>
+        </div>
+        <div class="card-body">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+</div>
 {% endblock %}

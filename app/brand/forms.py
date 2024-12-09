@@ -7,7 +7,7 @@ import sqlalchemy as sa
 
 
 class BrandForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
+    name = StringField('Brand Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
     def validate_name(self, name):

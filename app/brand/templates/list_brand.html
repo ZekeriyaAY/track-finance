@@ -1,14 +1,47 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>List Brands</h2>
-{% if brands %}
-{% for brand in brands %}
-{% include '_brand.html' %}
-{% endfor %}
-{% else %}
-<p>No brands found.
-    <a href="{{ url_for('brand.add_brand') }}">Create a new brand!</a>
-</p>
-{% endif %}
+<div class="container my-5">
+    <!-- Title and Add Brand Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">Brands</h1>
+        <a href="{{ url_for('brand.add_brand') }}" class="btn btn-success">+ Add New Brand</a>
+    </div>
+
+    <!-- Brand Table -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Brand List</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Brand Name</th>
+                        <th scope="col">Number of Products</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if brands %}
+                    <!-- Example Brand -->
+                    {% for brand in brands %}
+                    {% include '_brand.html' %}
+                    {% endfor %}
+                    <!-- If no brands exist -->
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-3">
+                            No brands available.
+                            <a href="{{ url_for('brand.add_brand') }}">Add a new brand!</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
