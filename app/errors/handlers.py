@@ -12,3 +12,9 @@ def not_found_error(error):
 def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
+
+
+@bp.app_errorhandler(Exception)
+def handle_exception(error):
+    # Here, you can catch other types of errors and send them to the generic error page
+    return render_template('error.html', error=error), 500
