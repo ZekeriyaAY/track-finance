@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Avatar and Basic Information -->
+        <div class="col-md-4 text-center">
+            <!-- User Avatar -->
+            <img src="{{ user.avatar(128) }}" alt="User Avatar" class="img-fluid rounded-circle mb-4"
+                style="width: 150px; height: 150px; object-fit: cover;">
+            <h3>{{ user.username }}</h3>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            {% if user.last_seen %}
+            <p class="text-muted"><strong>Last seen:</strong><br>{{ moment(user.last_seen).format('LLL') }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Additional User Info or Content -->
+        <div class="col-md-8">
+            <h4>About Me</h4>
+            <p>{{ user.about_me or 'This user has not provided an about me section.' }}</p>
+
+            <!-- You can add more sections here, such as user posts, activity logs, etc. -->
+        </div>
+    </div>
+</div>
+{% endblock %}
