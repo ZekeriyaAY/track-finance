@@ -2,12 +2,21 @@
 {% import 'bootstrap_wtf.html' as wtf %}
 
 {% block content %}
-
-{% if request.endpoint == 'category.add_category' %}
-<h2>Add Category</h2>
-{% elif request.endpoint == 'category.edit_category' %}
-<h2>Edit Category</h2>
-{% endif %}
-
-{{ wtf.quick_form(form) }}
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between">
+            <h2 class="mb-0">
+                {% if request.endpoint == 'category.add_category' %}
+                Add Category
+                {% elif request.endpoint == 'category.edit_category' %}
+                Edit Category
+                {% endif %}
+            </h2>
+            <a href="{{ url_for('category.list_category') }}" class="btn btn-warning">Back</a>
+        </div>
+        <div class="card-body">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+</div>
 {% endblock %}

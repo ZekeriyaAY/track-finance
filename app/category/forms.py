@@ -7,7 +7,7 @@ import sqlalchemy as sa
 
 
 class CategoryForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
+    name = StringField('Category Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
     def validate_name(self, name):

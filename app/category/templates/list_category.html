@@ -1,14 +1,47 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>List Categories</h2>
-{% if categories %}
-{% for category in categories %}
-{% include '_category.html' %}
-{% endfor %}
-{% else %}
-<p>No categories found.
-    <a href="{{ url_for('category.add_category') }}">Create a new category!</a>
-</p>
-{% endif %}
+<div class="container my-5">
+    <!-- Title and Add Category Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">Categories</h1>
+        <a href="{{ url_for('category.add_category') }}" class="btn btn-success">+ Add New Category</a>
+    </div>
+
+    <!-- Category Table -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Category List</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Category Name</th>
+                        <th scope="col">Usage Count</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if categories %}
+                    <!-- Example Category -->
+                    {% for category in categories %}
+                    {% include '_category.html' %}
+                    {% endfor %}
+                    <!-- If no categories exist -->
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-3">
+                            No categories available.
+                            <a href="{{ url_for('category.add_category') }}">Add a new category!</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

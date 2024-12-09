@@ -1,7 +1,10 @@
-<div class="card">
-    <div class="card-body">
-        <p class="card-text">{{ category.name }}</p>
-        <a href="{{ url_for('category.edit_category', id=category.id) }}" class="btn btn-primary">Edit</a>
-        <a href="{{ url_for('category.delete_category', id=category.id) }}" class="btn btn-danger">Delete</a>
-    </div>
-</div>
+<tr>
+    <th scope="row">{{ category.id }}</th>
+    <td>{{ category.name }}</td>
+    <td>{{ category.usage_count }}</td>
+    <td>{{ category.last_updated }}</td>
+    <td class="text-end">
+        <a href="{{ url_for('category.edit_category', id=category.id) }}" class="btn btn-warning btn-sm">Edit</a>
+        <a href="{{ url_for('category.delete_category', id=category.id) }}" class="btn btn-danger btn-sm">Delete</a>
+    </td>
+</tr>
