@@ -16,7 +16,7 @@ def add_brand():
         db.session.add(brand)
         db.session.commit()
         flash('Brand added. {}#{}'.format(brand.name, brand.id))
-        return redirect(url_for('brand.add_brand'))
+        return redirect(url_for('brand.list_brand'))
     return render_template('addit_brand.html', title='Add New Brand' , form=form)
 
 

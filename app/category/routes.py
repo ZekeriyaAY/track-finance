@@ -16,7 +16,7 @@ def add_category():
         db.session.add(category)
         db.session.commit()
         flash('Category added. {}#{}'.format(category.name, category.id))
-        return redirect(url_for('category.add_category'))
+        return redirect(url_for('category.list_category'))
     return render_template('addit_category.html', title='Add New Category', form=form)
 
 
