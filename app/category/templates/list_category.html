@@ -14,11 +14,11 @@
             <h5 class="mb-0">Category List</h5>
         </div>
         <div class="card-body p-0">
-            <table class="table table-striped mb-0">
+            <table class="table table-hover mb-0" id="data">
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Category Name</th>
+                        <th scope="col">Name</th>
                         <th scope="col">Usage Count</th>
                         <th scope="col">Last Updated</th>
                         <th scope="col" class="text-end">Actions</th>
@@ -44,4 +44,19 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function () {
+        $('#data').DataTable({
+            columns: [
+                null,
+                null,
+                null,
+                null,
+                { orderable: false, searchable: false }],
+            pageLength: 25,
+        });
+    });
+</script>
 {% endblock %}

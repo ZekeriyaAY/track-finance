@@ -1,14 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>List Transaction</h2>
-{% if transactions %}
-{% for transaction in transactions %}
-{% include '_transaction.html' %}
-{% endfor %}
-{% else %}
-<p>No transactions found.
-    <a href="{{ url_for('transaction.add_transaction') }}">Create a new transaction!</a>
-</p>
-{% endif %}
+<div class="container my-5">
+    <!-- Title and Add Transaction Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">Transaction</h1>
+        <a href="{{ url_for('transaction.add_transaction') }}" class="btn btn-success">+ Add New Transaction</a>
+    </div>
+
+    <!-- Transaction Table -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Transaction List</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0" id="data">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Timestamp</th>
+                        <th scope="col" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if transactions %}
+                    <!-- Example Transaction -->
+                    {% for transaction in transactions %}
+                    {% include '_transaction.html' %}
+                    {% endfor %}
+                    <!-- If no transactions exist -->
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-3">
+                            No transactions available.
+                            <a href="{{ url_for('transaction.add_transaction') }}">Add a new transaction!</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function () {
+        $('#data').DataTable({
+            columns: [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                { orderable: false, searchable: false }],
+            pageLength: 25,
+        });
+    });
+</script>
 {% endblock %}
