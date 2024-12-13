@@ -11,7 +11,7 @@
             <h3>{{ user.username }}</h3>
             <p><strong>Email:</strong> {{ user.email }}</p>
             {% if user.last_seen %}
-            <p class="text-muted"><strong>Last seen:</strong><br>{{ moment(user.last_seen).format('LLL') }}</p>
+            <p class="text-muted"><strong>Last seen:</strong><br>{{ moment(user.last_seen).format('D MMMM YY, HH:mm') }}</p>
             {% endif %}
 
             <!-- Edit Profile Button -->
