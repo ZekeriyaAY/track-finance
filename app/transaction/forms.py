@@ -8,7 +8,7 @@ import sqlalchemy as sa
 
 
 class TransactionForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
+    name = StringField('Transaction Name', validators=[DataRequired()])
     amount = FloatField('Amount', validators=[DataRequired()])
     category = SelectField('Category', coerce=int, validators=[DataRequired()])
     brand = SelectField('Brand', coerce=int, validators=[DataRequired()])

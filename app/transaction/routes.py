@@ -23,7 +23,7 @@ def add_transaction():
         db.session.commit()
         flash('Transaction added. {}#{}'.format(
             transaction.name, transaction.id))
-        return redirect(url_for('transaction.add_transaction'))
+        return redirect(url_for('transaction.list_transaction'))
     return render_template('addit_transaction.html', title='Add New Transaction', form=form)
 
 

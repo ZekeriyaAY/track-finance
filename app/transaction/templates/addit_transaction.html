@@ -2,12 +2,21 @@
 {% import 'bootstrap_wtf.html' as wtf %}
 
 {% block content %}
-
-{% if request.endpoint == 'transaction.add_transaction' %}
-<h2>Add Transaction</h2>
-{% elif request.endpoint == 'transaction.edit_transaction' %}
-<h2>Edit Transaction</h2>
-{% endif %}
-
-{{ wtf.quick_form(form) }}
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between">
+            <h2 class="mb-0">
+                {% if request.endpoint == 'transaction.add_transaction' %}
+                Add Transaction
+                {% elif request.endpoint == 'transaction.edit_transaction' %}
+                Edit Transaction
+                {% endif %}
+            </h2>
+            <a href="{{ url_for('transaction.list_transaction') }}" class="btn btn-warning">Back</a>
+        </div>
+        <div class="card-body">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+</div>
 {% endblock %}

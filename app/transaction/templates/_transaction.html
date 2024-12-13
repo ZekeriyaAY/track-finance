@@ -1,11 +1,14 @@
-<div class="card">
-    <div class="card-body">
-        <p class="card-text">{{ transaction.name }}</p>
-        <p class="card-text">{{ transaction.amount }}</p>
-        <p class="card-text">{{ transaction.timestamp }}</p>
-        <p class="card-text">{{ transaction.category.name }}</p>
-        <p class="card-text">{{ transaction.brand.name }}</p>
-        <a href="{{ url_for('transaction.edit_transaction', id=transaction.id) }}" class="btn btn-primary">Edit</a>
-        <a href="{{ url_for('transaction.delete_transaction', id=transaction.id) }}" class="btn btn-danger">Delete</a>
-    </div>
-</div>
+<tr>
+    <th scope="row">{{ transaction.id }}</th>
+    <td>{{ transaction.name }}</td>
+    <td>{{ transaction.amount }}</td>
+    <td>{{ transaction.category.name }}</td>
+    <td>{{ transaction.brand.name }}</td>
+    <td>{{ moment(transaction.timestamp).format('D MMM Y, HH:mm') }}</td>
+    <td class="text-end">
+        <a href="{{ url_for('transaction.edit_transaction', id=transaction.id) }}"
+            class="btn btn-warning btn-sm">Edit</a>
+        <a href="{{ url_for('transaction.delete_transaction', id=transaction.id) }}"
+            class="btn btn-danger btn-sm">Delete</a>
+    </td>
+</tr>
