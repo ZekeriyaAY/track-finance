@@ -46,7 +46,9 @@ class Category(db.Model):
     user_id: so.Mapped[int] = so.mapped_column(
         sa.ForeignKey(User.id), index=True, nullable=False)
     name: so.Mapped[str] = so.mapped_column(
-        sa.String(64), index=True, unique=True, nullable=False)
+        sa.String(64), index=True, nullable=False)
+    type: so.Mapped[str] = so.mapped_column(
+        sa.String(64), index=True, nullable=False, default='Expense')
 
     transactions: so.WriteOnlyMapped['Transaction'] = so.relationship(
         back_populates='category', lazy='dynamic')
@@ -60,7 +62,7 @@ class Brand(db.Model):
     user_id: so.Mapped[int] = so.mapped_column(
         sa.ForeignKey(User.id), index=True, nullable=False)
     name: so.Mapped[str] = so.mapped_column(
-        sa.String(64), index=True, unique=True, nullable=False)
+        sa.String(64), index=True, nullable=False)
 
     transactions: so.WriteOnlyMapped['Transaction'] = so.relationship(
         back_populates='brand', lazy='dynamic')

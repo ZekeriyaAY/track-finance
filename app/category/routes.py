@@ -12,10 +12,12 @@ import sqlalchemy as sa
 def add_category():
     form = CategoryForm()
     if form.validate_on_submit():
-        category = Category(user_id=current_user.id, name=form.name.data)
+        category = Category(user_id=current_user.id,
+                            name=form.name.data, type=form.type.data)
         db.session.add(category)
         db.session.commit()
-        flash('Category added. {}#{}'.format(category.name, category.id))
+        flash('Category added. {}#{}'.format(
+            category.name, category.id), 'success')
         return redirect(url_for('category.list_category'))
     return render_template('addit_category.html', title='Add New Category', form=form)
 
@@ -27,7 +29,8 @@ def delete_category(id):
         Category.id == id, Category.user_id == current_user.id))
     db.session.delete(category)
     db.session.commit()
-    flash('Category deleted. {}#{}'.format(category.name, category.id))
+    flash('Category deleted. {}#{}'.format(
+        category.name, category.id), 'success')
     return redirect(url_for('category.list_category'))
 
 
@@ -47,7 +50,9 @@ def edit_category(id):
     form = CategoryForm(obj=category)
     if form.validate_on_submit():
         category.name = form.name.data
+        category.type = form.type.data
         db.session.commit()
-        flash('Category updated. {}#{}'.format(category.name, category.id))
+        flash('Category updated. {}#{}'.format(
+            category.name, category.id), 'success')
         return redirect(url_for('category.list_category'))
     return render_template('addit_category.html', title='Edit Category', form=form)

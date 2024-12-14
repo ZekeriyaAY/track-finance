@@ -2,6 +2,7 @@
     <th scope="row">{{ transaction.id }}</th>
     <td>{{ transaction.name }}</td>
     <td>{{ transaction.amount }}</td>
+    <td>{{ transaction.category.type }}</td>
     <td>{{ transaction.category.name }}</td>
     <td>{{ transaction.brand.name }}</td>
     <td>{{ moment(transaction.timestamp).format('D MMM Y, HH:mm') }}</td>

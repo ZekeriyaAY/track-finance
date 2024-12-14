@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 @login_required
 def add_transaction():
     form = TransactionForm()
-    form.category.choices = [(c.id, c.name) for c in Category.query.filter_by(
+    form.category.choices = [(c.id, f'{c.name} [{c.type}]') for c in Category.query.filter_by(
         user_id=current_user.id).all()]
     form.brand.choices = [(b.id, b.name) for b in Brand.query.filter_by(
         user_id=current_user.id).all()]
@@ -22,7 +22,7 @@ def add_transaction():
         db.session.add(transaction)
         db.session.commit()
         flash('Transaction added. {}#{}'.format(
-            transaction.name, transaction.id))
+            transaction.name, transaction.id), 'success')
         return redirect(url_for('transaction.list_transaction'))
     return render_template('addit_transaction.html', title='Add New Transaction', form=form)
 
@@ -35,7 +35,7 @@ def delete_transaction(id):
     db.session.delete(transaction)
     db.session.commit()
     flash('Transaction deleted. {}#{}'.format(
-        transaction.name, transaction.id))
+        transaction.name, transaction.id), 'success')
     return redirect(url_for('transaction.list_transaction'))
 
 
@@ -53,17 +53,17 @@ def edit_transaction(id):
     transaction = db.first_or_404(sa.select(Transaction).where(
         Transaction.id == id, Transaction.user_id == current_user.id))
     form = TransactionForm(obj=transaction)
-    form.category.choices = [(c.id, c.name) for c in Category.query.filter_by(
+    form.category.choices = [(c.id, f'{c.name} [{c.type}]') for c in Category.query.filter_by(
         user_id=current_user.id).all()]
     form.brand.choices = [(b.id, b.name) for b in Brand.query.filter_by(
         user_id=current_user.id).all()]
     if form.validate_on_submit():
-        transaction.category_id = form.category.data
-        transaction.brand_id = form.brand.data
         transaction.name = form.name.data
         transaction.amount = form.amount.data
+        transaction.category_id = form.category.data
+        transaction.brand_id = form.brand.data
         db.session.commit()
         flash('Transaction updated. {}#{}'.format(
-            transaction.name, transaction.id))
+            transaction.name, transaction.id), 'success')
         return redirect(url_for('transaction.list_transaction'))
     return render_template('addit_transaction.html', title='Edit Transaction', form=form)
