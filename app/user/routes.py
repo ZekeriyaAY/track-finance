@@ -37,7 +37,7 @@ def edit_profile():
     if form.validate_on_submit():
         current_user.username = form.username.data
         db.session.commit()
-        flash('Your changes have been saved.')
+        flash('Your changes have been saved.', 'success')
         return redirect(url_for('user.profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username

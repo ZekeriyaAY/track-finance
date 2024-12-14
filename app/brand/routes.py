@@ -15,7 +15,7 @@ def add_brand():
         brand = Brand(user_id=current_user.id, name=form.name.data)
         db.session.add(brand)
         db.session.commit()
-        flash('Brand added. {}#{}'.format(brand.name, brand.id))
+        flash('Brand added. {}#{}'.format(brand.name, brand.id), 'success')
         return redirect(url_for('brand.list_brand'))
     return render_template('addit_brand.html', title='Add New Brand' , form=form)
 
@@ -27,7 +27,7 @@ def delete_brand(id):
         Brand.id == id, Brand.user_id == current_user.id))
     db.session.delete(brand)
     db.session.commit()
-    flash('Brand deleted. {}#{}'.format(brand.name, brand.id))
+    flash('Brand deleted. {}#{}'.format(brand.name, brand.id), 'success')
     return redirect(url_for('brand.list_brand'))
 
 
@@ -48,6 +48,6 @@ def edit_brand(id):
     if form.validate_on_submit():
         brand.name = form.name.data
         db.session.commit()
-        flash('Brand updated. {}#{}'.format(brand.name, brand.id))
+        flash('Brand updated. {}#{}'.format(brand.name, brand.id), 'success')
         return redirect(url_for('brand.list_brand'))
     return render_template('addit_brand.html', title='Edit Brand', form=form)
