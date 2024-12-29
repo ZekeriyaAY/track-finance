@@ -4,7 +4,11 @@
     <td>{{ brand.product_count }}</td>
     <td>{{ brand.last_updated }}</td>
     <td class="text-end">
-        <a href="{{ url_for('brand.edit_brand', id=brand.id) }}" class="btn btn-warning btn-sm">Edit</a>
-        <a href="{{ url_for('brand.delete_brand', id=brand.id) }}" class="btn btn-danger btn-sm">Delete</a>
+        {% if not brand.is_deleted %}
+            <a href="{{ url_for('brand.edit_brand', id=brand.id) }}" class="btn btn-warning btn-sm">Edit</a>
+            <form action="{{ url_for('brand.delete_brand', id=brand.id) }}" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+        {% endif %}
     </td>
 </tr>
