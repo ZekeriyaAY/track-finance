@@ -52,6 +52,8 @@ class Category(db.Model):
     is_deleted: so.Mapped[bool] = so.mapped_column(default=False)
     deleted_at: so.Mapped[Optional[datetime]] = so.mapped_column(default=None)
     original_name: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64))
+    timestamp: so.Mapped[datetime] = so.mapped_column(
+        index=True, default=lambda: datetime.now(timezone.utc))
 
     transactions: so.WriteOnlyMapped['Transaction'] = so.relationship(
         back_populates='category',
@@ -64,7 +66,10 @@ class Category(db.Model):
     @property
     def transaction_count(self):
         """Bu kategorinin kullanıldığı transaction sayısı"""
-        return self.transactions.count()
+        return db.session.scalar(
+            sa.select(sa.func.count())
+            .where(Transaction.category_id == self.id)
+        ) or 0
 
     def soft_delete(self):
         if self.is_deleted:
@@ -96,6 +101,8 @@ class Brand(db.Model):
     is_deleted: so.Mapped[bool] = so.mapped_column(default=False)
     deleted_at: so.Mapped[Optional[datetime]] = so.mapped_column(default=None)
     original_name: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64))
+    timestamp: so.Mapped[datetime] = so.mapped_column(
+        index=True, default=lambda: datetime.now(timezone.utc))
 
     transactions: so.WriteOnlyMapped['Transaction'] = so.relationship(
         back_populates='brand',
@@ -104,6 +111,14 @@ class Brand(db.Model):
 
     def __repr__(self):
         return f'<Brand {self.name}>'
+
+    @property
+    def transaction_count(self):
+        """Bu brand'in kullanıldığı transaction sayısı"""
+        return db.session.scalar(
+            sa.select(sa.func.count())
+            .where(Transaction.brand_id == self.id)
+        ) or 0
 
     def soft_delete(self):
         if self.is_deleted:
