@@ -2,8 +2,8 @@
     <th scope="row">{{ category.id }}</th>
     <td>{{ category.name }}</td>
     <td>{{ category.type }}</td>
-    <td>{{ category.transaction_count }}</td>
-    <td>{{ category.last_updated }}</td>
+    <td class="text-end">{{ category.transaction_count }}</td>
+    <td>{{ moment(category.timestamp).format('D MMM Y, HH:mm') }}</td>
     <td class="text-end">
         <a href="{{ url_for('category.edit_category', id=category.id) }}" class="btn btn-warning btn-sm">Edit</a>
         <form action="{{ url_for('category.delete_category', id=category.id) }}" method="POST" class="d-inline">
