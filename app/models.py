@@ -88,6 +88,7 @@ class Category(db.Model):
         self.deleted_at = None
         self.name = self.original_name
         self.original_name = None
+        self.timestamp = datetime.now(timezone.utc)
         
         db.session.flush()
 
@@ -137,6 +138,7 @@ class Brand(db.Model):
         self.deleted_at = None
         self.name = self.original_name
         self.original_name = None
+        self.timestamp = datetime.now(timezone.utc)
         
         db.session.flush()
 

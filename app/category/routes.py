@@ -5,6 +5,7 @@ from app.models import Category, Transaction
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 import sqlalchemy as sa
+from datetime import datetime, timezone
 
 
 @bp.route('/category/add', methods=['GET', 'POST'], endpoint='add_category')
@@ -45,7 +46,8 @@ def add_category():
             category = Category(
                 user_id=current_user.id,
                 name=form.name.data,
-                type=form.type.data
+                type=form.type.data,
+                timestamp=datetime.now(timezone.utc)  # Timestamp set etme
             )
             db.session.add(category)
             db.session.commit()
@@ -129,6 +131,7 @@ def edit_category(id):
             # Normal güncelleme
             category.name = form.name.data
             category.type = form.type.data
+            category.timestamp = datetime.now(timezone.utc)
             db.session.commit()
             flash('Category updated. {}#{}'.format(
                 category.name, category.id), 'success')

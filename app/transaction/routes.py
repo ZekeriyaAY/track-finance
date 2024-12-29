@@ -28,8 +28,7 @@ def add_transaction():
         )
         db.session.add(transaction)
         db.session.commit()
-        flash('Transaction added. {}#{}'.format(
-            transaction.name, transaction.id), 'success')
+        flash(f'Transaction added: {transaction.name}#{transaction.id}', 'success')
         return redirect(url_for('transaction.list_transaction'))
     return render_template('addit_transaction.html', title='Add New Transaction', form=form)
 
@@ -63,7 +62,9 @@ def list_transaction():
 @login_required
 def edit_transaction(id):
     transaction = db.first_or_404(sa.select(Transaction).where(
-        Transaction.id == id, Transaction.user_id == current_user.id))
+        Transaction.id == id,
+        Transaction.user_id == current_user.id
+    ))
     form = TransactionForm(obj=transaction)
     
     # Aktif kategorileri al
@@ -89,10 +90,11 @@ def edit_transaction(id):
     form.brand_id.choices = brand_choices
     
     if form.validate_on_submit():
-        transaction.name = form.name.data
-        transaction.amount = form.amount.data
         transaction.category_id = form.category_id.data
         transaction.brand_id = form.brand_id.data
+        transaction.name = form.name.data
+        transaction.amount = form.amount.data
+        transaction.timestamp = datetime.now(timezone.utc)
         db.session.commit()
         flash('Transaction updated. {}#{}'.format(
             transaction.name, transaction.id), 'success')

@@ -5,6 +5,7 @@ from app.models import Brand, Transaction
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 import sqlalchemy as sa
+from datetime import datetime, timezone
 
 
 @bp.route('/brand/add', methods=['GET', 'POST'], endpoint='add_brand')
@@ -12,7 +13,7 @@ import sqlalchemy as sa
 def add_brand():
     form = BrandForm()
     if form.validate_on_submit():
-        # Önce aktif veya silinmiş aynı isimli brand var mı kontrol et
+        # Aynı isim kontrolü
         existing_brand = Brand.query.filter_by(
             user_id=current_user.id,
             name=form.name.data,
@@ -42,12 +43,16 @@ def add_brand():
                 flash(f'Error: {str(e)}', 'danger')
         else:
             # Yoksa yeni ekle
-            brand = Brand(user_id=current_user.id, name=form.name.data)
+            brand = Brand(
+                user_id=current_user.id,
+                name=form.name.data,
+                timestamp=datetime.now(timezone.utc)  # Timestamp set etme
+            )
             db.session.add(brand)
             db.session.commit()
             flash(f'Brand added: {brand.name}#{brand.id}', 'success')
         
-        db.session.expire_all()  # Tüm objeleri yenile
+        db.session.expire_all()
         return redirect(url_for('brand.list_brand'))
     return render_template('addit_brand.html', title='Add New Brand', form=form)
 
@@ -122,10 +127,11 @@ def edit_brand(id):
         else:
             # Normal güncelleme
             brand.name = form.name.data
+            brand.timestamp = datetime.now(timezone.utc)  # Timestamp güncelleme
             db.session.commit()
             flash('Brand updated. {}#{}'.format(
                 brand.name, brand.id), 'success')
         
-        db.session.expire_all()
+        db.session.expire_all()  # Cache'i temizle
         return redirect(url_for('brand.list_brand'))
     return render_template('addit_brand.html', title='Edit Brand', form=form)
