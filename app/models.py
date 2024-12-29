@@ -49,12 +49,42 @@ class Category(db.Model):
         sa.String(64), index=True, nullable=False)
     type: so.Mapped[str] = so.mapped_column(
         sa.String(64), index=True, nullable=False, default='Expense')
+    is_deleted: so.Mapped[bool] = so.mapped_column(default=False)
+    deleted_at: so.Mapped[Optional[datetime]] = so.mapped_column(default=None)
+    original_name: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64))
 
     transactions: so.WriteOnlyMapped['Transaction'] = so.relationship(
-        back_populates='category', lazy='dynamic')
+        back_populates='category',
+        lazy='dynamic'
+    )
 
     def __repr__(self):
         return f'<Category {self.name}>'
+
+    @property
+    def transaction_count(self):
+        """Bu kategorinin kullanıldığı transaction sayısı"""
+        return self.transactions.count()
+
+    def soft_delete(self):
+        if self.is_deleted:
+            raise ValueError("This category is already deleted")
+        
+        self.is_deleted = True
+        self.deleted_at = datetime.now(timezone.utc)
+        self.original_name = self.name
+        self.name = f"DELETED: {self.name} ({self.deleted_at.strftime('%Y-%m-%d')})"
+
+    def restore(self):
+        if not self.is_deleted:
+            raise ValueError("This category is not deleted")
+        
+        self.is_deleted = False
+        self.deleted_at = None
+        self.name = self.original_name
+        self.original_name = None
+        
+        db.session.flush()
 
 
 class Brand(db.Model):
@@ -63,12 +93,37 @@ class Brand(db.Model):
         sa.ForeignKey(User.id), index=True, nullable=False)
     name: so.Mapped[str] = so.mapped_column(
         sa.String(64), index=True, nullable=False)
+    is_deleted: so.Mapped[bool] = so.mapped_column(default=False)
+    deleted_at: so.Mapped[Optional[datetime]] = so.mapped_column(default=None)
+    original_name: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64))
 
     transactions: so.WriteOnlyMapped['Transaction'] = so.relationship(
-        back_populates='brand', lazy='dynamic')
+        back_populates='brand',
+        lazy='dynamic'
+    )
 
     def __repr__(self):
         return f'<Brand {self.name}>'
+
+    def soft_delete(self):
+        if self.is_deleted:
+            raise ValueError("This brand is already deleted")
+        
+        self.is_deleted = True
+        self.deleted_at = datetime.now(timezone.utc)
+        self.original_name = self.name
+        self.name = f"DELETED: {self.name} ({self.deleted_at.strftime('%Y-%m-%d')})"
+
+    def restore(self):
+        if not self.is_deleted:
+            raise ValueError("This brand is not deleted")
+        
+        self.is_deleted = False
+        self.deleted_at = None
+        self.name = self.original_name
+        self.original_name = None
+        
+        db.session.flush()
 
 
 class Transaction(db.Model):
@@ -78,7 +133,10 @@ class Transaction(db.Model):
     category_id: so.Mapped[int] = so.mapped_column(
         sa.ForeignKey(Category.id), index=True, nullable=False)
     brand_id: so.Mapped[int] = so.mapped_column(
-        sa.ForeignKey(Brand.id), index=True, nullable=False)
+        sa.ForeignKey(Brand.id, ondelete='CASCADE'),
+        index=True,
+        nullable=False
+    )
     name: so.Mapped[str] = so.mapped_column(sa.String(64), nullable=False)
     amount: so.Mapped[Optional[float]] = so.mapped_column(
         sa.Float, nullable=False)
