@@ -79,11 +79,12 @@ def delete_category(id):
 @login_required
 def list_category():
     categories = db.session.scalars(
-        sa.select(Category).where(
+        sa.select(Category)
+        .where(
             Category.user_id == current_user.id,
             Category.is_deleted == False
         )
-    )
+    ).all()
     return render_template('list_category.html', title='Categories', categories=categories)
 
 
