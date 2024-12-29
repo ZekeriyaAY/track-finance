@@ -2,10 +2,12 @@
     <th scope="row">{{ category.id }}</th>
     <td>{{ category.name }}</td>
     <td>{{ category.type }}</td>
-    <td>{{ category.usage_count }}</td>
+    <td>{{ category.transaction_count }}</td>
     <td>{{ category.last_updated }}</td>
     <td class="text-end">
         <a href="{{ url_for('category.edit_category', id=category.id) }}" class="btn btn-warning btn-sm">Edit</a>
-        <a href="{{ url_for('category.delete_category', id=category.id) }}" class="btn btn-danger btn-sm">Delete</a>
+        <form action="{{ url_for('category.delete_category', id=category.id) }}" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
     </td>
 </tr>
