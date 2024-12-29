@@ -1,15 +1,29 @@
 <tr>
     <th scope="row">{{ transaction.id }}</th>
     <td>{{ transaction.name }}</td>
-    <td>{{ transaction.amount }}</td>
+    <td class="text-end">{{ "%.2f"|format(transaction.amount) }}</td>
     <td>{{ transaction.category.type }}</td>
-    <td>{{ transaction.category.name }}</td>
-    <td>{{ transaction.brand.name }}</td>
+    <td>
+        {% if transaction.category.is_deleted %}
+            <span class="text-muted">{{ transaction.category.name }}</span>
+        {% else %}
+            {{ transaction.category.name }}
+        {% endif %}
+    </td>
+    <td>
+        {% if transaction.brand.is_deleted %}
+            <span class="text-muted">{{ transaction.brand.name }}</span>
+        {% else %}
+            {{ transaction.brand.name }}
+        {% endif %}
+    </td>
     <td>{{ moment(transaction.timestamp).format('D MMM Y, HH:mm') }}</td>
     <td class="text-end">
         <a href="{{ url_for('transaction.edit_transaction', id=transaction.id) }}"
             class="btn btn-warning btn-sm">Edit</a>
-        <a href="{{ url_for('transaction.delete_transaction', id=transaction.id) }}"
-            class="btn btn-danger btn-sm">Delete</a>
+        <form action="{{ url_for('transaction.delete_transaction', id=transaction.id) }}" 
+              method="POST" class="d-inline">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
     </td>
 </tr>
