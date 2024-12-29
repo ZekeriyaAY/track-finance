@@ -1,0 +1,29 @@
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Top Categories</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th class="text-end">Count</th>
+                        <th class="text-end">Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in top_categories %}
+                    <tr>
+                        <td>{{ category.name }}</td>
+                        <td>{{ category.type }}</td>
+                        <td class="text-end">{{ category.count }}</td>
+                        <td class="text-end">{{ "%.2f"|format(category.total) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 

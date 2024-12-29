@@ -1,0 +1,38 @@
+<div class="row mb-4">
+    <!-- Toplam Transaction -->
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Transactions</h5>
+                <h2 class="card-text">{{ total_transactions }}</h2>
+            </div>
+        </div>
+    </div>
+    <!-- Toplam Expense -->
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Expenses</h5>
+                <h2 class="card-text">{{ "%.2f"|format(total_expenses) }}</h2>
+            </div>
+        </div>
+    </div>
+    <!-- Toplam Income -->
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Income</h5>
+                <h2 class="card-text">{{ "%.2f"|format(total_income) }}</h2>
+            </div>
+        </div>
+    </div>
+    <!-- Net Durum -->
+    <div class="col-md-3">
+        <div class="card {{ 'bg-success' if net_amount >= 0 else 'bg-danger' }} text-white">
+            <div class="card-body">
+                <h5 class="card-title">Net Amount</h5>
+                <h2 class="card-text">{{ "%.2f"|format(net_amount) }}</h2>
+            </div>
+        </div>
+    </div>
+</div> 
