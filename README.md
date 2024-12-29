@@ -1,5 +1,7 @@
 # Track-Finance
 
+A simple finance tracker app using Flask and SQLAlchemy.
+
 ### Spoiler 🤫🤐
 
 ![Add Transaction Sample Screen](sample.jpg)
