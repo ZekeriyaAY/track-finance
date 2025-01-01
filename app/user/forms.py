@@ -1,7 +1,7 @@
 from app import db
 from app.models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 import sqlalchemy as sa
 
@@ -35,6 +35,7 @@ class RegistrationForm(FlaskForm):
 
 
 class ProfileForm(FlaskForm):
+    form_type = HiddenField('Form Type', default='profile')
     username = StringField('Username', validators=[
         DataRequired(),
         Length(min=2, max=64)
@@ -65,6 +66,7 @@ class ProfileForm(FlaskForm):
 
 
 class ChangePasswordForm(FlaskForm):
+    form_type = HiddenField('Form Type', default='password')
     current_password = PasswordField('Current Password', validators=[DataRequired()])
     new_password = PasswordField('New Password', validators=[
         DataRequired(),
