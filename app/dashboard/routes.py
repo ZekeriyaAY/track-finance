@@ -58,7 +58,7 @@ def dashboard():
         .limit(5)
     ).all()
 
-    return render_template('index.html', title='Dashboard',
+    return render_template('dashboard.html', title='Dashboard',
                            total_transactions=total_transactions,
                            total_expenses=total_expenses,
                            total_income=total_income,
