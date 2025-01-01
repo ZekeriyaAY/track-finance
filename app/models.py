@@ -21,8 +21,12 @@ class User(UserMixin, db.Model):
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True,
                                              unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
-    last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(
+    created_at: so.Mapped[datetime] = so.mapped_column(
         default=lambda: datetime.now(timezone.utc))
+    last_seen: so.Mapped[datetime] = so.mapped_column(
+        default=lambda: datetime.now(timezone.utc))
+    preferences: so.Mapped[dict] = so.mapped_column(
+        sa.JSON, default=dict)
 
     transactions: so.WriteOnlyMapped['Transaction'] = so.relationship(
         back_populates='user', lazy='dynamic')
@@ -39,6 +43,19 @@ class User(UserMixin, db.Model):
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
+
+    def update_last_seen(self):
+        self.last_seen = datetime.now(timezone.utc)
+        db.session.commit()
+
+    def set_preference(self, key, value):
+        if not self.preferences:
+            self.preferences = {}
+        self.preferences[key] = value
+        db.session.commit()
+
+    def get_preference(self, key, default=None):
+        return self.preferences.get(key, default) if self.preferences else default
 
 
 class Category(db.Model):
