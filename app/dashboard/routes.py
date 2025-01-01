@@ -8,7 +8,7 @@ import sqlalchemy as sa
 
 @bp.route('/dashboard')
 @login_required
-def index():
+def dashboard():
     # Toplam istatistikler
     total_transactions = db.session.scalar(
         sa.select(sa.func.count()).select_from(Transaction)
