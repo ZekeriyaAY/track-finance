@@ -1,6 +1,6 @@
 from app import db
 from app.user import bp
-from app.user.forms import LoginForm, RegistrationForm
+from app.user.forms import LoginForm, RegistrationForm, ProfileForm, ChangePasswordForm
 from app.models import User, Transaction, Category, Brand
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required, login_user, logout_user
@@ -56,3 +56,43 @@ def register():
         flash('Congratulations! Your registration was successful.', 'success')
         return redirect(url_for('user.login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@bp.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', 
+                         title='Profile',
+                         user=current_user)
+
+
+@bp.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    profile_form = ProfileForm(
+        original_username=current_user.username,
+        original_email=current_user.email,
+        obj=current_user
+    )
+    password_form = ChangePasswordForm()
+
+    if profile_form.submit1.data and profile_form.validate():
+        current_user.username = profile_form.username.data
+        current_user.email = profile_form.email.data
+        db.session.commit()
+        flash('Your profile has been updated successfully.', 'success')
+        return redirect(url_for('user.profile'))
+
+    if password_form.submit2.data and password_form.validate():
+        if current_user.check_password(password_form.current_password.data):
+            current_user.set_password(password_form.new_password.data)
+            db.session.commit()
+            flash('Your password has been changed successfully.', 'success')
+            return redirect(url_for('user.settings'))
+        else:
+            flash('Invalid current password.', 'error')
+
+    return render_template('settings.html',
+                         title='Settings',
+                         profile_form=profile_form,
+                         password_form=password_form)
