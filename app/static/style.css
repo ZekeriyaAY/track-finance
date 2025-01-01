@@ -68,3 +68,23 @@ footer {
     font-weight: 500;
     padding: 0.4em 0.6em;
 }
+
+/* Footer Styles */
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #0d6efd !important;
+}
+
+.footer hr {
+    opacity: 0.2;
+}

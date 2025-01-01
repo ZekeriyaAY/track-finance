@@ -7,6 +7,7 @@ from config import Config
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+from datetime import datetime
 
 
 db = SQLAlchemy()
@@ -57,6 +58,10 @@ def create_app(config_class=Config):
 
         app.logger.setLevel(logging.INFO)
         app.logger.info('Track Finance App startup')
+
+    @app.context_processor
+    def inject_datetime():
+        return dict(datetime=datetime)
 
     return app
 
