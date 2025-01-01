@@ -14,10 +14,6 @@ footer {
     /* Footer stays at the bottom */
 }
 
-.nav-link.logout:hover {
-    color: var(--bs-red);
-}
-
 /* Avatar border */
 .img-fluid.rounded-circle {
     border: 2px solid #ddd;
@@ -35,4 +31,40 @@ footer {
 #data_wrapper>.dt-layout-table {
     margin-left: -12px;
     margin-right: -12px;
+}
+
+/* Nav link stilleri */
+.navbar-dark .navbar-nav .nav-link {
+    border-radius: 0.25rem;
+}
+
+.navbar-dark .navbar-nav .nav-link.active,
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Logout link için özel hover efekti */
+.navbar-dark .navbar-nav .nav-link.logout:hover {
+    color: #fff !important;
+    background-color: #dc3545;
+}
+
+/* Recent Activity stilleri */
+.list-group-item-action {
+    transition: transform 0.1s ease-in-out;
+}
+
+.list-group-item-action:hover {
+    transform: translateX(5px);
+}
+
+.list-group-item small i {
+    opacity: 0.6;
+}
+
+/* Badge stilleri */
+.badge {
+    font-weight: 500;
+    padding: 0.4em 0.6em;
 }

@@ -17,4 +17,5 @@ def internal_error(error):
 @bp.app_errorhandler(Exception)
 def handle_exception(error):
     # Here, you can catch other types of errors and send them to the generic error page
+    print(error)
     return render_template('error.html', error=error), 500
