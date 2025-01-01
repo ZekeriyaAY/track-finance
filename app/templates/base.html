@@ -32,34 +32,30 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.endpoint == 'dashboard.dashboard' }}" 
-                           href="{{ url_for('main.index') }}">Dashboard</a>
+                        <a class="nav-link {{ 'active' if request.endpoint == 'dashboard.dashboard' }}"
+                            href="{{ url_for('main.index') }}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.endpoint.startswith('transaction.') }}" 
-                           href="{{ url_for('transaction.list_transaction') }}">Transactions</a>
+                        <a class="nav-link {{ 'active' if request.endpoint.startswith('transaction.') }}"
+                            href="{{ url_for('transaction.list_transaction') }}">Transactions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.endpoint.startswith('category.') }}" 
-                           href="{{ url_for('category.list_category') }}">Categories</a>
+                        <a class="nav-link {{ 'active' if request.endpoint.startswith('category.') }}"
+                            href="{{ url_for('category.list_category') }}">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.endpoint.startswith('brand.') }}" 
-                           href="{{ url_for('brand.list_brand') }}">Brands</a>
+                        <a class="nav-link {{ 'active' if request.endpoint.startswith('brand.') }}"
+                            href="{{ url_for('brand.list_brand') }}">Brands</a>
                     </li>
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     {% if current_user.is_anonymous %}
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.endpoint.startswith('auth.') }}" 
-                           href="{{ url_for('auth.login') }}">Login</a>
+                        <a class="nav-link {{ 'active' if request.endpoint.startswith('auth.') }}"
+                            href="{{ url_for('auth.login') }}">Login</a>
                     </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link {{ 'active' if request.endpoint.startswith('user.') }}" 
-                           href="{{ url_for('user.profile') }}">Profile</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link logout" href="{{ url_for('auth.logout') }}">Logout</a>
                     </li>
