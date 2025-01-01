@@ -18,6 +18,10 @@
 
     <!-- Scripts -->
     {% include 'partials/_scripts.html' %}
+
+    <!-- Moment.js -->
+    {{ moment.include_moment() }}
+    {{ moment.locale(g.locale or 'en') }}
 </body>
 
 </html>

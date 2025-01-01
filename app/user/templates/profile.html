@@ -30,7 +30,7 @@
                             <h6 class="mb-0">Account Created</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {{ user.created_at.strftime('%B %d, %Y') }}
+                            {{ moment(user.created_at).fromNow() }}
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -38,7 +38,7 @@
                             <h6 class="mb-0">Last Seen</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {{ user.last_seen.strftime('%B %d, %Y %H:%M') }}
+                            {{ moment(user.last_seen).fromNow() }}
                         </div>
                     </div>
                     <div class="row">
@@ -51,4 +51,4 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
