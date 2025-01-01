@@ -12,7 +12,7 @@ import os
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
-login.login_view = 'auth.login'
+login.login_view = 'user.login'
 login.login_message_category = 'info'
 moment = Moment()
 
@@ -27,9 +27,6 @@ def create_app(config_class=Config):
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
-
-    from app.auth import bp as auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     from app.user import bp as user_bp
     app.register_blueprint(user_bp)
