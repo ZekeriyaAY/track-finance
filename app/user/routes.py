@@ -61,29 +61,30 @@ def register():
 @bp.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', 
-                         title='Profile',
-                         user=current_user)
+    return render_template('profile.html',
+                           title='Profile',
+                           user=current_user)
 
 
 @bp.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
     profile_form = ProfileForm(
+        form_type="profile",
         original_username=current_user.username,
         original_email=current_user.email,
         obj=current_user
     )
-    password_form = ChangePasswordForm()
+    password_form = ChangePasswordForm(form_type="password")
 
-    if profile_form.submit1.data and profile_form.validate():
+    if request.form.get('form_type') == 'profile' and profile_form.validate_on_submit():
         current_user.username = profile_form.username.data
         current_user.email = profile_form.email.data
         db.session.commit()
         flash('Your profile has been updated successfully.', 'success')
         return redirect(url_for('user.profile'))
 
-    if password_form.submit2.data and password_form.validate():
+    if request.form.get('form_type') == 'password' and password_form.validate_on_submit():
         if current_user.check_password(password_form.current_password.data):
             current_user.set_password(password_form.new_password.data)
             db.session.commit()
@@ -93,6 +94,6 @@ def settings():
             flash('Invalid current password.', 'error')
 
     return render_template('settings.html',
-                         title='Settings',
-                         profile_form=profile_form,
-                         password_form=password_form)
+                           title='Settings',
+                           profile_form=profile_form,
+                           password_form=password_form)
