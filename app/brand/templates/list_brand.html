@@ -15,16 +15,16 @@
             <h5 class="card-title mb-0">Brand List</h5>
         </div>
         <div class="card-body">
-            {% if brands %}
+            {% if brands and brands|length > 0 %}
             <div class="table-responsive">
                 <table class="table table-hover">
-                    <thead>
+                    <thead class="table-light">
                         <tr>
                             <th>#</th>
                             <th>Name</th>
-                            <th>Transaction Count</th>
+                            <th class="text-end">Transaction Count</th>
                             <th>Last Updated</th>
-                            <th>Actions</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,16 +32,16 @@
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ brand.name }}</td>
-                            <td>{{ brand.transactions.count() }}</td>
+                            <td class="text-end">{{ brand.transactions.count() }}</td>
                             <td>{{ moment(brand.timestamp).fromNow() }}</td>
-                            <td>
+                            <td class="text-end">
                                 <div class="btn-group">
-                                    <a href="{{ url_for('brand.edit_brand', id=brand.id) }}"
-                                        class="btn btn-sm btn-outline-primary">
+                                    <a href="{{ url_for('brand.edit_brand', id=brand.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger"
-                                        onclick="confirmDelete('{{ brand.id }}', '{{ brand.name }}')">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            onclick="confirmDelete('{{ brand.id }}', '{{ brand.name }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -53,11 +53,11 @@
             </div>
             {% else %}
             {{ render_empty_state(
-            'No Brands Yet',
-            'Start tracking your spending by vendor by creating brands.',
-            url_for('brand.add_brand'),
-            'Add New Brand',
-            'fas fa-tags'
+                'No Brands Yet',
+                'Start tracking your spending by vendor by creating brands.',
+                url_for('brand.add_brand'),
+                'Add New Brand',
+                'fas fa-tags'
             ) }}
             {% endif %}
         </div>
@@ -86,10 +86,10 @@
 </div>
 
 <script>
-    function confirmDelete(id, name) {
-        document.getElementById('brandName').textContent = name;
-        document.getElementById('deleteForm').action = "{{ url_for('brand.delete_brand', id=0) }}".replace('0', id);
-        new bootstrap.Modal(document.getElementById('deleteModal')).show();
-    }
+function confirmDelete(id, name) {
+    document.getElementById('brandName').textContent = name;
+    document.getElementById('deleteForm').action = "{{ url_for('brand.delete_brand', id=0) }}".replace('0', id);
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
 </script>
 {% endblock %}
