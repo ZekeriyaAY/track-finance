@@ -89,7 +89,7 @@ def settings():
             current_user.set_password(password_form.new_password.data)
             db.session.commit()
             flash('Your password has been changed successfully.', 'success')
-            return redirect(url_for('user.settings'))
+            return redirect(url_for('user.profile'))
         else:
             flash('Invalid current password.', 'danger')
 

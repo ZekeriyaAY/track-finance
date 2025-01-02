@@ -11,7 +11,8 @@
                 <div class="card-body">
                     <div class="text-center mb-4">
                         <div class="avatar-wrapper mb-3">
-                            <img src="{{ user.avatar(128) }}" class="rounded-circle img-thumbnail" alt="Profile Picture">
+                            <img src="{{ user.avatar(128) }}" class="rounded-circle img-thumbnail"
+                                alt="Profile Picture">
                         </div>
                         <h4 class="mb-1">{{ user.username }}</h4>
                         <p class="text-muted mb-0">{{ user.email }}</p>
@@ -42,19 +43,4 @@
         </div>
     </div>
 </div>
-
-<style>
-.avatar-wrapper {
-    width: 128px;
-    height: 128px;
-    margin: 0 auto;
-}
-
-.info-item {
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 0.5rem;
-    height: 100%;
-}
-</style>
 {% endblock %}
