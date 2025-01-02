@@ -1,0 +1,36 @@
+{% macro render_form_card(title, form, form_url, cancel_url, submit_text='Save') %}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="card-title mb-0">{{ title }}</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{{ form_url }}" class="needs-validation" novalidate>
+            {{ form.hidden_tag() }}
+            
+            {% for field in form if field.type not in ['CSRFTokenField', 'SubmitField', 'HiddenField'] %}
+            <div class="mb-3">
+                {{ field.label(class="form-label") }}
+                {% if field.type == 'SelectField' %}
+                    {{ field(class="form-select") }}
+                {% else %}
+                    {{ field(class="form-control") }}
+                {% endif %}
+                
+                {% if field.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in field.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{{ cancel_url }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">{{ submit_text }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endmacro %} 

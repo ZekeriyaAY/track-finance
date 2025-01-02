@@ -1,21 +1,17 @@
 {% extends "base.html" %}
-{% import 'bootstrap_wtf.html' as wtf %}
+{% from 'partials/_form_card.html' import render_form_card %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="card">
-        <div class="card-header bg-primary text-white d-flex justify-content-between">
-            <h2 class="mb-0">
-                {% if request.endpoint == 'transaction.add_transaction' %}
-                Add Transaction
-                {% elif request.endpoint == 'transaction.edit_transaction' %}
-                Edit Transaction
-                {% endif %}
-            </h2>
-            <a href="{{ url_for('transaction.list_transaction') }}" class="btn btn-warning">Back</a>
-        </div>
-        <div class="card-body">
-            {{ wtf.quick_form(form) }}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            {{ render_form_card(
+                title='Add Transaction' if not form.data.get('id') else 'Edit Transaction',
+                form=form,
+                form_url=request.url,
+                cancel_url=url_for('transaction.list_transaction'),
+                submit_text='Add Transaction' if not form.data.get('id') else 'Update Transaction'
+            ) }}
         </div>
     </div>
 </div>

@@ -1,21 +1,17 @@
 {% extends "base.html" %}
-{% import 'bootstrap_wtf.html' as wtf %}
+{% from 'partials/_form_card.html' import render_form_card %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="card">
-        <div class="card-header bg-primary text-white d-flex justify-content-between">
-            <h2 class="mb-0">
-                {% if request.endpoint == 'category.add_category' %}
-                Add Category
-                {% elif request.endpoint == 'category.edit_category' %}
-                Edit Category
-                {% endif %}
-            </h2>
-            <a href="{{ url_for('category.list_category') }}" class="btn btn-warning">Back</a>
-        </div>
-        <div class="card-body">
-            {{ wtf.quick_form(form) }}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            {{ render_form_card(
+                title='Add Category' if not form.data.get('id') else 'Edit Category',
+                form=form,
+                form_url=request.url,
+                cancel_url=url_for('category.list_category'),
+                submit_text='Add Category' if not form.data.get('id') else 'Update Category'
+            ) }}
         </div>
     </div>
 </div>
