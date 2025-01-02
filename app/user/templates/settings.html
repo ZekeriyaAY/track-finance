@@ -10,7 +10,10 @@
                 form=profile_form,
                 form_url=request.url,
                 cancel_url=url_for('user.profile'),
-                title='Profile Settings'
+                title='Profile Settings',
+                submit_text='Save Changes',
+                submit_icon='fas fa-save',
+                cancel_text='Back to Profile'
             ) }}
 
             <!-- Password Form -->
@@ -19,7 +22,10 @@
                     form=password_form,
                     form_url=request.url,
                     cancel_url=url_for('user.profile'),
-                    title='Change Password'
+                    title='Change Password',
+                    submit_text='Update Password',
+                    submit_icon='fas fa-key',
+                    cancel_text='Back to Profile'
                 ) }}
             </div>
         </div>

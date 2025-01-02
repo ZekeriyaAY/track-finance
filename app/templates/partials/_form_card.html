@@ -1,4 +1,4 @@
-{% macro render_form_card(form, form_url, cancel_url, add_title='', edit_title='', is_edit=false, title='') %}
+{% macro render_form_card(form, form_url, cancel_url, add_title='', edit_title='', is_edit=false, title='', submit_text='', submit_icon='', cancel_text='Cancel') %}
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white">
         <h5 class="card-title mb-0">
@@ -33,9 +33,10 @@
             {% endfor %}
 
             <div class="d-flex justify-content-end gap-2">
-                <a href="{{ cancel_url }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ cancel_url }}" class="btn btn-secondary">{{ cancel_text }}</a>
                 <button type="submit" class="btn btn-primary">
-                    {{ 'Update' if is_edit else 'Add' }}
+                    {% if submit_icon %}<i class="{{ submit_icon }} me-1"></i>{% endif %}
+                    {{ submit_text if submit_text else ('Update' if is_edit else 'Add') }}
                 </button>
             </div>
         </form>

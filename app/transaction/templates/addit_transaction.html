@@ -11,7 +11,9 @@
                 cancel_url=url_for('transaction.list_transaction'),
                 add_title='Add Transaction',
                 edit_title='Edit Transaction',
-                is_edit=request.endpoint == 'transaction.edit_transaction'
+                is_edit=request.endpoint == 'transaction.edit_transaction',
+                submit_icon='fas fa-receipt',
+                cancel_text='Back to Transactions'
             ) }}
         </div>
     </div>

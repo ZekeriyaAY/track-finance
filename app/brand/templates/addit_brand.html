@@ -11,7 +11,9 @@
                 cancel_url=url_for('brand.list_brand'),
                 add_title='Add Brand',
                 edit_title='Edit Brand',
-                is_edit=request.endpoint == 'brand.edit_brand'
+                is_edit=request.endpoint == 'brand.edit_brand',
+                submit_icon='fas fa-tags',
+                cancel_text='Back to Brands'
             ) }}
         </div>
     </div>

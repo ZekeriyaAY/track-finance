@@ -11,7 +11,9 @@
                 cancel_url=url_for('category.list_category'),
                 add_title='Add Category',
                 edit_title='Edit Category',
-                is_edit=request.endpoint == 'category.edit_category'
+                is_edit=request.endpoint == 'category.edit_category',
+                submit_icon='fas fa-folder-plus',
+                cancel_text='Back to Categories'
             ) }}
         </div>
     </div>
