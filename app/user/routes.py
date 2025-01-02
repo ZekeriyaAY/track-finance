@@ -32,7 +32,7 @@ def login():
         user = db.session.scalar(
             sa.select(User).where(User.username == form.username.data))
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid email or password.', 'error')
+            flash('Invalid email or password.', 'danger')
             return redirect(url_for('user.login'))
         login_user(user, remember=form.remember_me.data)
         flash(f'Welcome back, {user.username}!', 'success')
@@ -91,7 +91,7 @@ def settings():
             flash('Your password has been changed successfully.', 'success')
             return redirect(url_for('user.settings'))
         else:
-            flash('Invalid current password.', 'error')
+            flash('Invalid current password.', 'danger')
 
     return render_template('settings.html',
                            title='Settings',
