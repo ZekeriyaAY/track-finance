@@ -1,7 +1,13 @@
-{% macro render_form_card(form, form_url, cancel_url, add_title, edit_title, is_edit=false) %}
+{% macro render_form_card(form, form_url, cancel_url, add_title='', edit_title='', is_edit=false, title='') %}
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white">
-        <h5 class="card-title mb-0">{{ edit_title if is_edit else add_title }}</h5>
+        <h5 class="card-title mb-0">
+            {% if title %}
+                {{ title }}
+            {% else %}
+                {{ edit_title if is_edit else add_title }}
+            {% endif %}
+        </h5>
     </div>
     <div class="card-body">
         <form method="post" action="{{ form_url }}" class="needs-validation" novalidate>

@@ -1,28 +1,26 @@
 {% extends "base.html" %}
-{% import 'bootstrap_wtf.html' as wtf %}
+{% from 'partials/_form_card.html' import render_form_card %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <!-- Profile Settings -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4 class="mb-0">Profile Settings</h4>
-                </div>
-                <div class="card-body">
-                    {{ wtf.quick_form(profile_form) }}
-                </div>
-            </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Profile Form -->
+            {{ render_form_card(
+                form=profile_form,
+                form_url=request.url,
+                cancel_url=url_for('user.profile'),
+                title='Profile Settings'
+            ) }}
 
-            <!-- Password Change -->
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="mb-0">Change Password</h4>
-                </div>
-                <div class="card-body">
-                    {{ wtf.quick_form(password_form) }}
-                </div>
+            <!-- Password Form -->
+            <div class="mt-4">
+                {{ render_form_card(
+                    form=password_form,
+                    form_url=request.url,
+                    cancel_url=url_for('user.profile'),
+                    title='Change Password'
+                ) }}
             </div>
         </div>
     </div>

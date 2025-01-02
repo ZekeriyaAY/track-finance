@@ -88,3 +88,22 @@ footer {
 .footer hr {
     opacity: 0.2;
 }
+
+/* Profile Styles */
+.avatar-wrapper {
+    width: 128px;
+    height: 128px;
+    margin: 0 auto;
+}
+
+.info-item {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    height: 100%;
+    transition: background-color 0.2s ease;
+}
+
+.info-item:hover {
+    background-color: #e9ecef;
+}
