@@ -15,18 +15,18 @@
             <h5 class="card-title mb-0">Transaction List</h5>
         </div>
         <div class="card-body">
-            {% if transactions %}
+            {% if transactions and transactions|length > 0 %}
             <div class="table-responsive">
                 <table class="table table-hover">
-                    <thead>
+                    <thead class="table-light">
                         <tr>
                             <th>#</th>
                             <th>Name</th>
                             <th>Category</th>
                             <th>Brand</th>
-                            <th>Amount</th>
+                            <th class="text-end">Amount</th>
                             <th>Date</th>
-                            <th>Actions</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,18 +34,22 @@
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ transaction.name }}</td>
-                            <td>{{ transaction.category.name }} [{{ transaction.category.type }}]</td>
-                            <td>{{ transaction.brand.name }}</td>
-                            <td>{{ transaction.amount }}</td>
-                            <td>{{ moment(transaction.timestamp).format('LL') }}</td>
                             <td>
+                                <span class="badge bg-{{ 'success' if transaction.category.type == 'Income' else 'danger' }}">
+                                    {{ transaction.category.name }}
+                                </span>
+                            </td>
+                            <td>{{ transaction.brand.name }}</td>
+                            <td class="text-end">{{ "%.2f"|format(transaction.amount) }}</td>
+                            <td>{{ moment(transaction.timestamp).format('LL') }}</td>
+                            <td class="text-end">
                                 <div class="btn-group">
-                                    <a href="{{ url_for('transaction.edit_transaction', id=transaction.id) }}"
-                                        class="btn btn-sm btn-outline-primary">
+                                    <a href="{{ url_for('transaction.edit_transaction', id=transaction.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger"
-                                        onclick="confirmDelete('{{ transaction.id }}', '{{ transaction.name }}')">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            onclick="confirmDelete('{{ transaction.id }}', '{{ transaction.name }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -57,11 +61,11 @@
             </div>
             {% else %}
             {{ render_empty_state(
-            'No Transactions Yet',
-            'Start tracking your finances by adding transactions.',
-            url_for('transaction.add_transaction'),
-            'Add New Transaction',
-            'fas fa-receipt'
+                'No Transactions Yet',
+                'Start tracking your finances by adding transactions.',
+                url_for('transaction.add_transaction'),
+                'Add New Transaction',
+                'fas fa-receipt'
             ) }}
             {% endif %}
         </div>
@@ -90,10 +94,10 @@
 </div>
 
 <script>
-    function confirmDelete(id, name) {
-        document.getElementById('transactionName').textContent = name;
-        document.getElementById('deleteForm').action = "{{ url_for('transaction.delete_transaction', id=0) }}".replace('0', id);
-        new bootstrap.Modal(document.getElementById('deleteModal')).show();
-    }
+function confirmDelete(id, name) {
+    document.getElementById('transactionName').textContent = name;
+    document.getElementById('deleteForm').action = "{{ url_for('transaction.delete_transaction', id=0) }}".replace('0', id);
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
 </script>
 {% endblock %}

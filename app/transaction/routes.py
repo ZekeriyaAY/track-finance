@@ -16,7 +16,7 @@ def list_transaction():
         .where(Transaction.user_id == current_user.id)
         .join(Transaction.brand)
         .execution_options(fresh_metadata=True)
-    )
+    ).all()
     db.session.expire_all()
     return render_template('list_transaction.html', title='Transactions', transactions=transactions)
 
