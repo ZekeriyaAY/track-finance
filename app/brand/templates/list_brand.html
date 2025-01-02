@@ -1,62 +1,95 @@
 {% extends "base.html" %}
+{% from 'partials/_empty_state.html' import render_empty_state %}
 
 {% block content %}
-<div class="container my-5">
-    <!-- Title and Add Brand Button -->
+<div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-primary">Brands</h1>
-        <a href="{{ url_for('brand.add_brand') }}" class="btn btn-success">+ Add New Brand</a>
+        <h1>Brands</h1>
+        <a href="{{ url_for('brand.add_brand') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Brand
+        </a>
     </div>
 
-    <!-- Brand Table -->
     <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Brand List</h5>
+        <div class="card-header">
+            <h5 class="card-title mb-0">Brand List</h5>
         </div>
-        <div class="card-body p-0">
-            <table class="table table-hover mb-0" id="data">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col" class="text-end">Transaction Count</th>
-                        <th scope="col">Last Updated</th>
-                        <th scope="col" class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if brands %}
-                    <!-- Example Brand -->
-                    {% for brand in brands %}
-                    {% include '_brand.html' %}
-                    {% endfor %}
-                    <!-- If no brands exist -->
-                    {% else %}
-                    <tr>
-                        <td colspan="5" class="text-center text-muted py-3">
-                            No brands available.
-                            <a href="{{ url_for('brand.add_brand') }}">Add a new brand!</a>
-                        </td>
-                    </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+        <div class="card-body">
+            {% if brands %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Transaction Count</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for brand in brands %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ brand.name }}</td>
+                            <td>{{ brand.transactions.count() }}</td>
+                            <td>{{ moment(brand.timestamp).fromNow() }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ url_for('brand.edit_brand', id=brand.id) }}"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                        onclick="confirmDelete('{{ brand.id }}', '{{ brand.name }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            {{ render_empty_state(
+            'No Brands Yet',
+            'Start tracking your spending by vendor by creating brands.',
+            url_for('brand.add_brand'),
+            'Add New Brand',
+            'fas fa-tags'
+            ) }}
+            {% endif %}
         </div>
     </div>
 </div>
-{% endblock %}
-{% block script %}
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Brand</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <span id="brandName"></span>?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="post">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    $(document).ready(function () {
-        $('#data').DataTable({
-            columns: [
-                null,
-                null,
-                null,
-                null,
-                { orderable: false, searchable: false }],
-            pageLength: 25,
-        });
-    });
+    function confirmDelete(id, name) {
+        document.getElementById('brandName').textContent = name;
+        document.getElementById('deleteForm').action = "{{ url_for('brand.delete_brand', id=0) }}".replace('0', id);
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
 </script>
 {% endblock %}
