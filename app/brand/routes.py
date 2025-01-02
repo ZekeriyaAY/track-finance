@@ -16,7 +16,7 @@ def list_brand():
             Brand.user_id == current_user.id,
             Brand.is_deleted == False
         )
-    )
+    ).all()
     return render_template('list_brand.html', title='Brands', brands=brands)
 
 
