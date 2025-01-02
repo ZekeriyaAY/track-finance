@@ -11,13 +11,19 @@ from datetime import datetime, timezone
 @bp.route('/brand')
 @login_required
 def list_brand():
-    brands = db.session.scalars(
-        sa.select(Brand).where(
+    result = db.session.execute(
+        sa.select(
+            Brand,
+            sa.func.count(Transaction.id).label('transaction_count')
+        )
+        .where(
             Brand.user_id == current_user.id,
             Brand.is_deleted == False
         )
+        .join(Brand.transactions, isouter=True)
+        .group_by(Brand.id)
     ).all()
-    return render_template('list_brand.html', title='Brands', brands=brands)
+    return render_template('list_brand.html', title='Brands', brands=result)
 
 
 @bp.route('/brand/add', methods=['GET', 'POST'], endpoint='add_brand')

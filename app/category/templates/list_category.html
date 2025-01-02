@@ -32,22 +32,22 @@
                         {% for category in categories %}
                         <tr>
                             <td>{{ loop.index }}</td>
-                            <td>{{ category.name }}</td>
+                            <td>{{ category[0].name }}</td>
                             <td>
-                                <span class="badge bg-{{ 'success' if category.type == 'Income' else 'danger' }}">
-                                    {{ category.type }}
+                                <span class="badge bg-{{ 'success' if category[0].type == 'Income' else 'danger' }}">
+                                    {{ category[0].type }}
                                 </span>
                             </td>
-                            <td class="text-end">{{ category.transactions.count() }}</td>
-                            <td>{{ moment(category.timestamp).fromNow() }}</td>
+                            <td class="text-end">{{ category[1] }}</td>
+                            <td>{{ moment(category[0].timestamp).fromNow() }}</td>
                             <td class="text-end">
                                 <div class="btn-group">
-                                    <a href="{{ url_for('category.edit_category', id=category.id) }}" 
+                                    <a href="{{ url_for('category.edit_category', id=category[0].id) }}" 
                                        class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <button type="button" class="btn btn-sm btn-outline-danger" 
-                                            onclick="confirmDelete('{{ category.id }}', '{{ category.name }}')">
+                                            onclick="confirmDelete('{{ category[0].id }}', '{{ category[0].name }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>

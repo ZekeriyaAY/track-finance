@@ -11,14 +11,19 @@ from datetime import datetime, timezone
 @bp.route('/category')
 @login_required
 def list_category():
-    categories = db.session.scalars(
-        sa.select(Category)
+    result = db.session.execute(
+        sa.select(
+            Category,
+            sa.func.count(Transaction.id).label('transaction_count')
+        )
         .where(
             Category.user_id == current_user.id,
             Category.is_deleted == False
         )
+        .join(Category.transactions, isouter=True)
+        .group_by(Category.id)
     ).all()
-    return render_template('list_category.html', title='Categories', categories=categories)
+    return render_template('list_category.html', title='Categories', categories=result)
 
 
 @bp.route('/category/add', methods=['GET', 'POST'], endpoint='add_category')
