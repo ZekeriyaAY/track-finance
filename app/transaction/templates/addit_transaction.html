@@ -6,11 +6,12 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             {{ render_form_card(
-                title='Add Transaction' if not form.data.get('id') else 'Edit Transaction',
                 form=form,
                 form_url=request.url,
                 cancel_url=url_for('transaction.list_transaction'),
-                submit_text='Add Transaction' if not form.data.get('id') else 'Update Transaction'
+                add_title='Add Transaction',
+                edit_title='Edit Transaction',
+                is_edit=request.endpoint == 'transaction.edit_transaction'
             ) }}
         </div>
     </div>

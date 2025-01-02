@@ -1,7 +1,7 @@
-{% macro render_form_card(title, form, form_url, cancel_url, submit_text='Save') %}
+{% macro render_form_card(form, form_url, cancel_url, add_title, edit_title, is_edit=false) %}
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white">
-        <h5 class="card-title mb-0">{{ title }}</h5>
+        <h5 class="card-title mb-0">{{ edit_title if is_edit else add_title }}</h5>
     </div>
     <div class="card-body">
         <form method="post" action="{{ form_url }}" class="needs-validation" novalidate>
@@ -28,7 +28,9 @@
 
             <div class="d-flex justify-content-end gap-2">
                 <a href="{{ cancel_url }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">{{ submit_text }}</button>
+                <button type="submit" class="btn btn-primary">
+                    {{ 'Update' if is_edit else 'Add' }}
+                </button>
             </div>
         </form>
     </div>

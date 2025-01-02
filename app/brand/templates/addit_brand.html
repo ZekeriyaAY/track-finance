@@ -6,11 +6,12 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             {{ render_form_card(
-                title='Add Brand' if not form.data.get('id') else 'Edit Brand',
                 form=form,
                 form_url=request.url,
                 cancel_url=url_for('brand.list_brand'),
-                submit_text='Add Brand' if not form.data.get('id') else 'Update Brand'
+                add_title='Add Brand',
+                edit_title='Edit Brand',
+                is_edit=request.endpoint == 'brand.edit_brand'
             ) }}
         </div>
     </div>
