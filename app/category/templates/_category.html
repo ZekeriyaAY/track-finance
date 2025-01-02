@@ -1,13 +1,25 @@
+{% macro render_category(category, loop, moment) %}
 <tr>
-    <th scope="row">{{ category.id }}</th>
-    <td>{{ category.name }}</td>
-    <td>{{ category.type }}</td>
-    <td class="text-end">{{ category.transaction_count }}</td>
-    <td>{{ moment(category.timestamp).format('D MMM Y, HH:mm') }}</td>
+    <td>{{ loop.index }}</td>
+    <td>{{ category[0].name }}</td>
+    <td>
+        <span class="badge bg-{{ 'success' if category[0].type == 'Income' else 'danger' }}">
+            {{ category[0].type }}
+        </span>
+    </td>
+    <td class="text-end">{{ category[1] }}</td>
+    <td>{{ moment(category[0].timestamp).fromNow() }}</td>
     <td class="text-end">
-        <a href="{{ url_for('category.edit_category', id=category.id) }}" class="btn btn-warning btn-sm">Edit</a>
-        <form action="{{ url_for('category.delete_category', id=category.id) }}" method="POST" class="d-inline">
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-        </form>
+        <div class="btn-group">
+            <a href="{{ url_for('category.edit_category', id=category[0].id) }}" 
+               class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-edit"></i>
+            </a>
+            <button type="button" class="btn btn-sm btn-outline-danger" 
+                    onclick="confirmDelete('{{ category[0].id }}', '{{ category[0].name }}')">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
     </td>
 </tr>
+{% endmacro %}

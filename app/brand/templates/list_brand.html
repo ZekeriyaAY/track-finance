@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from 'partials/_empty_state.html' import render_empty_state %}
+{% from '_brand.html' import render_brand %}
 
 {% block content %}
 <div class="container">
@@ -29,24 +30,7 @@
                     </thead>
                     <tbody>
                         {% for brand in brands %}
-                        <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>{{ brand[0].name }}</td>
-                            <td class="text-end">{{ brand[1] }}</td>
-                            <td>{{ moment(brand[0].timestamp).fromNow() }}</td>
-                            <td class="text-end">
-                                <div class="btn-group">
-                                    <a href="{{ url_for('brand.edit_brand', id=brand[0].id) }}" 
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" 
-                                            onclick="confirmDelete('{{ brand[0].id }}', '{{ brand[0].name }}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        {{ render_brand(brand, loop, moment) }}
                         {% endfor %}
                     </tbody>
                 </table>
