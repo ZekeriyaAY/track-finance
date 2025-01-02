@@ -1,0 +1,17 @@
+{% macro render_stats_card(title, value, icon, color="primary") %}
+<div class="card border-0 shadow-sm h-100">
+    <div class="card-body">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0 me-3">
+                <div class="stats-icon bg-{{ color }} bg-opacity-10 rounded-3 p-3">
+                    <i class="{{ icon }} text-{{ color }} fa-fw fa-2x"></i>
+                </div>
+            </div>
+            <div class="flex-grow-1">
+                <h6 class="card-subtitle mb-2 text-muted">{{ title }}</h6>
+                <h3 class="card-title mb-0">{{ value }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %} 

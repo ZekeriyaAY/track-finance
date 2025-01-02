@@ -107,3 +107,12 @@ footer {
 .info-item:hover {
     background-color: #e9ecef;
 }
+
+/* Dashboard Stats Card */
+.stats-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
