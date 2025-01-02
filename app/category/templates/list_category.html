@@ -18,14 +18,14 @@
             {% if categories %}
             <div class="table-responsive">
                 <table class="table table-hover">
-                    <thead>
+                    <thead class="table-light">
                         <tr>
                             <th>#</th>
                             <th>Name</th>
                             <th>Type</th>
-                            <th>Transaction Count</th>
+                            <th class="text-end">Transaction Count</th>
                             <th>Last Updated</th>
-                            <th>Actions</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,17 +33,21 @@
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ category.name }}</td>
-                            <td>{{ category.type }}</td>
-                            <td>{{ category.transactions.count() }}</td>
-                            <td>{{ moment(category.timestamp).fromNow() }}</td>
                             <td>
+                                <span class="badge bg-{{ 'success' if category.type == 'Income' else 'danger' }}">
+                                    {{ category.type }}
+                                </span>
+                            </td>
+                            <td class="text-end">{{ category.transactions.count() }}</td>
+                            <td>{{ moment(category.timestamp).fromNow() }}</td>
+                            <td class="text-end">
                                 <div class="btn-group">
-                                    <a href="{{ url_for('category.edit_category', id=category.id) }}"
-                                        class="btn btn-sm btn-outline-primary">
+                                    <a href="{{ url_for('category.edit_category', id=category.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger"
-                                        onclick="confirmDelete('{{ category.id }}', '{{ category.name }}')">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            onclick="confirmDelete('{{ category.id }}', '{{ category.name }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -55,18 +59,18 @@
             </div>
             {% else %}
             {{ render_empty_state(
-            'No Categories Yet',
-            'Start organizing your transactions by creating categories.',
-            url_for('category.add_category'),
-            'Add New Category',
-            'fas fa-folder-plus'
+                'No Categories Yet',
+                'Start organizing your transactions by creating categories.',
+                url_for('category.add_category'),
+                'Add New Category',
+                'fas fa-folder-plus'
             ) }}
             {% endif %}
         </div>
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -88,10 +92,10 @@
 </div>
 
 <script>
-    function confirmDelete(id, name) {
-        document.getElementById('categoryName').textContent = name;
-        document.getElementById('deleteForm').action = "{{ url_for('category.delete_category', id=0) }}".replace('0', id);
-        new bootstrap.Modal(document.getElementById('deleteModal')).show();
-    }
+function confirmDelete(id, name) {
+    document.getElementById('categoryName').textContent = name;
+    document.getElementById('deleteForm').action = "{{ url_for('category.delete_category', id=0) }}".replace('0', id);
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
 </script>
 {% endblock %}
