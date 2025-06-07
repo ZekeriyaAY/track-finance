@@ -16,3 +16,6 @@ instance/
 
 # IDE-specific files
 .DS_Store 
+
+# Flask-Migrate directory
+migrations/ 
