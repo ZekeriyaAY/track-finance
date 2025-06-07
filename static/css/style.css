@@ -194,7 +194,7 @@ textarea.form-control {
 /* Button Styles */
 .btn {
     font-weight: 500;
-    padding: 0.5rem 1rem;
+    padding: 0.375rem 0.75rem;
     border-radius: 0.375rem;
     transition: all 0.2s ease;
     display: inline-flex;
@@ -213,7 +213,7 @@ textarea.form-control {
 form .btn,
 form button[type="submit"],
 form a.btn {
-    padding: 0.5rem 1rem;
+    padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
 }
 
