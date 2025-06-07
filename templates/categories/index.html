@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Kategoriler{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold">Kategoriler</h1>
+    <a href="{{ url_for('add_category') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+      {% include 'icons/plus.svg' %}
+      Yeni Kategori
+    </a>
+  </div>
+
+  <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
+    <table class="min-w-full text-sm align-middle">
+      <thead>
+        <tr class="bg-darkbg/80">
+          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Kategori Adı</th>
+          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Gelir / Gider</th>
+          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-800">
+        {% for category in categories %}
+          <tr class="hover:bg-darkbg/40 transition">
+            <td class="py-2 px-4">
+              <span class="inline-flex items-center gap-2">
+                {% include 'icons/folder.svg' %}
+                {{ category.name }}
+              </span>
+            </td>
+            <td class="py-2 px-4 text-right flex flex-row items-center justify-end gap-2">
+              <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="Toplam Gelir">
+                {% include 'icons/plus.svg' %}
+                {{ category.get_income_count() }}
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="Toplam Gider">
+                {% include 'icons/minus.svg' %}
+                {{ category.get_expense_count() }}
+              </span>
+            </td>
+            <td class="py-2 px-4 text-right">
+              <a href="{{ url_for('edit_category', id=category.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
+                {% include 'icons/pencil.svg' %}
+                Düzenle
+              </a>
+              <a href="{{ url_for('delete_category', id=category.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')">
+                {% include 'icons/trash.svg' %}
+                Sil
+              </a>
+            </td>
+          </tr>
+          {% if category.subcategories %}
+            {% for subcategory in category.subcategories %}
+              <tr class="hover:bg-darkbg/30 transition">
+                <td class="py-2 px-4 pl-8">
+                  <span class="inline-flex items-center gap-2 text-sm text-gray-300">
+                    {% include 'icons/folder.svg' %}
+                    {{ subcategory.name }}
+                  </span>
+                </td>
+                <td class="py-2 px-4 text-right flex flex-row items-center justify-end gap-2">
+                  <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="Toplam Gelir">
+                    {% include 'icons/plus.svg' %}
+                    {{ subcategory.get_income_count() }}
+                  </span>
+                  <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="Toplam Gider">
+                    {% include 'icons/minus.svg' %}
+                    {{ subcategory.get_expense_count() }}
+                  </span>
+                </td>
+                <td class="py-2 px-4 text-right">
+                  <a href="{{ url_for('edit_category', id=subcategory.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
+                    {% include 'icons/pencil.svg' %}
+                    Düzenle
+                  </a>
+                  <a href="{{ url_for('delete_category', id=subcategory.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')">
+                    {% include 'icons/trash.svg' %}
+                    Sil
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %} 
