@@ -54,6 +54,10 @@
                         {% include 'icons/tag.svg' %}
                         Taglar
                       </a>
+                      <a href="{{ url_for('settings') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint == 'settings' %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
+                        {% include 'icons/settings.svg' %}
+                        Ayarlar
+                      </a>
                     </div>
                   </div>
                 </div>

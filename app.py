@@ -18,14 +18,14 @@ migrate = Migrate(app, db)
 def create_default_categories():
     default_categories = {
         'Ulaşım': ['Uçak', 'Toplu Taşıma', 'Taksi', 'Yakıt'],
-        'Yemek': ['Restoran', 'Market', 'Kahve', 'Öğle Yemeği'],
+        'Yemek': ['Restoran', 'Market', 'Kahve'],
         'Alışveriş': ['Giyim', 'Elektronik', 'Ev Eşyaları', 'Kozmetik'],
         'Sağlık': ['Doktor', 'İlaç', 'Spor', 'Sağlık Sigortası'],
         'Eğlence': ['Sinema', 'Tiyatro', 'Konser', 'Hobi'],
         'Konut': ['Kira', 'Faturalar', 'Bakım', 'Mobilya'],
         'İletişim': ['Telefon', 'İnternet', 'TV', 'Abonelikler'],
-        'Eğitim': ['Kurs', 'Kitap', 'Malzeme', 'Sınav'],
-        'Seyahat': ['Otel', 'Yemek', 'Aktivite', 'Ulaşım'],
+        'Eğitim': ['Kurs', 'Kitap', 'Sınav'],
+        'Seyahat': ['Otel', 'Aktivite'],
         'Diğer': ['Hediye', 'Bağış', 'Vergi', 'Diğer']
     }
     
@@ -39,6 +39,79 @@ def create_default_categories():
         for subcategory_name in subcategories:
             subcategory = Category(name=subcategory_name, parent_id=category.id)
             db.session.add(subcategory)
+    
+    db.session.commit()
+
+def create_dummy_data():
+    # Create default categories
+    create_default_categories()
+    
+    # Create sample tags
+    sample_tags = [
+        'Acil', 'Önemli', 'Düzenli', 'Aylık', 'Yıllık',
+        'Tatil', 'İş', 'Kişisel', 'Aile', 'Arkadaşlar'
+    ]
+    
+    for tag_name in sample_tags:
+        tag = Tag(name=tag_name)
+        db.session.add(tag)
+    
+    db.session.commit()
+    
+    # Get all categories and tags
+    categories = Category.query.all()
+    tags = Tag.query.all()
+    
+    # Create sample transactions
+    from datetime import datetime, timedelta
+    import random
+    
+    # Sample transaction descriptions
+    descriptions = [
+        'Market alışverişi', 'Restoran yemeği', 'Sinema bileti',
+        'Kira ödemesi', 'Elektrik faturası', 'Su faturası',
+        'İnternet faturası', 'Telefon faturası', 'Maaş',
+        'Freelance proje', 'Hediye', 'Tatil', 'Spor salonu üyeliği',
+        'Kitap alışverişi', 'Kıyafet alışverişi', 'Toplu taşıma',
+        'Taksi', 'Yakıt', 'Sağlık sigortası', 'Doktor randevusu'
+    ]
+    
+    # Create transactions for the last 3 months
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=90)
+    
+    current_date = start_date
+    while current_date <= end_date:
+        # Create 1-3 transactions per day
+        num_transactions = random.randint(1, 3)
+        
+        for _ in range(num_transactions):
+            # Randomly select transaction type
+            transaction_type = random.choice(['income', 'expense'])
+            
+            # Generate random amount based on type
+            if transaction_type == 'income':
+                amount = round(random.uniform(1000, 10000), 2)
+            else:
+                amount = round(random.uniform(50, 2000), 2)
+            
+            # Randomly select category and tags
+            category = random.choice(categories)
+            selected_tags = random.sample(tags, k=random.randint(0, 3))
+            
+            # Create transaction
+            transaction = Transaction(
+                date=current_date,
+                type=transaction_type,
+                amount=amount,
+                description=random.choice(descriptions),
+                category_id=category.id,
+                tags=selected_tags
+            )
+            
+            db.session.add(transaction)
+        
+        current_date += timedelta(days=1)
     
     db.session.commit()
 
@@ -244,10 +317,38 @@ def delete_tag(id):
     flash('Tag başarıyla silindi!', 'success')
     return redirect(url_for('tags'))
 
+@app.route('/settings')
+def settings():
+    return render_template('settings/index.html')
+
+@app.route('/settings/create_default_categories', methods=['POST'])
+def create_default_categories_route():
+    if not Category.query.first():
+        create_default_categories()
+        flash('Varsayılan kategoriler başarıyla oluşturuldu!', 'success')
+    else:
+        flash('Kategoriler zaten mevcut! Tüm kategorilerin silinmesi gerekiyor.', 'error')
+    return redirect(url_for('settings'))
+
+@app.route('/settings/create_dummy_data', methods=['POST'])
+def create_dummy_data_route():
+    if not Category.query.first():
+        create_dummy_data()
+        flash('Örnek veriler başarıyla oluşturuldu!', 'success')
+    else:
+        flash('Veritabanı boş değil! Örnek veriler oluşturulamadı.', 'error')
+    return redirect(url_for('settings'))
+
+@app.route('/settings/reset_database', methods=['POST'])
+def reset_database():
+    # Tüm tabloları sil
+    db.drop_all()
+    # Tabloları yeniden oluştur
+    db.create_all()
+    flash('Veritabanı başarıyla sıfırlandı!', 'success')
+    return redirect(url_for('settings'))
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        # Eğer veritabanı boşsa varsayılan kategorileri ekle
-        if not Category.query.first():
-            create_default_categories()
     app.run(debug=True) 
