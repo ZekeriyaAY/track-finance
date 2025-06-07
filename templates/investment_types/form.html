@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Yatırım Türü Düzenle' if type else 'Yeni Yatırım Türü' }}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-6">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">{{ 'Yatırım Türü Düzenle' if type else 'Yeni Yatırım Türü Ekle' }}</h1>
+    <a href="{{ url_for('investment_types') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+      {% include 'icons/back.svg' %}
+      Geri Dön
+    </a>
+  </div>
+
+  <div class="bg-card rounded-xl shadow p-6">
+    {% macro investment_type_form(action_url, type=None, types=None) %}
+    <form method="POST" action="{{ action_url }}" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label for="name" class="block text-sm font-medium text-gray-300">Tür Adı</label>
+          <input type="text" id="name" name="name" value="{{ type.name if type else '' }}" required class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+
+        <div class="space-y-2">
+          <label for="code" class="block text-sm font-medium text-gray-300">Kod</label>
+          <input type="text" id="code" name="code" value="{{ type.code if type else '' }}" required class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+
+        <div class="space-y-2">
+          <label for="parent_id" class="block text-sm font-medium text-gray-300">Üst Tür</label>
+          <select id="parent_id" name="parent_id" class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+            <option value="">Ana Tür</option>
+            {% for parent in types %}
+              {% if not parent.parent_id and (not type or parent.id != type.id) %}
+              <option value="{{ parent.id }}" {% if type and type.parent_id == parent.id %}selected{% endif %}>{{ parent.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <a href="{{ url_for('investment_types') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+          {% include 'icons/back.svg' %}
+          İptal
+        </a>
+        <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition">
+          {% include 'icons/save.svg' %}
+          Kaydet
+        </button>
+      </div>
+    </form>
+    {% endmacro %}
+
+    {{ investment_type_form(url_for('edit_investment_type', id=type.id) if type else url_for('add_investment_type'), type, types) }}
+  </div>
+</div>
+{% endblock %} 

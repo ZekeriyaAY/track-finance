@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "investment_types/form.html" import investment_type_form %}
+
+{% block title %}Yeni Yatırım Türü{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-6">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">Yeni Yatırım Türü</h1>
+    <a href="{{ url_for('investment_types') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+      {% include 'icons/back.svg' %}
+      Geri Dön
+    </a>
+  </div>
+
+  <div class="bg-card rounded-xl shadow p-6">
+    {{ investment_type_form(url_for('add_investment_type'), types=types) }}
+  </div>
+</div>
+{% endblock %} 
