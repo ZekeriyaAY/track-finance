@@ -9,11 +9,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwindcss.min.css">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
       tailwind.config = {
         theme: {
@@ -32,7 +31,7 @@
     </script>
     {% endblock %}
 </head>
-<body class="bg-darkbg text-gray-100 font-inter min-h-screen flex flex-col">
+<body class="bg-darkbg text-gray-100 font-inter min-h-screen flex flex-col" data-tables-language-url="{{ url_for('static', filename='i18n/tr.json') }}">
     <nav class="bg-card shadow-md mb-8">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
@@ -85,23 +84,7 @@
     </div>
 
     <!-- DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.tailwindcss.min.js"></script>
-    <script>
-      $(document).ready(function() {
-        $('.datatable').DataTable({
-          language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/tr.json'
-          },
-          pageLength: 25,
-          order: [[0, 'desc']],
-          dom: '<"flex flex-col md:flex-row justify-between items-center mb-4"<"mb-4 md:mb-0"l><"flex gap-2"f>>rtip',
-          lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tümü"]],
-          responsive: true
-        });
-      });
-    </script>
+    
     {% block scripts %}{% endblock %}
 </body>
 </html> 
