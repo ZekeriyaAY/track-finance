@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "forms/category_form.html" import category_form %}
+
+{% block title %}Yeni Kategori Ekle{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-6">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">Yeni Kategori Ekle</h1>
+    <a href="{{ url_for('categories') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+      {% include 'icons/back.svg' %}
+      Geri Dön
+    </a>
+  </div>
+
+  <div class="bg-card rounded-xl shadow p-6">
+    {{ category_form(url_for('add_category'), categories=categories) }}
+  </div>
+</div>
+{% endblock %} 

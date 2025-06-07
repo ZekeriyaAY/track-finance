@@ -1,0 +1,37 @@
+{% macro category_form(action_url, category=None, categories=None) %}
+<form method="POST" action="{{ action_url }}" class="space-y-6">
+  <div class="space-y-2">
+    <label for="name" class="block text-sm font-medium text-gray-300">Kategori Adı</label>
+    <input type="text" id="name" name="name" value="{{ category.name if category else '' }}" required
+           class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+  </div>
+
+  <div class="space-y-2">
+    <label for="parent_id" class="block text-sm font-medium text-gray-300">Üst Kategori</label>
+    <select id="parent_id" name="parent_id"
+            class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+      <option value="">Ana Kategori</option>
+      {% if categories %}
+        {% for cat in categories %}
+          {% if category and cat.id != category.id %}
+            <option value="{{ cat.id }}" {% if category and category.parent_id == cat.id %}selected{% endif %}>
+              {{ cat.name }}
+            </option>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </select>
+  </div>
+
+  <div class="flex justify-end gap-3 mt-6">
+    <a href="{{ url_for('categories') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+      {% include 'icons/cancel.svg' %}
+      İptal
+    </a>
+    <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition">
+      {% include 'icons/save.svg' %}
+      Kaydet
+    </button>
+  </div>
+</form>
+{% endmacro %} 

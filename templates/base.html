@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - Finance Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+            },
+            colors: {
+              primary: '#0d6efd',
+              darkbg: '#1a1d20',
+              card: '#23272b',
+            }
+          }
+        }
+      }
+    </script>
+    {% endblock %}
+</head>
+<body class="bg-darkbg text-gray-100 font-inter min-h-screen flex flex-col">
+    <nav class="bg-card shadow-md mb-8">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <a class="font-bold text-lg flex items-center gap-2" href="{{ url_for('index') }}">
+                    {% include 'icons/logo.svg' %}
+                    Finance Tracker
+                </a>
+            </div>
+            <div class="flex gap-2">
+                <a href="{{ url_for('index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'index' %}bg-primary/20 text-primary font-semibold{% endif %}">Ana Sayfa</a>
+                <div class="relative group">
+                  <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['categories', 'add_category', 'edit_category', 'tags', 'add_tag', 'edit_tag'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                    Yönetim
+                    {% include 'icons/dropdown_arrow.svg' %}
+                  </button>
+                  <div class="absolute right-0 w-48 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out">
+                    <div class="py-1">
+                      <a href="{{ url_for('categories') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['categories', 'add_category', 'edit_category'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
+                        {% include 'icons/folder.svg' %}
+                        Kategoriler
+                      </a>
+                      <a href="{{ url_for('tags') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['tags', 'add_tag', 'edit_tag'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
+                        {% include 'icons/tag.svg' %}
+                        Taglar
+                      </a>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 flex-grow">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded-lg text-sm font-medium {% if category == 'success' %}bg-green-700/20 text-green-300{% elif category == 'danger' %}bg-red-700/20 text-red-300{% else %}bg-blue-700/20 text-blue-300{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html> 
