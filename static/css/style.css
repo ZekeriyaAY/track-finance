@@ -1,14 +1,10 @@
 :root {
-    --bs-body-bg: #1a1d20;
     --bs-body-color: #e9ecef;
-    --bs-primary: #0d6efd;
     --bs-primary-rgb: 13, 110, 253;
 }
 
 body {
-    background-color: var(--bs-body-bg);
     color: var(--bs-body-color);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
