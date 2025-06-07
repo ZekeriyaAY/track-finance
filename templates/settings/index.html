@@ -36,6 +36,17 @@
         </div>
 
         <div class="p-4 bg-darkbg/40 rounded-lg">
+          <h3 class="text-lg font-medium mb-2">Varsayılan Yatırım Türleri</h3>
+          <p class="text-gray-400 text-sm mb-4">Varsayılan yatırım türü yapısını oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
+          <form action="{{ url_for('create_default_investment_types_route') }}" method="POST" class="inline">
+            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm">
+              <i class="fas fa-coins"></i>
+              Varsayılan Yatırım Türlerini Oluştur
+            </button>
+          </form>
+        </div>
+
+        <div class="p-4 bg-darkbg/40 rounded-lg">
           <h3 class="text-lg font-medium mb-2">Örnek Veriler</h3>
           <p class="text-gray-400 text-sm mb-4">Örnek kategoriler, etiketler ve işlemler oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
           <form action="{{ url_for('create_dummy_data_route') }}" method="POST" class="inline">

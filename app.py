@@ -6,6 +6,9 @@ from models.__init__ import db
 from models.category import Category
 from models.tag import Tag
 from models.transaction import Transaction, transaction_tags
+from models.investment import Investment
+from models.investment_history import InvestmentHistory
+from models.investment_type import InvestmentType
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
@@ -346,6 +349,191 @@ def reset_database():
     # Tabloları yeniden oluştur
     db.create_all()
     flash('Veritabanı başarıyla sıfırlandı!', 'success')
+    return redirect(url_for('settings'))
+
+@app.route('/investments')
+def investments():
+    investments = Investment.query.order_by(Investment.created_at.desc()).all()
+    return render_template('investments/index.html', investments=investments)
+
+@app.route('/add_investment', methods=['GET', 'POST'])
+def add_investment():
+    if request.method == 'POST':
+        investment = Investment(
+            type_id=int(request.form['type_id']),
+            purchase_date=datetime.strptime(request.form['purchase_date'], '%Y-%m-%d').date(),
+            purchase_price=float(request.form['purchase_price']),
+            current_price=float(request.form['current_price']),
+            quantity=float(request.form['quantity']),
+            description=request.form['description']
+        )
+        db.session.add(investment)
+        db.session.flush()  # Ensure investment.id is available
+        
+        # Add initial price to history
+        history = InvestmentHistory(
+            investment_id=investment.id,
+            price=float(request.form['current_price']),
+            date=datetime.now().date()
+        )
+        db.session.add(history)
+        db.session.commit()
+        flash('Yatırım başarıyla eklendi!', 'success')
+        return redirect(url_for('investments'))
+    
+    today = datetime.now().strftime('%Y-%m-%d')
+    types = InvestmentType.query.filter_by(parent_id=None).order_by(InvestmentType.name).all()
+    return render_template('investments/add.html', today=today, types=types)
+
+@app.route('/edit_investment/<int:id>', methods=['GET', 'POST'])
+def edit_investment(id):
+    investment = Investment.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        old_price = investment.current_price
+        new_price = float(request.form['current_price'])
+        
+        investment.type_id = int(request.form['type_id'])
+        investment.purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d').date()
+        investment.purchase_price = float(request.form['purchase_price'])
+        investment.current_price = new_price
+        investment.quantity = float(request.form['quantity'])
+        investment.description = request.form['description']
+        
+        # If price changed, add to history
+        if old_price != new_price:
+            history = InvestmentHistory(
+                investment_id=investment.id,
+                price=new_price,
+                date=datetime.now().date()
+            )
+            db.session.add(history)
+        
+        db.session.commit()
+        flash('Yatırım başarıyla güncellendi!', 'success')
+        return redirect(url_for('investments'))
+    
+    today = datetime.now().strftime('%Y-%m-%d')
+    types = InvestmentType.query.filter_by(parent_id=None).order_by(InvestmentType.name).all()
+    return render_template('investments/edit.html', investment=investment, today=today, types=types)
+
+@app.route('/delete_investment/<int:id>')
+def delete_investment(id):
+    investment = Investment.query.get_or_404(id)
+    db.session.delete(investment)
+    db.session.commit()
+    flash('Yatırım başarıyla silindi!', 'success')
+    return redirect(url_for('investments'))
+
+@app.route('/investment_types')
+def investment_types():
+    types = InvestmentType.query.order_by(InvestmentType.name).all()
+    return render_template('investment_types/index.html', types=types)
+
+@app.route('/add_investment_type', methods=['GET', 'POST'])
+def add_investment_type():
+    if request.method == 'POST':
+        name = request.form['name']
+        code = request.form['code']
+        parent_id = request.form['parent_id'] if request.form['parent_id'] else None
+
+        if InvestmentType.query.filter_by(code=code).first():
+            flash('Bu kod zaten kullanılıyor!', 'error')
+            return redirect(url_for('add_investment_type'))
+
+        type = InvestmentType(
+            name=name,
+            code=code,
+            parent_id=parent_id
+        )
+        db.session.add(type)
+        db.session.commit()
+        flash('Yatırım türü başarıyla eklendi!', 'success')
+        return redirect(url_for('investment_types'))
+
+    types = InvestmentType.query.filter_by(parent_id=None).order_by(InvestmentType.name).all()
+    return render_template('investment_types/form.html', types=types)
+
+@app.route('/edit_investment_type/<int:id>', methods=['GET', 'POST'])
+def edit_investment_type(id):
+    type = InvestmentType.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        name = request.form['name']
+        code = request.form['code']
+        parent_id = request.form['parent_id'] if request.form['parent_id'] else None
+
+        existing = InvestmentType.query.filter_by(code=code).first()
+        if existing and existing.id != id:
+            flash('Bu kod zaten kullanılıyor!', 'error')
+            return redirect(url_for('edit_investment_type', id=id))
+
+        type.name = name
+        type.code = code
+        type.parent_id = parent_id
+        db.session.commit()
+        flash('Yatırım türü başarıyla güncellendi!', 'success')
+        return redirect(url_for('investment_types'))
+
+    types = InvestmentType.query.filter_by(parent_id=None).order_by(InvestmentType.name).all()
+    return render_template('investment_types/form.html', type=type, types=types)
+
+@app.route('/delete_investment_type/<int:id>')
+def delete_investment_type(id):
+    type = InvestmentType.query.get_or_404(id)
+    
+    # Check if type has children
+    if type.children:
+        flash('Bu türün alt türleri var. Önce alt türleri silmelisiniz!', 'error')
+        return redirect(url_for('investment_types'))
+    
+    # Check if type has investments
+    if type.investments:
+        flash('Bu türe ait yatırımlar var. Önce yatırımları silmelisiniz!', 'error')
+        return redirect(url_for('investment_types'))
+    
+    db.session.delete(type)
+    db.session.commit()
+    flash('Yatırım türü başarıyla silindi!', 'success')
+    return redirect(url_for('investment_types'))
+
+@app.route('/create_default_investment_types', methods=['POST'])
+def create_default_investment_types_route():
+    # Check if there are any existing investment types
+    if InvestmentType.query.first():
+        flash('Varsayılan yatırım türleri sadece veritabanı boşken oluşturulabilir!', 'error')
+        return redirect(url_for('settings'))
+    
+    # Ana türler
+    stock = InvestmentType(name='Hisse Senedi', code='stock')
+    crypto = InvestmentType(name='Kripto Para', code='crypto')
+    precious_metal = InvestmentType(name='Değerli Metal', code='precious_metal')
+    currency = InvestmentType(name='Döviz', code='currency')
+    bond = InvestmentType(name='Tahvil/Bono', code='bond')
+    real_estate = InvestmentType(name='Gayrimenkul', code='real_estate')
+    other = InvestmentType(name='Diğer', code='other')
+    
+    db.session.add_all([stock, crypto, precious_metal, currency, bond, real_estate, other])
+    db.session.flush()
+    
+    # Alt türler
+    # Değerli Metal alt türleri
+    gold = InvestmentType(name='Altın', code='gold', parent_id=precious_metal.id)
+    silver = InvestmentType(name='Gümüş', code='silver', parent_id=precious_metal.id)
+    platinum = InvestmentType(name='Platin', code='platinum', parent_id=precious_metal.id)
+    palladium = InvestmentType(name='Paladyum', code='palladium', parent_id=precious_metal.id)
+    
+    # Döviz alt türleri
+    usd = InvestmentType(name='USD', code='usd', parent_id=currency.id)
+    eur = InvestmentType(name='EUR', code='eur', parent_id=currency.id)
+    gbp = InvestmentType(name='GBP', code='gbp', parent_id=currency.id)
+    chf = InvestmentType(name='CHF', code='chf', parent_id=currency.id)
+    jpy = InvestmentType(name='JPY', code='jpy', parent_id=currency.id)
+    
+    db.session.add_all([gold, silver, platinum, palladium, usd, eur, gbp, chf, jpy])
+    db.session.commit()
+    
+    flash('Varsayılan yatırım türleri başarıyla oluşturuldu!', 'success')
     return redirect(url_for('settings'))
 
 if __name__ == '__main__':
