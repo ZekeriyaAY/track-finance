@@ -3,56 +3,49 @@
 {% block title %}Taglar{% endblock %}
 
 {% block content %}
-<div class="flex flex-col gap-6">
-  <div class="flex justify-between items-center mb-6">
+<div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-semibold">Taglar</h1>
-    <a href="{{ url_for('add_tag') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
-      {% include 'icons/plus.svg' %}
-      Yeni Tag
+    <a href="{{ url_for('add_tag') }}" class="btn bg-primary text-white hover:bg-primary/90">
+        {% include 'icons/plus.svg' %}
+        Yeni Tag
     </a>
-  </div>
-  <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
-    <table class="min-w-full text-sm align-middle">
-      <thead>
-        <tr class="bg-darkbg/80">
-          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tag Adı</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Gelir / Gider</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-800">
-        {% for tag in tags %}
-        <tr class="hover:bg-darkbg/40 transition">
-          <td class="py-2 px-4">
-            <span class="inline-flex items-center gap-2">
-              {% include 'icons/tag.svg' %}
-              {{ tag.name }}
-            </span>
-          </td>
-          <td class="py-2 px-4 text-right flex flex-row items-center justify-end gap-2">
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="Toplam Gelir">
-              {% include 'icons/plus.svg' %}
-              {{ tag.get_income_count() }}
-            </span>
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="Toplam Gider">
-              {% include 'icons/minus.svg' %}
-              {{ tag.get_expense_count() }}
-            </span>
-          </td>
-          <td class="py-2 px-4 text-right">
-            <a href="{{ url_for('edit_tag', id=tag.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
-              {% include 'icons/pencil.svg' %}
-              Düzenle
-            </a>
-            <a href="{{ url_for('delete_tag', id=tag.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu tagı silmek istediğinizden emin misiniz?')">
-              {% include 'icons/trash.svg' %}
-              Sil
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tag Adı</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tag in tags %}
+                    <tr>
+                        <td>{{ tag.id }}</td>
+                        <td>{{ tag.name }}</td>
+                        <td>
+                            <div class="flex gap-2">
+                                <a href="{{ url_for('edit_tag', id=tag.id) }}" class="btn bg-primary/10 text-primary hover:bg-primary/20">
+                                    {% include 'icons/pencil.svg' %}
+                                    Düzenle
+                                </a>
+                                <form method="POST" action="{{ url_for('delete_tag', id=tag.id) }}" class="inline" onsubmit="return confirm('Bu tagı silmek istediğinizden emin misiniz?');">
+                                    <button type="submit" class="btn bg-red-500/10 text-red-500 hover:bg-red-500/20">
+                                        {% include 'icons/trash.svg' %}
+                                        Sil
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %} 
