@@ -89,17 +89,4 @@
     </form>
   </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Set the date input value using JavaScript to ensure correct rendering
-    const dateInput = document.getElementById('date');
-    const todayValue = dateInput.value; // Get the value set by Jinja
-    if (dateInput && todayValue) {
-        dateInput.value = todayValue;
-    }
-});
-</script>
 {% endblock %} 
