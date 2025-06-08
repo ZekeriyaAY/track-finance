@@ -21,11 +21,11 @@
       </div>
 
       <div class="flex justify-end gap-3 mt-6">
-        <a href="{{ url_for('tag.index') }}" class="btn bg-primary/10 text-primary hover:bg-primary/20">
+        <a href="{{ url_for('tag.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition">
           {% include 'icons/cancel.svg' %}
           İptal
         </a>
-        <button type="submit" class="btn bg-primary text-white hover:bg-primary/90">
+        <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
           {% include 'icons/save.svg' %}
           Kaydet
         </button>
