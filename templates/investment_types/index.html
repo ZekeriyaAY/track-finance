@@ -6,7 +6,7 @@
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">Yatırım Türleri</h1>
-    <a href="{{ url_for('add_investment_type') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition">
+    <a href="{{ url_for('investment_type.add') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition">
       {% include 'icons/plus.svg' %}
       Yeni Tür
     </a>
@@ -30,11 +30,11 @@
             <td class="px-4 py-3 text-sm text-gray-300">{{ type.code }}</td>
             <td class="px-4 py-3 text-sm text-gray-300">{{ type.parent.name if type.parent else '-' }}</td>
             <td class="px-4 py-3 text-sm text-right space-x-2">
-              <a href="{{ url_for('edit_investment_type', id=type.id) }}" class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+              <a href="{{ url_for('investment_type.edit', id=type.id) }}" class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
                 {% include 'icons/pencil.svg' %}
                 Düzenle
               </a>
-              <button onclick="confirmDelete('{{ url_for('delete_investment_type', id=type.id) }}')" class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition">
+              <button onclick="confirmDelete('{{ url_for('investment_type.delete', id=type.id) }}')" class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition">
                 {% include 'icons/trash.svg' %}
                 Sil
               </button>

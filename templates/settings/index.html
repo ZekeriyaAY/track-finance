@@ -16,7 +16,7 @@
         <div class="p-4 bg-darkbg/40 rounded-lg border border-red-500/20">
           <h3 class="text-lg font-medium mb-2 text-red-500">Veritabanını Sıfırla</h3>
           <p class="text-gray-400 text-sm mb-4">Tüm verileri siler ve veritabanını sıfırlar. Bu işlem geri alınamaz!</p>
-          <form action="{{ url_for('reset_database') }}" method="POST" class="inline" onsubmit="return confirm('Tüm veriler silinecek! Bu işlemden emin misiniz?');">
+          <form action="{{ url_for('settings.reset_database') }}" method="POST" class="inline" onsubmit="return confirm('Tüm veriler silinecek! Bu işlemden emin misiniz?');">
             <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md !bg-red-500 !text-white hover:!bg-red-600 transition text-sm font-medium">
               {% include 'icons/trash.svg' %}
               Veritabanını Sıfırla
@@ -27,7 +27,7 @@
         <div class="p-4 bg-darkbg/40 rounded-lg">
           <h3 class="text-lg font-medium mb-2">Varsayılan Kategoriler</h3>
           <p class="text-gray-400 text-sm mb-4">Varsayılan kategori yapısını oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
-          <form action="{{ url_for('create_default_categories_route') }}" method="POST" class="inline">
+          <form action="{{ url_for('settings.create_default_categories_route') }}" method="POST" class="inline">
             <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm">
               {% include 'icons/plus.svg' %}
               Varsayılan Kategorileri Oluştur
@@ -38,7 +38,7 @@
         <div class="p-4 bg-darkbg/40 rounded-lg">
           <h3 class="text-lg font-medium mb-2">Varsayılan Yatırım Türleri</h3>
           <p class="text-gray-400 text-sm mb-4">Varsayılan yatırım türü yapısını oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
-          <form action="{{ url_for('create_default_investment_types_route') }}" method="POST" class="inline">
+          <form action="{{ url_for('settings.create_default_investment_types_route') }}" method="POST" class="inline">
             <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm">
               <i class="fas fa-coins"></i>
               Varsayılan Yatırım Türlerini Oluştur
@@ -49,7 +49,7 @@
         <div class="p-4 bg-darkbg/40 rounded-lg">
           <h3 class="text-lg font-medium mb-2">Örnek Veriler</h3>
           <p class="text-gray-400 text-sm mb-4">Örnek kategoriler, etiketler ve işlemler oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
-          <form action="{{ url_for('create_dummy_data_route') }}" method="POST" class="inline">
+          <form action="{{ url_for('settings.create_dummy_data_route') }}" method="POST" class="inline">
             <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm">
               {% include 'icons/plus.svg' %}
               Örnek Verileri Oluştur

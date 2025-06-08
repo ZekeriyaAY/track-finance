@@ -7,14 +7,14 @@
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">İşlem Düzenle</h1>
-    <a href="{{ url_for('index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+    <a href="{{ url_for('transaction.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
       {% include 'icons/back.svg' %}
       Geri Dön
     </a>
   </div>
 
   <div class="bg-card rounded-xl shadow p-6">
-    {{ transaction_form(url_for('edit_transaction', id=transaction.id), transaction=transaction, categories=categories, tags=tags) }}
+    {{ transaction_form(url_for('transaction.edit_transaction', id=transaction.id), transaction=transaction, categories=categories, tags=tags) }}
   </div>
 </div>
 {% endblock %} 

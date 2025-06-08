@@ -35,34 +35,34 @@
     <nav class="bg-card shadow-md mb-8">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
-                <a class="font-bold text-lg flex items-center gap-2" href="{{ url_for('index') }}">
+                <a class="font-bold text-lg flex items-center gap-2" href="{{ url_for('transaction.index') }}">
                     {% include 'icons/logo.svg' %}
                     Finance Tracker
                 </a>
             </div>
             <div class="flex gap-2">
-                <a href="{{ url_for('index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'index' %}bg-primary/20 text-primary font-semibold{% endif %}">Ana Sayfa</a>
-                <a href="{{ url_for('investments') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'investments' %}bg-primary/20 text-primary font-semibold{% endif %}">Yatırımlar</a>
+                <a href="{{ url_for('transaction.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'transaction.index' %}bg-primary/20 text-primary font-semibold{% endif %}">Ana Sayfa</a>
+                <a href="{{ url_for('investment.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'investment.index' %}bg-primary/20 text-primary font-semibold{% endif %}">Yatırımlar</a>
                 <div class="relative group">
-                  <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['categories', 'add_category', 'edit_category', 'tags', 'add_tag', 'edit_tag'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                  <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add', 'category.edit', 'tag.index', 'tag.add', 'tag.edit'] %}bg-primary/20 text-primary font-semibold{% endif %}">
                     Yönetim
                     {% include 'icons/dropdown_arrow.svg' %}
                   </button>
                   <div class="absolute right-0 w-48 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out">
                     <div class="py-1">
-                      <a href="{{ url_for('categories') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['categories', 'add_category', 'edit_category'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
+                      <a href="{{ url_for('category.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add', 'category.edit'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         {% include 'icons/folder.svg' %}
                         Kategoriler
                       </a>
-                      <a href="{{ url_for('tags') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['tags', 'add_tag', 'edit_tag'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
+                      <a href="{{ url_for('tag.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['tag.index', 'tag.add', 'tag.edit'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         {% include 'icons/tag.svg' %}
                         Taglar
                       </a>
-                      <a href="{{ url_for('investment_types') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['investment_types', 'add_investment_type', 'edit_investment_type'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
+                      <a href="{{ url_for('investment_type.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['investment_type.index', 'investment_type.add', 'investment_type.edit'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         <i class="fas fa-coins"></i>
                         Yatırım Türleri
                       </a>
-                      <a href="{{ url_for('settings') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint == 'settings' %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
+                      <a href="{{ url_for('settings.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint == 'settings.index' %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         {% include 'icons/settings.svg' %}
                         Ayarlar
                       </a>
