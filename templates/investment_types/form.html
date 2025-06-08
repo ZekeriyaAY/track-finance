@@ -13,8 +13,7 @@
   </div>
 
   <div class="bg-card rounded-xl shadow p-6">
-    {% macro investment_type_form(action_url, type=None, types=None) %}
-    <form method="POST" action="{{ action_url }}" class="space-y-6">
+    <form method="POST" action="{{ url_for('investment_type.edit', id=type.id) if type else url_for('investment_type.add') }}" class="space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-2">
           <label for="name" class="block text-sm font-medium text-gray-300">Tür Adı</label>
@@ -61,9 +60,6 @@
         </button>
       </div>
     </form>
-    {% endmacro %}
-
-    {{ investment_type_form(url_for('investment_type.edit', id=type.id) if type else url_for('investment_type.add'), type, types) }}
   </div>
 </div>
 {% endblock %} 
