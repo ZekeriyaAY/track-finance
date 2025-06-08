@@ -15,62 +15,56 @@ def index():
 @transaction_bp.route('/add_transaction', methods=['GET', 'POST'])
 def add_transaction():
     if request.method == 'POST':
-        transaction_date = datetime.strptime(request.form['date'], '%Y-%m-%d').date()
-        type = request.form['type']
-        category_id = request.form['category_id']
+        date = datetime.strptime(request.form['date'], '%Y-%m-%d')
         amount = float(request.form['amount'])
+        type = request.form['type']
+        category_id = int(request.form['category_id'])
         description = request.form['description']
-        
+        tag_ids = request.form.getlist('tags')
+
         transaction = Transaction(
-            date=transaction_date,
+            date=date,
+            amount=amount,
             type=type,
             category_id=category_id,
-            amount=amount,
             description=description
         )
-        
-        # Tag'leri ekle
-        tag_ids = request.form.getlist('tags')
+
         if tag_ids:
             tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
             transaction.tags = tags
-        
+
         db.session.add(transaction)
         db.session.commit()
         flash('İşlem başarıyla eklendi!', 'success')
         return redirect(url_for('transaction.index'))
-    
-    categories = Category.query.all()
+
+    categories = Category.query.filter_by(parent_id=None).all()
     tags = Tag.query.all()
     today = datetime.now().strftime('%Y-%m-%d')
-    return render_template('transactions/add.html', categories=categories, tags=tags, today=today)
+    return render_template('transactions/form.html', categories=categories, tags=tags, today=today)
 
 @transaction_bp.route('/edit_transaction/<int:id>', methods=['GET', 'POST'])
 def edit_transaction(id):
     transaction = Transaction.query.get_or_404(id)
-    
     if request.method == 'POST':
-        transaction.date = datetime.strptime(request.form['date'], '%Y-%m-%d').date()
-        transaction.type = request.form['type']
+        transaction.date = datetime.strptime(request.form['date'], '%Y-%m-%d')
         transaction.amount = float(request.form['amount'])
+        transaction.type = request.form['type']
+        transaction.category_id = int(request.form['category_id'])
         transaction.description = request.form['description']
-        transaction.category_id = request.form['category_id']
-
-        # Tag'leri güncelle
+        
+        # Update tags
         tag_ids = request.form.getlist('tags')
-        if tag_ids:
-            tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
-            transaction.tags = tags
-        else:
-            transaction.tags = []
+        transaction.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
 
         db.session.commit()
         flash('İşlem başarıyla güncellendi!', 'success')
         return redirect(url_for('transaction.index'))
 
     categories = Category.query.filter_by(parent_id=None).all()
-    tags = Tag.query.order_by(Tag.name).all()
-    return render_template('transactions/edit.html', transaction=transaction, categories=categories, tags=tags)
+    tags = Tag.query.all()
+    return render_template('transactions/form.html', transaction=transaction, categories=categories, tags=tags)
 
 @transaction_bp.route('/delete_transaction/<int:id>')
 def delete_transaction(id):

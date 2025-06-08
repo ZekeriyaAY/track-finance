@@ -1,76 +1,105 @@
-{% macro transaction_form(form_action, transaction=None, categories=None, tags=None, today=None) %}
-<form method="POST" action="{{ form_action }}" class="space-y-6">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="space-y-2">
-      <label for="date" class="block text-sm font-medium text-gray-300">Tarih</label>
-      <input type="date" id="date" name="date" 
-             value="{{ transaction.date.strftime('%Y-%m-%d') if transaction else today }}" required
-             class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-    </div>
+{% extends "base.html" %}
 
-    <div class="space-y-2">
-      <label for="amount" class="block text-sm font-medium text-gray-300">Tutar</label>
-      <input type="number" id="amount" name="amount" step="0.01" 
-             value="{{ transaction.amount if transaction else '' }}" required
-             class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-    </div>
+{% block title %}{{ 'İşlem Düzenle' if transaction else 'Yeni İşlem' }}{% endblock %}
 
-    <div class="space-y-2">
-      <label for="type" class="block text-sm font-medium text-gray-300">İşlem Tipi</label>
-      <select id="type" name="type" required
-              class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-        <option value="income" {% if transaction and transaction.type == 'income' %}selected{% endif %}>Gelir</option>
-        <option value="expense" {% if transaction and transaction.type == 'expense' %}selected{% endif %}>Gider</option>
-      </select>
-    </div>
-
-    <div class="space-y-2">
-      <label for="category" class="block text-sm font-medium text-gray-300">Kategori</label>
-      <select id="category" name="category_id" required
-              class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-        {% for category in categories %}
-          {% if not category.parent %}
-            <optgroup label="{{ category.name }}">
-              {% for subcategory in category.subcategories %}
-                <option value="{{ subcategory.id }}" {% if transaction and transaction.category_id == subcategory.id %}selected{% endif %}>{{ subcategory.name }}</option>
-              {% endfor %}
-            </optgroup>
-          {% endif %}
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="space-y-2 md:col-span-2">
-      <label for="description" class="block text-sm font-medium text-gray-300">Açıklama</label>
-      <input type="text" id="description" name="description" 
-             value="{{ transaction.description if transaction else '' }}"
-             class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-    </div>
-
-    <div class="space-y-2 md:col-span-2">
-      <label class="block text-sm font-medium text-gray-300">Taglar</label>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-        {% for tag in tags %}
-        <label class="inline-flex items-center gap-2 p-2 rounded-md bg-darkbg border border-gray-700 hover:bg-gray-700/50 cursor-pointer">
-          <input type="checkbox" name="tags" value="{{ tag.id }}" 
-                 {% if transaction and tag in transaction.tags %}checked{% endif %}
-                 class="rounded border-gray-600 text-primary focus:ring-primary/50">
-          <span class="text-sm text-gray-300">{{ tag.name }}</span>
-        </label>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-
-  <div class="flex justify-end gap-3 mt-6">
-    <a href="{{ url_for('transaction.index') }}" class="btn bg-primary/10 text-primary hover:bg-primary/20">
-      {% include 'icons/cancel.svg' %}
-      İptal
+{% block content %}
+<div class="flex flex-col gap-6">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">{{ 'İşlem Düzenle' if transaction else 'Yeni İşlem Ekle' }}</h1>
+    <a href="{{ url_for('transaction.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+      {% include 'icons/back.svg' %}
+      Geri Dön
     </a>
-    <button type="submit" class="btn bg-primary text-white hover:bg-primary/90">
-      {% include 'icons/save.svg' %}
-      Kaydet
-    </button>
   </div>
-</form>
-{% endmacro %} 
+
+  <div class="bg-card rounded-xl shadow p-6">
+    <form method="POST" action="{{ url_for('transaction.edit_transaction', id=transaction.id) if transaction else url_for('transaction.add_transaction') }}" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label for="date" class="block text-sm font-medium text-gray-300">Tarih</label>
+          <input type="date" id="date" name="date" 
+                 value="{{ transaction.date.strftime('%Y-%m-%d') if transaction else today }}" required
+                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+        </div>
+
+        <div class="space-y-2">
+          <label for="amount" class="block text-sm font-medium text-gray-300">Tutar</label>
+          <input type="number" id="amount" name="amount" step="0.01" 
+                 value="{{ transaction.amount if transaction else '' }}" required
+                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+        </div>
+
+        <div class="space-y-2">
+          <label for="type" class="block text-sm font-medium text-gray-300">İşlem Tipi</label>
+          <select id="type" name="type" required
+                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            <option value="income" {% if transaction and transaction.type == 'income' %}selected{% endif %}>Gelir</option>
+            <option value="expense" {% if transaction and transaction.type == 'expense' %}selected{% endif %}>Gider</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label for="category" class="block text-sm font-medium text-gray-300">Kategori</label>
+          <select id="category" name="category_id" required
+                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            {% for category in categories %}
+              {% if not category.parent %}
+                <optgroup label="{{ category.name }}">
+                  {% for subcategory in category.subcategories %}
+                    <option value="{{ subcategory.id }}" {% if transaction and transaction.category_id == subcategory.id %}selected{% endif %}>{{ subcategory.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="space-y-2 md:col-span-2">
+          <label for="description" class="block text-sm font-medium text-gray-300">Açıklama</label>
+          <input type="text" id="description" name="description" 
+                 value="{{ transaction.description if transaction else '' }}"
+                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+        </div>
+
+        <div class="space-y-2 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-300">Taglar</label>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {% for tag in tags %}
+            <label class="inline-flex items-center gap-2 p-2 rounded-md bg-darkbg border border-gray-700 hover:bg-gray-700/50 cursor-pointer">
+              <input type="checkbox" name="tags" value="{{ tag.id }}" 
+                     {% if transaction and tag in transaction.tags %}checked{% endif %}
+                     class="rounded border-gray-600 text-primary focus:ring-primary/50">
+              <span class="text-sm text-gray-300">{{ tag.name }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <a href="{{ url_for('transaction.index') }}" class="btn bg-primary/10 text-primary hover:bg-primary/20">
+          {% include 'icons/cancel.svg' %}
+          İptal
+        </a>
+        <button type="submit" class="btn bg-primary text-white hover:bg-primary/90">
+          {% include 'icons/save.svg' %}
+          Kaydet
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set the date input value using JavaScript to ensure correct rendering
+    const dateInput = document.getElementById('date');
+    const todayValue = dateInput.value; // Get the value set by Jinja
+    if (dateInput && todayValue) {
+        dateInput.value = todayValue;
+    }
+});
+</script>
+{% endblock %} 
