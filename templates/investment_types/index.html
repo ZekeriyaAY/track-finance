@@ -34,11 +34,11 @@
             <td class="py-2 px-4 text-gray-300">{{ type.code }}</td>
             <td class="py-2 px-4 text-gray-300">{{ type.parent.name if type.parent else '-' }}</td>
             <td class="py-2 px-4 text-right">
-              <a href="{{ url_for('investment_type.edit', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
+              <a href="{{ url_for('investment_type.edit', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
                 {% include 'icons/pencil.svg' %}
                 Düzenle
               </a>
-              <a href="{{ url_for('investment_type.delete', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
+              <a href="{{ url_for('investment_type.delete', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
                 {% include 'icons/trash.svg' %}
                 Sil
               </a>
@@ -54,13 +54,13 @@
                   </span>
                 </td>
                 <td class="py-2 px-4 text-gray-300">{{ child.code }}</td>
-                <td class="py-2 px-4 text-gray-300">{{ child.parent.name if child.parent else '-' }}</td>
+                <td class="py-2 px-4 text-gray-300">{{ type.name }}</td>
                 <td class="py-2 px-4 text-right">
-                  <a href="{{ url_for('investment_type.edit', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
+                  <a href="{{ url_for('investment_type.edit', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
                     {% include 'icons/pencil.svg' %}
                     Düzenle
                   </a>
-                  <a href="{{ url_for('investment_type.delete', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
+                  <a href="{{ url_for('investment_type.delete', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
                     {% include 'icons/trash.svg' %}
                     Sil
                   </a>
