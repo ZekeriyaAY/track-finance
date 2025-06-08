@@ -44,23 +44,23 @@
               </a>
             </td>
           </tr>
-          {% if type.subtypes %}
-            {% for subtype in type.subtypes %}
+          {% if type.children %}
+            {% for child in type.children %}
               <tr class="hover:bg-darkbg/30 transition">
                 <td class="py-2 px-4 pl-8">
                   <span class="inline-flex items-center gap-2 text-sm text-gray-300">
                     {% include 'icons/folder.svg' %}
-                    {{ subtype.name }}
+                    {{ child.name }}
                   </span>
                 </td>
-                <td class="py-2 px-4 text-gray-300">{{ subtype.code }}</td>
-                <td class="py-2 px-4 text-gray-300">{{ subtype.parent.name if subtype.parent else '-' }}</td>
+                <td class="py-2 px-4 text-gray-300">{{ child.code }}</td>
+                <td class="py-2 px-4 text-gray-300">{{ child.parent.name if child.parent else '-' }}</td>
                 <td class="py-2 px-4 text-right">
-                  <a href="{{ url_for('investment_type.edit', id=subtype.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
+                  <a href="{{ url_for('investment_type.edit', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
                     {% include 'icons/pencil.svg' %}
                     Düzenle
                   </a>
-                  <a href="{{ url_for('investment_type.delete', id=subtype.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
+                  <a href="{{ url_for('investment_type.delete', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
                     {% include 'icons/trash.svg' %}
                     Sil
                   </a>

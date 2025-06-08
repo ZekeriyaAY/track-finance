@@ -6,22 +6,22 @@ investment_type_bp = Blueprint('investment_type', __name__)
 
 @investment_type_bp.route('/investment_types')
 def index():
-    types = InvestmentType.query.order_by(InvestmentType.name).all()
+    types = InvestmentType.query.filter_by(parent_id=None).all()
     return render_template('investment_types/index.html', types=types)
 
-@investment_type_bp.route('/add_investment_type', methods=['GET', 'POST'])
+@investment_type_bp.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
         name = request.form['name']
         code = request.form['code']
-        icon = request.form.get('icon', 'fas fa-chart-pie')  # Default icon if not provided
-        color = request.form.get('color', '#3B82F6')  # Default color if not provided
+        icon = request.form['icon']
+        color = request.form['color']
         parent_id = request.form['parent_id'] if request.form['parent_id'] else None
-
-        if InvestmentType.query.filter_by(code=code).first():
-            flash('Bu kod zaten kullanılıyor!', 'error')
+        
+        if InvestmentType.query.filter_by(name=name).first():
+            flash('Bu yatırım türü zaten mevcut!', 'error')
             return redirect(url_for('investment_type.add'))
-
+        
         type = InvestmentType(
             name=name,
             code=code,
@@ -33,26 +33,25 @@ def add():
         db.session.commit()
         flash('Yatırım türü başarıyla eklendi!', 'success')
         return redirect(url_for('investment_type.index'))
-
-    types = InvestmentType.query.filter_by(parent_id=None).order_by(InvestmentType.name).all()
+    
+    types = InvestmentType.query.filter_by(parent_id=None).all()
     return render_template('investment_types/form.html', types=types)
 
-@investment_type_bp.route('/edit_investment_type/<int:id>', methods=['GET', 'POST'])
+@investment_type_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
     type = InvestmentType.query.get_or_404(id)
-    
     if request.method == 'POST':
         name = request.form['name']
         code = request.form['code']
-        icon = request.form.get('icon', 'fas fa-chart-pie')  # Default icon if not provided
-        color = request.form.get('color', '#3B82F6')  # Default color if not provided
+        icon = request.form['icon']
+        color = request.form['color']
         parent_id = request.form['parent_id'] if request.form['parent_id'] else None
-
-        existing = InvestmentType.query.filter_by(code=code).first()
+        
+        existing = InvestmentType.query.filter_by(name=name).first()
         if existing and existing.id != id:
-            flash('Bu kod zaten kullanılıyor!', 'error')
+            flash('Bu yatırım türü zaten mevcut!', 'error')
             return redirect(url_for('investment_type.edit', id=id))
-
+        
         type.name = name
         type.code = code
         type.icon = icon
@@ -61,22 +60,20 @@ def edit(id):
         db.session.commit()
         flash('Yatırım türü başarıyla güncellendi!', 'success')
         return redirect(url_for('investment_type.index'))
-
-    types = InvestmentType.query.filter_by(parent_id=None).order_by(InvestmentType.name).all()
+    
+    types = InvestmentType.query.filter_by(parent_id=None).all()
     return render_template('investment_types/form.html', type=type, types=types)
 
-@investment_type_bp.route('/delete_investment_type/<int:id>')
+@investment_type_bp.route('/delete/<int:id>')
 def delete(id):
     type = InvestmentType.query.get_or_404(id)
     
-    # Check if type has children
+    # Check if type has children or investments
     if type.children:
-        flash('Bu türün alt türleri var. Önce alt türleri silmelisiniz!', 'error')
+        flash('Bu yatırım türünün alt türleri var. Önce alt türleri silmelisiniz!', 'error')
         return redirect(url_for('investment_type.index'))
-    
-    # Check if type has investments
     if type.investments:
-        flash('Bu türe ait yatırımlar var. Önce yatırımları silmelisiniz!', 'error')
+        flash('Bu yatırım türüne ait yatırımlar var. Önce yatırımları silmelisiniz!', 'error')
         return redirect(url_for('investment_type.index'))
     
     db.session.delete(type)
