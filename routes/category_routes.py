@@ -14,13 +14,12 @@ def index():
 def add_category():
     if request.method == 'POST':
         name = request.form['name']
-        parent_id = request.form.get('parent_id')
+        parent_id = request.form['parent_id'] if request.form['parent_id'] else None
         
-        if parent_id == '':
-            parent_id = None
-        else:
-            parent_id = int(parent_id)
-            
+        if Category.query.filter_by(name=name, parent_id=parent_id).first():
+            flash('Bu kategori zaten mevcut!', 'error')
+            return redirect(url_for('category.add_category'))
+        
         category = Category(name=name, parent_id=parent_id)
         db.session.add(category)
         db.session.commit()
@@ -28,54 +27,39 @@ def add_category():
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
-    return render_template('categories/add.html', categories=categories)
+    return render_template('categories/form.html', categories=categories)
 
 @category_bp.route('/edit_category/<int:id>', methods=['GET', 'POST'])
 def edit_category(id):
     category = Category.query.get_or_404(id)
     if request.method == 'POST':
-        category.name = request.form['name']
-        parent_id = request.form.get('parent_id')
+        name = request.form['name']
+        parent_id = request.form['parent_id'] if request.form['parent_id'] else None
         
-        if parent_id == '':
-            parent_id = None
-        else:
-            parent_id = int(parent_id)
-            
-        # Eğer kategori kendisini üst kategori olarak seçmeye çalışıyorsa engelle
-        if parent_id == category.id:
-            flash('Bir kategori kendisini üst kategori olarak seçemez!', 'error')
+        existing = Category.query.filter_by(name=name, parent_id=parent_id).first()
+        if existing and existing.id != id:
+            flash('Bu kategori zaten mevcut!', 'error')
             return redirect(url_for('category.edit_category', id=id))
-            
-        # Eğer seçilen üst kategori bir alt kategori ise engelle
-        if parent_id:
-            parent = Category.query.get(parent_id)
-            if parent and parent.is_subcategory():
-                flash('Alt kategoriler üst kategori olamaz!', 'error')
-                return redirect(url_for('category.edit_category', id=id))
-            
+        
+        category.name = name
         category.parent_id = parent_id
         db.session.commit()
         flash('Kategori başarıyla güncellendi!', 'success')
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
-    return render_template('categories/edit.html', category=category, categories=categories)
+    return render_template('categories/form.html', category=category, categories=categories)
 
 @category_bp.route('/delete_category/<int:id>')
 def delete_category(id):
     category = Category.query.get_or_404(id)
     
-    # Kategoriye bağlı işlemleri kontrol et
-    transactions = Transaction.query.filter_by(category_id=id).all()
-    if transactions:
-        flash('Bu kategoriye bağlı işlemler var. Önce bu işlemleri başka bir kategoriye taşıyın veya silin.', 'error')
+    # Check if category has subcategories or transactions
+    if category.subcategories:
+        flash('Bu kategorinin alt kategorileri var. Önce alt kategorileri silmelisiniz!', 'error')
         return redirect(url_for('category.index'))
-    
-    # Alt kategorileri kontrol et
-    subcategories = Category.query.filter_by(parent_id=id).all()
-    if subcategories:
-        flash('Bu kategorinin alt kategorileri var. Önce alt kategorileri silin.', 'error')
+    if category.transactions:
+        flash('Bu kategoriye ait işlemler var. Önce işlemleri silmelisiniz!', 'error')
         return redirect(url_for('category.index'))
     
     db.session.delete(category)

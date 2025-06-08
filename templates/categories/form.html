@@ -1,37 +1,53 @@
-{% macro category_form(action_url, category=None, categories=None) %}
-<form method="POST" action="{{ action_url }}" class="space-y-6">
-  <div class="space-y-2">
-    <label for="name" class="block text-sm font-medium text-gray-300">Kategori Adı</label>
-    <input type="text" id="name" name="name" value="{{ category.name if category else '' }}" required
-           class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-  </div>
+{% extends "base.html" %}
 
-  <div class="space-y-2">
-    <label for="parent_id" class="block text-sm font-medium text-gray-300">Üst Kategori</label>
-    <select id="parent_id" name="parent_id"
-            class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-      <option value="">Ana Kategori</option>
-      {% if categories %}
-        {% for cat in categories %}
-          {% if category and cat.id != category.id %}
-            <option value="{{ cat.id }}" {% if category and category.parent_id == cat.id %}selected{% endif %}>
-              {{ cat.name }}
-            </option>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
-    </select>
-  </div>
+{% block title %}{{ 'Kategori Düzenle' if category else 'Yeni Kategori Ekle' }}{% endblock %}
 
-  <div class="flex justify-end gap-3 mt-6">
-    <a href="{{ url_for('category.index') }}" class="btn bg-primary/10 text-primary hover:bg-primary/20">
-      {% include 'icons/cancel.svg' %}
-      İptal
+{% block content %}
+<div class="flex flex-col gap-6">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">{{ 'Kategori Düzenle' if category else 'Yeni Kategori Ekle' }}</h1>
+    <a href="{{ url_for('category.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+      {% include 'icons/back.svg' %}
+      Geri Dön
     </a>
-    <button type="submit" class="btn bg-primary text-white hover:bg-primary/90">
-      {% include 'icons/save.svg' %}
-      Kaydet
-    </button>
   </div>
-</form>
-{% endmacro %} 
+
+  <div class="bg-card rounded-xl shadow p-6">
+    <form method="POST" action="{{ url_for('category.edit_category', id=category.id) if category else url_for('category.add_category') }}" class="space-y-6">
+      <div class="space-y-2">
+        <label for="name" class="block text-sm font-medium text-gray-300">Kategori Adı</label>
+        <input type="text" id="name" name="name" value="{{ category.name if category else '' }}" required
+               class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+      </div>
+
+      <div class="space-y-2">
+        <label for="parent_id" class="block text-sm font-medium text-gray-300">Üst Kategori</label>
+        <select id="parent_id" name="parent_id"
+                class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+          <option value="">Ana Kategori</option>
+          {% if categories %}
+            {% for cat in categories %}
+              {% if not category or cat.id != category.id %}
+                <option value="{{ cat.id }}" {% if category and category.parent_id == cat.id %}selected{% endif %}>
+                  {{ cat.name }}
+                </option>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </select>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <a href="{{ url_for('category.index') }}" class="btn bg-primary/10 text-primary hover:bg-primary/20">
+          {% include 'icons/cancel.svg' %}
+          İptal
+        </a>
+        <button type="submit" class="btn bg-primary text-white hover:bg-primary/90">
+          {% include 'icons/save.svg' %}
+          Kaydet
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %} 
