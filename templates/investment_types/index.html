@@ -4,54 +4,73 @@
 
 {% block content %}
 <div class="flex flex-col gap-6">
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold">Yatırım Türleri</h1>
-    <a href="{{ url_for('investment_type.add') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold">Yatırım Türleri</h1>
+    <a href="{{ url_for('investment_type.add') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
       {% include 'icons/plus.svg' %}
       Yeni Tür
     </a>
   </div>
 
-  <div class="bg-card rounded-xl shadow overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full">
-        <thead>
-          <tr class="bg-card/50">
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-400">Tür Adı</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-400">Kod</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-400">Üst Tür</th>
-            <th class="px-4 py-3 text-right text-sm font-medium text-gray-400">İşlemler</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-800">
-          {% for type in types %}
-          <tr class="hover:bg-card/50">
-            <td class="px-4 py-3 text-sm text-gray-300">{{ type.name }}</td>
-            <td class="px-4 py-3 text-sm text-gray-300">{{ type.code }}</td>
-            <td class="px-4 py-3 text-sm text-gray-300">{{ type.parent.name if type.parent else '-' }}</td>
-            <td class="px-4 py-3 text-sm text-right space-x-2">
-              <a href="{{ url_for('investment_type.edit', id=type.id) }}" class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+  <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
+    <table class="min-w-full text-sm align-middle">
+      <thead>
+        <tr class="bg-darkbg/80">
+          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tür Adı</th>
+          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Kod</th>
+          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Üst Tür</th>
+          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-800">
+        {% for type in types %}
+          <tr class="hover:bg-darkbg/40 transition">
+            <td class="py-2 px-4">
+              <span class="inline-flex items-center gap-2">
+                {% include 'icons/folder.svg' %}
+                {{ type.name }}
+              </span>
+            </td>
+            <td class="py-2 px-4 text-gray-300">{{ type.code }}</td>
+            <td class="py-2 px-4 text-gray-300">{{ type.parent.name if type.parent else '-' }}</td>
+            <td class="py-2 px-4 text-right">
+              <a href="{{ url_for('investment_type.edit', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
                 {% include 'icons/pencil.svg' %}
                 Düzenle
               </a>
-              <button onclick="confirmDelete('{{ url_for('investment_type.delete', id=type.id) }}')" class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-red-500/10 text-red-500 hover:bg-red-500/20 transition">
+              <a href="{{ url_for('investment_type.delete', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
                 {% include 'icons/trash.svg' %}
                 Sil
-              </button>
+              </a>
             </td>
           </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+          {% if type.subtypes %}
+            {% for subtype in type.subtypes %}
+              <tr class="hover:bg-darkbg/30 transition">
+                <td class="py-2 px-4 pl-8">
+                  <span class="inline-flex items-center gap-2 text-sm text-gray-300">
+                    {% include 'icons/folder.svg' %}
+                    {{ subtype.name }}
+                  </span>
+                </td>
+                <td class="py-2 px-4 text-gray-300">{{ subtype.code }}</td>
+                <td class="py-2 px-4 text-gray-300">{{ subtype.parent.name if subtype.parent else '-' }}</td>
+                <td class="py-2 px-4 text-right">
+                  <a href="{{ url_for('investment_type.edit', id=subtype.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
+                    {% include 'icons/pencil.svg' %}
+                    Düzenle
+                  </a>
+                  <a href="{{ url_for('investment_type.delete', id=subtype.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
+                    {% include 'icons/trash.svg' %}
+                    Sil
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
-
-<script>
-function confirmDelete(url) {
-  if (confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')) {
-    window.location.href = url;
-  }
-}
-</script>
 {% endblock %} 
