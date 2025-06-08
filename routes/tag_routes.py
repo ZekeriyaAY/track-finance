@@ -13,29 +13,48 @@ def index():
 def add_tag():
     if request.method == 'POST':
         name = request.form['name']
+        
+        if Tag.query.filter_by(name=name).first():
+            flash('Bu tag zaten mevcut!', 'error')
+            return redirect(url_for('tag.add_tag'))
+        
         tag = Tag(name=name)
         db.session.add(tag)
         db.session.commit()
-        flash('Etiket başarıyla eklendi!', 'success')
+        flash('Tag başarıyla eklendi!', 'success')
         return redirect(url_for('tag.index'))
     
-    return render_template('tags/add.html')
+    return render_template('tags/form.html')
 
 @tag_bp.route('/edit_tag/<int:id>', methods=['GET', 'POST'])
 def edit_tag(id):
     tag = Tag.query.get_or_404(id)
+    
     if request.method == 'POST':
-        tag.name = request.form['name']
+        name = request.form['name']
+        
+        existing = Tag.query.filter_by(name=name).first()
+        if existing and existing.id != id:
+            flash('Bu tag zaten mevcut!', 'error')
+            return redirect(url_for('tag.edit_tag', id=id))
+        
+        tag.name = name
         db.session.commit()
-        flash('Etiket başarıyla güncellendi!', 'success')
+        flash('Tag başarıyla güncellendi!', 'success')
         return redirect(url_for('tag.index'))
     
-    return render_template('tags/edit.html', tag=tag)
+    return render_template('tags/form.html', tag=tag)
 
 @tag_bp.route('/delete_tag/<int:id>')
 def delete_tag(id):
     tag = Tag.query.get_or_404(id)
+    
+    # Check if tag has transactions
+    if tag.transactions:
+        flash('Bu tage ait işlemler var. Önce işlemleri silmelisiniz!', 'error')
+        return redirect(url_for('tag.index'))
+    
     db.session.delete(tag)
     db.session.commit()
-    flash('Etiket başarıyla silindi!', 'success')
+    flash('Tag başarıyla silindi!', 'success')
     return redirect(url_for('tag.index')) 
