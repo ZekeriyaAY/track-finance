@@ -86,11 +86,11 @@
             </span>
           </td>
           <td class="py-2 px-4 text-right">
-            <a href="{{ url_for('investment.edit_investment', id=investment.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/80 text-white hover:bg-primary transition text-xs font-medium mr-1">
+            <a href="{{ url_for('investment.edit_investment', id=investment.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
               {% include 'icons/pencil.svg' %}
               Düzenle
             </a>
-            <a href="{{ url_for('investment.delete_investment', id=investment.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/80 text-white hover:bg-red-700 transition text-xs font-medium" onclick="return confirm('Bu yatırımı silmek istediğinizden emin misiniz?')">
+            <a href="{{ url_for('investment.delete_investment', id=investment.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu yatırımı silmek istediğinizden emin misiniz?')">
               {% include 'icons/trash.svg' %}
               Sil
             </a>
