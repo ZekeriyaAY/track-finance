@@ -7,7 +7,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-semibold">İşlemler</h1>
     <a href="{{ url_for('transaction.add_transaction') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
-      {% include 'icons/plus.svg' %}
+      <i class="fas fa-plus"></i>
       Yeni İşlem
     </a>
   </div>
@@ -59,11 +59,11 @@
             <td class="py-2 px-4">{{ transaction.description }}</td>
             <td class="py-2 px-4 text-right">
               <a href="{{ url_for('transaction.edit_transaction', id=transaction.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-                {% include 'icons/pencil.svg' %}
+                <i class="fas fa-pencil-alt"></i>
                 Düzenle
               </a>
               <a href="{{ url_for('transaction.delete_transaction', id=transaction.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu işlemi silmek istediğinizden emin misiniz?')">
-                {% include 'icons/trash.svg' %}
+                <i class="fas fa-trash"></i>
                 Sil
               </a>
             </td>

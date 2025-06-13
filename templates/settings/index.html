@@ -18,7 +18,7 @@
           <p class="text-gray-400 text-sm mb-4">Tüm verileri siler ve veritabanını sıfırlar. Bu işlem geri alınamaz!</p>
           <form action="{{ url_for('settings.reset_database') }}" method="POST" class="inline" onsubmit="return confirm('Tüm veriler silinecek! Bu işlemden emin misiniz?');">
             <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md !bg-red-500 !text-white hover:!bg-red-600 transition text-sm font-medium">
-              {% include 'icons/trash.svg' %}
+              <i class="fas fa-trash"></i>
               Veritabanını Sıfırla
             </button>
           </form>
@@ -29,7 +29,7 @@
           <p class="text-gray-400 text-sm mb-4">Varsayılan kategori yapısını oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
           <form action="{{ url_for('settings.create_default_categories_route') }}" method="POST" class="inline">
             <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm">
-              {% include 'icons/plus.svg' %}
+              <i class="fas fa-plus"></i>
               Varsayılan Kategorileri Oluştur
             </button>
           </form>
@@ -51,7 +51,7 @@
           <p class="text-gray-400 text-sm mb-4">Örnek kategoriler, etiketler ve işlemler oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
           <form action="{{ url_for('settings.create_dummy_data_route') }}" method="POST" class="inline">
             <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm">
-              {% include 'icons/plus.svg' %}
+              <i class="fas fa-plus"></i>
               Örnek Verileri Oluştur
             </button>
           </form>
