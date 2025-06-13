@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask_migrate import Migrate
 from models.__init__ import db
 
@@ -25,6 +25,10 @@ app.register_blueprint(tag_bp)
 app.register_blueprint(investment_bp)
 app.register_blueprint(investment_type_bp)
 app.register_blueprint(settings_bp)
+
+@app.route('/')
+def index():
+    return redirect(url_for('transaction.index'))
 
 if __name__ == '__main__':
     app.run(debug=True) 

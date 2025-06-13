@@ -3,14 +3,14 @@ from models.__init__ import db
 from models.category import Category
 from models.transaction import Transaction
 
-category_bp = Blueprint('category', __name__)
+category_bp = Blueprint('category', __name__, url_prefix='/categories')
 
-@category_bp.route('/categories')
+@category_bp.route('/')
 def index():
     categories = Category.query.filter_by(parent_id=None).all()
     return render_template('categories/index.html', categories=categories)
 
-@category_bp.route('/add_category', methods=['GET', 'POST'])
+@category_bp.route('/add', methods=['GET', 'POST'])
 def add_category():
     if request.method == 'POST':
         name = request.form['name']
@@ -29,7 +29,7 @@ def add_category():
     categories = Category.query.filter_by(parent_id=None).all()
     return render_template('categories/form.html', categories=categories)
 
-@category_bp.route('/edit_category/<int:id>', methods=['GET', 'POST'])
+@category_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_category(id):
     category = Category.query.get_or_404(id)
     if request.method == 'POST':
@@ -50,7 +50,7 @@ def edit_category(id):
     categories = Category.query.filter_by(parent_id=None).all()
     return render_template('categories/form.html', category=category, categories=categories)
 
-@category_bp.route('/delete_category/<int:id>')
+@category_bp.route('/delete/<int:id>')
 def delete_category(id):
     category = Category.query.get_or_404(id)
     

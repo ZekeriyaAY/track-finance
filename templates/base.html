@@ -41,7 +41,7 @@
                 </a>
             </div>
             <div class="flex gap-2">
-                <a href="{{ url_for('transaction.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'transaction.index' %}bg-primary/20 text-primary font-semibold{% endif %}">Ana Sayfa</a>
+                <a href="{{ url_for('transaction.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'transaction.index' %}bg-primary/20 text-primary font-semibold{% endif %}">İşlemler</a>
                 <a href="{{ url_for('investment.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'investment.index' %}bg-primary/20 text-primary font-semibold{% endif %}">Yatırımlar</a>
                 <div class="relative group">
                   <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add', 'category.edit', 'tag.index', 'tag.add', 'tag.edit'] %}bg-primary/20 text-primary font-semibold{% endif %}">

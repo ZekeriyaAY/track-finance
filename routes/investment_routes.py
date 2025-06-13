@@ -3,14 +3,14 @@ from models.__init__ import db
 from models.investment import Investment
 from models.investment_type import InvestmentType
 
-investment_bp = Blueprint('investment', __name__)
+investment_bp = Blueprint('investment', __name__, url_prefix='/investments')
 
-@investment_bp.route('/investments')
+@investment_bp.route('/')
 def index():
     investments = Investment.query.all()
     return render_template('investments/index.html', investments=investments)
 
-@investment_bp.route('/add_investment', methods=['GET', 'POST'])
+@investment_bp.route('/add', methods=['GET', 'POST'])
 def add_investment():
     if request.method == 'POST':
         name = request.form['name']
@@ -33,7 +33,7 @@ def add_investment():
     investment_types = InvestmentType.query.all()
     return render_template('investments/add.html', investment_types=investment_types)
 
-@investment_bp.route('/edit_investment/<int:id>', methods=['GET', 'POST'])
+@investment_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_investment(id):
     investment = Investment.query.get_or_404(id)
     if request.method == 'POST':
@@ -49,7 +49,7 @@ def edit_investment(id):
     investment_types = InvestmentType.query.all()
     return render_template('investments/edit.html', investment=investment, investment_types=investment_types)
 
-@investment_bp.route('/delete_investment/<int:id>')
+@investment_bp.route('/delete/<int:id>')
 def delete_investment(id):
     investment = Investment.query.get_or_404(id)
     db.session.delete(investment)

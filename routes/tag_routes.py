@@ -2,21 +2,21 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
 from models.tag import Tag
 
-tag_bp = Blueprint('tag', __name__)
+tag_bp = Blueprint('tag', __name__, url_prefix='/tags')
 
-@tag_bp.route('/tags')
+@tag_bp.route('/')
 def index():
     tags = Tag.query.order_by(Tag.name).all()
     return render_template('tags/index.html', tags=tags)
 
-@tag_bp.route('/add_tag', methods=['GET', 'POST'])
+@tag_bp.route('/add', methods=['GET', 'POST'])
 def add_tag():
     if request.method == 'POST':
         name = request.form['name']
         
         if Tag.query.filter_by(name=name).first():
             flash('Bu tag zaten mevcut!', 'error')
-            return redirect(url_for('tag.add_tag'))
+            return redirect(url_for('tag.add'))
         
         tag = Tag(name=name)
         db.session.add(tag)
@@ -26,7 +26,7 @@ def add_tag():
     
     return render_template('tags/form.html')
 
-@tag_bp.route('/edit_tag/<int:id>', methods=['GET', 'POST'])
+@tag_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_tag(id):
     tag = Tag.query.get_or_404(id)
     
@@ -45,7 +45,7 @@ def edit_tag(id):
     
     return render_template('tags/form.html', tag=tag)
 
-@tag_bp.route('/delete_tag/<int:id>')
+@tag_bp.route('/delete/<int:id>')
 def delete_tag(id):
     tag = Tag.query.get_or_404(id)
     

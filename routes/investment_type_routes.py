@@ -2,9 +2,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
 from models.investment_type import InvestmentType
 
-investment_type_bp = Blueprint('investment_type', __name__)
+investment_type_bp = Blueprint('investment_type', __name__, url_prefix='/investment-types')
 
-@investment_type_bp.route('/investment_types')
+@investment_type_bp.route('/')
 def index():
     types = InvestmentType.query.filter_by(parent_id=None).all()
     return render_template('investment_types/index.html', types=types)

@@ -5,14 +5,14 @@ from models.transaction import Transaction
 from models.category import Category
 from models.tag import Tag
 
-transaction_bp = Blueprint('transaction', __name__)
+transaction_bp = Blueprint('transaction', __name__, url_prefix='/transactions')
 
 @transaction_bp.route('/')
 def index():
     transactions = Transaction.query.order_by(Transaction.date.desc()).all()
     return render_template('transactions/index.html', transactions=transactions)
 
-@transaction_bp.route('/add_transaction', methods=['GET', 'POST'])
+@transaction_bp.route('/add', methods=['GET', 'POST'])
 def add_transaction():
     if request.method == 'POST':
         date = datetime.strptime(request.form['date'], '%Y-%m-%d')
@@ -44,7 +44,7 @@ def add_transaction():
     today = datetime.now().strftime('%Y-%m-%d')
     return render_template('transactions/form.html', categories=categories, tags=tags, today=today)
 
-@transaction_bp.route('/edit_transaction/<int:id>', methods=['GET', 'POST'])
+@transaction_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_transaction(id):
     transaction = Transaction.query.get_or_404(id)
     if request.method == 'POST':
@@ -66,7 +66,7 @@ def edit_transaction(id):
     tags = Tag.query.all()
     return render_template('transactions/form.html', transaction=transaction, categories=categories, tags=tags)
 
-@transaction_bp.route('/delete_transaction/<int:id>')
+@transaction_bp.route('/delete/<int:id>')
 def delete_transaction(id):
     transaction = Transaction.query.get_or_404(id)
     db.session.delete(transaction)
