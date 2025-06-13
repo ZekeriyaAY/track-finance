@@ -13,74 +13,84 @@
   </div>
 
   <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
-    <table class="min-w-full text-sm align-middle">
-      <thead>
-        <tr class="bg-darkbg/80">
-          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tür Adı</th>
-          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Kod</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Yatırım Sayısı</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-800">
-        {% for type in types %}
-          <tr class="hover:bg-darkbg/40 transition">
-            <td class="py-2 px-4">
-              <span class="inline-flex items-center gap-2">
-                <i class="{{ type.icon }} text-{{ type.color }}"></i>
-                {{ type.name }}
-              </span>
-            </td>
-            <td class="py-2 px-4 text-gray-300">{{ type.code }}</td>
-            <td class="py-2 px-4 text-right">
-              <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary/10 text-primary text-xs font-medium" title="Toplam Yatırım">
-                {% include 'icons/plus.svg' %}
-                {{ type.investments|length }}
-              </span>
-            </td>
-            <td class="py-2 px-4 text-right">
-              <a href="{{ url_for('investment_type.edit', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-                {% include 'icons/pencil.svg' %}
-                Düzenle
-              </a>
-              <a href="{{ url_for('investment_type.delete', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
-                {% include 'icons/trash.svg' %}
-                Sil
-              </a>
-            </td>
+    {% if types %}
+      <table class="min-w-full text-sm align-middle">
+        <thead>
+          <tr class="bg-darkbg/80">
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tür Adı</th>
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Kod</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Yatırım Sayısı</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
           </tr>
-          {% if type.children %}
-            {% for child in type.children %}
-              <tr class="hover:bg-darkbg/30 transition">
-                <td class="py-2 px-4 pl-8">
-                  <span class="inline-flex items-center gap-2 text-sm text-gray-300">
-                    <i class="{{ child.icon }} text-{{ child.color }}"></i>
-                    {{ child.name }}
-                  </span>
-                </td>
-                <td class="py-2 px-4 text-gray-300">{{ child.code }}</td>
-                <td class="py-2 px-4 text-right">
-                  <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary/10 text-primary text-xs font-medium" title="Toplam Yatırım">
-                    {% include 'icons/plus.svg' %}
-                    {{ child.investments|length }}
-                  </span>
-                </td>
-                <td class="py-2 px-4 text-right">
-                  <a href="{{ url_for('investment_type.edit', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-                    {% include 'icons/pencil.svg' %}
-                    Düzenle
-                  </a>
-                  <a href="{{ url_for('investment_type.delete', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
-                    {% include 'icons/trash.svg' %}
-                    Sil
-                  </a>
-                </td>
-              </tr>
-            {% endfor %}
-          {% endif %}
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="divide-y divide-gray-800">
+          {% for type in types %}
+            <tr class="hover:bg-darkbg/40 transition">
+              <td class="py-2 px-4">
+                <span class="inline-flex items-center gap-2">
+                  <i class="{{ type.icon }} text-{{ type.color }}"></i>
+                  {{ type.name }}
+                </span>
+              </td>
+              <td class="py-2 px-4 text-gray-300">{{ type.code }}</td>
+              <td class="py-2 px-4 text-right">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary/10 text-primary text-xs font-medium" title="Toplam Yatırım">
+                  {% include 'icons/plus.svg' %}
+                  {{ type.investments|length }}
+                </span>
+              </td>
+              <td class="py-2 px-4 text-right">
+                <a href="{{ url_for('investment_type.edit', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
+                  {% include 'icons/pencil.svg' %}
+                  Düzenle
+                </a>
+                <a href="{{ url_for('investment_type.delete', id=type.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
+                  {% include 'icons/trash.svg' %}
+                  Sil
+                </a>
+              </td>
+            </tr>
+            {% if type.children %}
+              {% for child in type.children %}
+                <tr class="hover:bg-darkbg/30 transition">
+                  <td class="py-2 px-4 pl-8">
+                    <span class="inline-flex items-center gap-2 text-sm text-gray-300">
+                      <i class="{{ child.icon }} text-{{ child.color }}"></i>
+                      {{ child.name }}
+                    </span>
+                  </td>
+                  <td class="py-2 px-4 text-gray-300">{{ child.code }}</td>
+                  <td class="py-2 px-4 text-right">
+                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary/10 text-primary text-xs font-medium" title="Toplam Yatırım">
+                      {% include 'icons/plus.svg' %}
+                      {{ child.investments|length }}
+                    </span>
+                  </td>
+                  <td class="py-2 px-4 text-right">
+                    <a href="{{ url_for('investment_type.edit', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
+                      {% include 'icons/pencil.svg' %}
+                      Düzenle
+                    </a>
+                    <a href="{{ url_for('investment_type.delete', id=child.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu yatırım türünü silmek istediğinizden emin misiniz?')">
+                      {% include 'icons/trash.svg' %}
+                      Sil
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="p-8 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
+          <i class="fas fa-coins text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-medium text-gray-200 mb-1">Henüz yatırım türü bulunmuyor</h3>
+        <p class="text-gray-400">Yeni bir yatırım türü eklemek için "Yeni Tür" butonunu kullanabilirsiniz.</p>
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %} 
