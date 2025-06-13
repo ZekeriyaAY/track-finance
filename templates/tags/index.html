@@ -12,47 +12,57 @@
     </a>
   </div>
   <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
-    <table class="min-w-full text-sm align-middle">
-      <thead>
-        <tr class="bg-darkbg/80">
-          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tag Adı</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Gelir / Gider</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-800">
-        {% for tag in tags %}
-        <tr class="hover:bg-darkbg/40 transition">
-          <td class="py-2 px-4">
-            <span class="inline-flex items-center gap-2">
-              {% include 'icons/tag.svg' %}
-              {{ tag.name }}
-            </span>
-          </td>
-          <td class="py-2 px-4 text-right flex flex-row items-center justify-end gap-2">
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="Toplam Gelir">
-              {% include 'icons/plus.svg' %}
-              {{ tag.get_income_count() }}
-            </span>
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="Toplam Gider">
-              {% include 'icons/minus.svg' %}
-              {{ tag.get_expense_count() }}
-            </span>
-          </td>
-          <td class="py-2 px-4 text-right">
-            <a href="{{ url_for('tag.edit_tag', id=tag.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-              {% include 'icons/pencil.svg' %}
-              Düzenle
-            </a>
-            <a href="{{ url_for('tag.delete_tag', id=tag.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu tagı silmek istediğinizden emin misiniz?')">
-              {% include 'icons/trash.svg' %}
-              Sil
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {% if tags %}
+      <table class="min-w-full text-sm align-middle">
+        <thead>
+          <tr class="bg-darkbg/80">
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tag Adı</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Gelir / Gider</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800">
+          {% for tag in tags %}
+          <tr class="hover:bg-darkbg/40 transition">
+            <td class="py-2 px-4">
+              <span class="inline-flex items-center gap-2">
+                <i class="fas fa-tag text-primary"></i>
+                {{ tag.name }}
+              </span>
+            </td>
+            <td class="py-2 px-4 text-right flex flex-row items-center justify-end gap-2">
+              <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="Toplam Gelir">
+                {% include 'icons/plus.svg' %}
+                {{ tag.get_income_count() }}
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="Toplam Gider">
+                {% include 'icons/minus.svg' %}
+                {{ tag.get_expense_count() }}
+              </span>
+            </td>
+            <td class="py-2 px-4 text-right">
+              <a href="{{ url_for('tag.edit_tag', id=tag.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
+                {% include 'icons/pencil.svg' %}
+                Düzenle
+              </a>
+              <a href="{{ url_for('tag.delete_tag', id=tag.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu tagı silmek istediğinizden emin misiniz?')">
+                {% include 'icons/trash.svg' %}
+                Sil
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="p-8 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
+          <i class="fas fa-tag text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-medium text-gray-200 mb-1">Henüz tag bulunmuyor</h3>
+        <p class="text-gray-400">Yeni bir tag eklemek için "Yeni Tag" butonunu kullanabilirsiniz.</p>
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %} 

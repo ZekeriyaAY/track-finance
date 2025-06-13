@@ -13,92 +13,102 @@
   </div>
 
   <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
-    <table class="min-w-full text-sm align-middle">
-      <thead>
-        <tr class="bg-darkbg/80">
-          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Alış Tarihi</th>
-          <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tür</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Miktar</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Alış Fiyatı</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Güncel Fiyat</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Toplam Değer</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Kar/Zarar</th>
-          <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-800">
-        {% for investment in investments %}
-        <tr class="hover:bg-darkbg/40 transition">
-          <td class="py-2 px-4">{{ investment.purchase_date.strftime('%d.%m.%Y') }}</td>
-          <td class="py-2 px-4">
-            {% set type = investment.investment_type %}
-            {% set type_colors = {
-              'stock': 'bg-blue-700/20 text-blue-300',
-              'crypto': 'bg-purple-700/20 text-purple-300',
-              'gold': 'bg-yellow-700/20 text-yellow-300',
-              'silver': 'bg-gray-700/20 text-gray-300',
-              'platinum': 'bg-gray-700/20 text-gray-300',
-              'palladium': 'bg-gray-700/20 text-gray-300',
-              'usd': 'bg-green-700/20 text-green-300',
-              'eur': 'bg-blue-700/20 text-blue-300',
-              'gbp': 'bg-red-700/20 text-red-300',
-              'chf': 'bg-red-700/20 text-red-300',
-              'jpy': 'bg-red-700/20 text-red-300',
-              'bond': 'bg-green-700/20 text-green-300',
-              'real_estate': 'bg-orange-700/20 text-orange-300',
-              'other': 'bg-gray-700/20 text-gray-300'
-            } %}
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded {{ type_colors[type.code] }} text-xs font-medium">
-              {% if type.code == 'stock' %}
-                <i class="fas fa-chart-line"></i>
-              {% elif type.code == 'crypto' %}
-                <i class="fab fa-bitcoin"></i>
-              {% elif type.code in ['gold', 'silver', 'platinum', 'palladium'] %}
-                <i class="fas fa-coins"></i>
-              {% elif type.code in ['usd', 'eur', 'gbp', 'chf', 'jpy'] %}
-                <i class="fas fa-dollar-sign"></i>
-              {% elif type.code == 'bond' %}
-                <i class="fas fa-file-invoice-dollar"></i>
-              {% elif type.code == 'real_estate' %}
-                <i class="fas fa-home"></i>
-              {% else %}
-                <i class="fas fa-chart-pie"></i>
-              {% endif %}
-              {{ type.name }}
-            </span>
-          </td>
-          <td class="py-2 px-4 text-right">{{ "%.2f"|format(investment.quantity) }}</td>
-          <td class="py-2 px-4 text-right">{{ "%.2f"|format(investment.purchase_price) }} ₺</td>
-          <td class="py-2 px-4 text-right">{{ "%.2f"|format(investment.current_price) }} ₺</td>
-          <td class="py-2 px-4 text-right">{{ "%.2f"|format(investment.get_total_value()) }} ₺</td>
-          <td class="py-2 px-4 text-right">
-            {% set profit_loss = investment.get_profit_loss() %}
-            {% set profit_loss_percentage = investment.get_profit_loss_percentage() %}
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded {% if profit_loss > 0 %}bg-green-700/20 text-green-300{% elif profit_loss < 0 %}bg-red-700/20 text-red-300{% else %}bg-gray-700/20 text-gray-300{% endif %} text-xs font-medium">
-              {% if profit_loss > 0 %}
-                {% include 'icons/plus.svg' %}
-              {% elif profit_loss < 0 %}
-                {% include 'icons/minus.svg' %}
-              {% else %}
-                <i class="fas fa-equals"></i>
-              {% endif %}
-              {{ "%.2f"|format(profit_loss) }} ₺ ({{ "%.2f"|format(profit_loss_percentage) }}%)
-            </span>
-          </td>
-          <td class="py-2 px-4 text-right">
-            <a href="{{ url_for('investment.edit_investment', id=investment.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-              {% include 'icons/pencil.svg' %}
-              Düzenle
-            </a>
-            <a href="{{ url_for('investment.delete_investment', id=investment.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu yatırımı silmek istediğinizden emin misiniz?')">
-              {% include 'icons/trash.svg' %}
-              Sil
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {% if investments %}
+      <table class="min-w-full text-sm align-middle">
+        <thead>
+          <tr class="bg-darkbg/80">
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Alış Tarihi</th>
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tür</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Miktar</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Alış Fiyatı</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Güncel Fiyat</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Toplam Değer</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Kar/Zarar</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800">
+          {% for investment in investments %}
+          <tr class="hover:bg-darkbg/40 transition">
+            <td class="py-2 px-4">{{ investment.purchase_date.strftime('%d.%m.%Y') }}</td>
+            <td class="py-2 px-4">
+              {% set type = investment.investment_type %}
+              {% set type_colors = {
+                'stock': 'bg-blue-700/20 text-blue-300',
+                'crypto': 'bg-purple-700/20 text-purple-300',
+                'gold': 'bg-yellow-700/20 text-yellow-300',
+                'silver': 'bg-gray-700/20 text-gray-300',
+                'platinum': 'bg-gray-700/20 text-gray-300',
+                'palladium': 'bg-gray-700/20 text-gray-300',
+                'usd': 'bg-green-700/20 text-green-300',
+                'eur': 'bg-blue-700/20 text-blue-300',
+                'gbp': 'bg-red-700/20 text-red-300',
+                'chf': 'bg-red-700/20 text-red-300',
+                'jpy': 'bg-red-700/20 text-red-300',
+                'bond': 'bg-green-700/20 text-green-300',
+                'real_estate': 'bg-orange-700/20 text-orange-300',
+                'other': 'bg-gray-700/20 text-gray-300'
+              } %}
+              <span class="inline-flex items-center gap-1 px-2 py-1 rounded {{ type_colors[type.code] }} text-xs font-medium">
+                {% if type.code == 'stock' %}
+                  <i class="fas fa-chart-line text-sm"></i>
+                {% elif type.code == 'crypto' %}
+                  <i class="fab fa-bitcoin text-sm"></i>
+                {% elif type.code in ['gold', 'silver', 'platinum', 'palladium'] %}
+                  <i class="fas fa-coins text-sm"></i>
+                {% elif type.code in ['usd', 'eur', 'gbp', 'chf', 'jpy'] %}
+                  <i class="fas fa-dollar-sign text-sm"></i>
+                {% elif type.code == 'bond' %}
+                  <i class="fas fa-file-invoice-dollar text-sm"></i>
+                {% elif type.code == 'real_estate' %}
+                  <i class="fas fa-home text-sm"></i>
+                {% else %}
+                  <i class="fas fa-chart-pie text-sm"></i>
+                {% endif %}
+                {{ type.name }}
+              </span>
+            </td>
+            <td class="py-2 px-4 text-right">{{ "%.2f"|format(investment.quantity) }}</td>
+            <td class="py-2 px-4 text-right">{{ "%.2f"|format(investment.purchase_price) }} ₺</td>
+            <td class="py-2 px-4 text-right">{{ "%.2f"|format(investment.current_price) }} ₺</td>
+            <td class="py-2 px-4 text-right">{{ "%.2f"|format(investment.get_total_value()) }} ₺</td>
+            <td class="py-2 px-4 text-right">
+              {% set profit_loss = investment.get_profit_loss() %}
+              {% set profit_loss_percentage = investment.get_profit_loss_percentage() %}
+              <span class="inline-flex items-center gap-1 px-2 py-1 rounded {% if profit_loss > 0 %}bg-green-700/20 text-green-300{% elif profit_loss < 0 %}bg-red-700/20 text-red-300{% else %}bg-gray-700/20 text-gray-300{% endif %} text-xs font-medium">
+                {% if profit_loss > 0 %}
+                  <i class="fas fa-plus text-sm"></i>
+                {% elif profit_loss < 0 %}
+                  <i class="fas fa-minus text-sm"></i>
+                {% else %}
+                  <i class="fas fa-equals text-sm"></i>
+                {% endif %}
+                {{ "%.2f"|format(profit_loss) }} ₺ ({{ "%.2f"|format(profit_loss_percentage) }}%)
+              </span>
+            </td>
+            <td class="py-2 px-4 text-right">
+              <a href="{{ url_for('investment.edit_investment', id=investment.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
+                {% include 'icons/pencil.svg' %}
+                Düzenle
+              </a>
+              <a href="{{ url_for('investment.delete_investment', id=investment.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu yatırımı silmek istediğinizden emin misiniz?')">
+                {% include 'icons/trash.svg' %}
+                Sil
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="p-8 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
+          <i class="fas fa-chart-line text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-medium text-gray-200 mb-1">Henüz yatırım bulunmuyor</h3>
+        <p class="text-gray-400">Yeni bir yatırım eklemek için "Yeni Yatırım" butonunu kullanabilirsiniz.</p>
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %} 
