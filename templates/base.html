@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
@@ -36,7 +36,7 @@
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
                 <a class="font-bold text-lg flex items-center gap-2" href="{{ url_for('transaction.index') }}">
-                    {% include 'icons/logo.svg' %}
+                    <i class="fa-solid fa-arrow-trend-up text-2xl -mt-1"></i>
                     Finance Tracker
                 </a>
             </div>
@@ -46,16 +46,16 @@
                 <div class="relative group">
                   <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add', 'category.edit', 'tag.index', 'tag.add', 'tag.edit'] %}bg-primary/20 text-primary font-semibold{% endif %}">
                     Yönetim
-                    {% include 'icons/dropdown_arrow.svg' %}
+                    <i class="fas fa-chevron-down"></i>
                   </button>
                   <div class="absolute right-0 w-48 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out">
                     <div class="py-1">
                       <a href="{{ url_for('category.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add', 'category.edit'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
-                        {% include 'icons/folder.svg' %}
+                        <i class="fas fa-folder"></i>
                         Kategoriler
                       </a>
                       <a href="{{ url_for('tag.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['tag.index', 'tag.add', 'tag.edit'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
-                        {% include 'icons/tag.svg' %}
+                        <i class="fas fa-tag"></i>
                         Taglar
                       </a>
                       <a href="{{ url_for('investment_type.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['investment_type.index', 'investment_type.add', 'investment_type.edit'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
@@ -63,7 +63,7 @@
                         Yatırım Türleri
                       </a>
                       <a href="{{ url_for('settings.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint == 'settings.index' %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
-                        {% include 'icons/settings.svg' %}
+                        <i class="fas fa-cog"></i>
                         Ayarlar
                       </a>
                     </div>

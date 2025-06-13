@@ -7,7 +7,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-semibold">Taglar</h1>
     <a href="{{ url_for('tag.add_tag') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
-      {% include 'icons/plus.svg' %}
+      <i class="fas fa-plus"></i>
       Yeni Tag
     </a>
   </div>
@@ -26,27 +26,27 @@
           <tr class="hover:bg-darkbg/40 transition">
             <td class="py-2 px-4">
               <span class="inline-flex items-center gap-2">
-                <i class="fas fa-tag text-primary"></i>
+                <i class="fas fa-tag"></i>
                 {{ tag.name }}
               </span>
             </td>
             <td class="py-2 px-4 text-right flex flex-row items-center justify-end gap-2">
               <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="Toplam Gelir">
-                {% include 'icons/plus.svg' %}
+                <i class="fas fa-plus"></i>
                 {{ tag.get_income_count() }}
               </span>
               <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="Toplam Gider">
-                {% include 'icons/minus.svg' %}
+                <i class="fas fa-minus"></i>
                 {{ tag.get_expense_count() }}
               </span>
             </td>
             <td class="py-2 px-4 text-right">
               <a href="{{ url_for('tag.edit_tag', id=tag.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-                {% include 'icons/pencil.svg' %}
+                <i class="fas fa-pencil-alt"></i>
                 Düzenle
               </a>
               <a href="{{ url_for('tag.delete_tag', id=tag.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu tagı silmek istediğinizden emin misiniz?')">
-                {% include 'icons/trash.svg' %}
+                <i class="fas fa-trash"></i>
                 Sil
               </a>
             </td>
