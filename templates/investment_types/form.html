@@ -17,28 +17,52 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-2">
           <label for="name" class="block text-sm font-medium text-gray-300">Tür Adı</label>
-          <input type="text" id="name" name="name" value="{{ type.name if type else '' }}" required class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+          <input type="text" id="name" name="name" value="{{ type.name if type else '' }}" required 
+                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                 oninput="updateIconPreview()">
         </div>
 
         <div class="space-y-2">
           <label for="code" class="block text-sm font-medium text-gray-300">Kod</label>
-          <input type="text" id="code" name="code" value="{{ type.code if type else '' }}" required class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+          <input type="text" id="code" name="code" value="{{ type.code if type else '' }}" required 
+                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
         </div>
 
-        <div class="space-y-2">
-          <label for="icon" class="block text-sm font-medium text-gray-300">İkon</label>
-          <input type="text" id="icon" name="icon" value="{{ type.icon if type else 'fas fa-chart-pie' }}" class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-          <p class="text-sm text-gray-400">Font Awesome ikon sınıfı (örn: fas fa-chart-pie)</p>
+        <div class="space-y-2 md:col-span-2">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="space-y-2">
+              <label for="icon" class="block text-sm font-medium text-gray-300">İkon</label>
+              <input type="text" id="icon" name="icon" value="{{ type.icon if type else 'fas fa-chart-pie' }}" 
+                     class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                     oninput="updateIconPreview()">
+              <p class="text-sm text-gray-400">Font Awesome ikon sınıfı</p>
+            </div>
+
+            <div class="space-y-2">
+              <label for="color" class="block text-sm font-medium text-gray-300">Renk</label>
+              <div class="h-[34px]">
+                <input type="color" id="color" name="color" value="{{ type.color if type else '#3B82F6' }}" 
+                       class="w-full h-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                       oninput="updateIconPreview()">
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-300">Önizleme</label>
+              <div class="p-2 bg-darkbg border border-gray-700 rounded-md h-[34px] flex items-center">
+                <div class="flex items-center gap-2">
+                  <i id="iconPreview" class="{{ type.icon if type else 'fas fa-chart-pie' }}" style="color: {{ type.color if type else '#3B82F6' }}"></i>
+                  <span class="text-sm text-gray-300" id="iconPreviewText">{{ type.name if type else '' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="space-y-2">
-          <label for="color" class="block text-sm font-medium text-gray-300">Renk</label>
-          <input type="color" id="color" name="color" value="{{ type.color if type else '#3B82F6' }}" class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-        </div>
-
-        <div class="space-y-2">
+        <div class="space-y-2 md:col-span-2">
           <label for="parent_id" class="block text-sm font-medium text-gray-300">Üst Tür</label>
-          <select id="parent_id" name="parent_id" class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+          <select id="parent_id" name="parent_id" 
+                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
             <option value="">Ana Tür</option>
             {% for parent in types %}
               {% if not parent.parent_id and (not type or parent.id != type.id) %}
@@ -62,4 +86,18 @@
     </form>
   </div>
 </div>
+
+<script>
+function updateIconPreview() {
+  const iconInput = document.getElementById('icon');
+  const colorInput = document.getElementById('color');
+  const nameInput = document.getElementById('name');
+  const iconPreview = document.getElementById('iconPreview');
+  const iconPreviewText = document.getElementById('iconPreviewText');
+  
+  iconPreview.className = iconInput.value;
+  iconPreview.style.color = colorInput.value;
+  iconPreviewText.textContent = nameInput.value;
+}
+</script>
 {% endblock %} 
