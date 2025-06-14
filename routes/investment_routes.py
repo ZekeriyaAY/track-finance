@@ -2,7 +2,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
 from models.investment import Investment
 from models.investment_type import InvestmentType
+from models.investment_history import InvestmentHistory
 from datetime import datetime
+import logging
 
 investment_bp = Blueprint('investment', __name__, url_prefix='/investments')
 
@@ -57,10 +59,22 @@ def edit_investment(id):
     investment_types = InvestmentType.query.all()
     return render_template('investments/form.html', investment=investment, types=investment_types)
 
-@investment_bp.route('/delete/<int:id>')
-def delete_investment(id):
+@investment_bp.route('/delete/<int:id>', methods=['POST'])
+def delete(id):
+    """Yatırımı siler."""
     investment = Investment.query.get_or_404(id)
-    db.session.delete(investment)
-    db.session.commit()
-    flash('Yatırım başarıyla silindi!', 'success')
+    
+    try:
+        # Önce ilişkili geçmiş kayıtlarını sil
+        InvestmentHistory.query.filter_by(investment_id=id).delete()
+        # Sonra yatırımı sil
+        db.session.delete(investment)
+        db.session.commit()
+        flash('Yatırım başarıyla silindi.', 'success')
+        logger.info(f"Yatırım silindi: {investment.name}")
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Yatırım silinirken bir hata oluştu: {str(e)}")
+        flash('Yatırım silinirken bir hata oluştu.', 'error')
+    
     return redirect(url_for('investment.index')) 
