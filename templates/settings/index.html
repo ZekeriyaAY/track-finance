@@ -8,53 +8,38 @@
     <h1 class="text-2xl font-bold">Ayarlar</h1>
   </div>
 
+  <!-- Veritabanı Yönetimi -->
   <div class="bg-card rounded-xl shadow p-6 space-y-6">
     <div class="space-y-4">
       <h2 class="text-xl font-semibold">Veritabanı Yönetimi</h2>
       
-      <div class="space-y-4">
-        <div class="p-4 bg-darkbg/40 rounded-lg border border-red-500/20">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Örnek Veriler -->
+        <div class="p-4 bg-darkbg/40 rounded-lg border border-primary/20 flex flex-col">
+          <h3 class="text-lg font-medium mb-2 text-primary">Örnek Veriler</h3>
+          <p class="text-gray-400 text-sm mb-4">Varsayılan kategoriler, etiketler, yatırım türleri ve örnek işlemler oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
+          <div class="mt-auto">
+            <form action="{{ url_for('settings.create_dummy_data_route') }}" method="POST" class="inline">
+              <button type="submit" class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm font-medium">
+                <i class="fas fa-database"></i>
+                Örnek Verileri Oluştur
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Veritabanı Sıfırlama -->
+        <div class="p-4 bg-darkbg/40 rounded-lg border border-red-500/20 flex flex-col">
           <h3 class="text-lg font-medium mb-2 text-red-500">Veritabanını Sıfırla</h3>
           <p class="text-gray-400 text-sm mb-4">Tüm verileri siler ve veritabanını sıfırlar. Bu işlem geri alınamaz!</p>
-          <form action="{{ url_for('settings.reset_database') }}" method="POST" class="inline" onsubmit="return confirm('Tüm veriler silinecek! Bu işlemden emin misiniz?');">
-            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md !bg-red-500 !text-white hover:!bg-red-600 transition text-sm font-medium">
-              <i class="fas fa-trash"></i>
-              Veritabanını Sıfırla
-            </button>
-          </form>
-        </div>
-
-        <div class="p-4 bg-darkbg/40 rounded-lg">
-          <h3 class="text-lg font-medium mb-2">Varsayılan Kategoriler</h3>
-          <p class="text-gray-400 text-sm mb-4">Varsayılan kategori yapısını oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
-          <form action="{{ url_for('settings.create_default_categories_route') }}" method="POST" class="inline">
-            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm">
-              <i class="fas fa-plus"></i>
-              Varsayılan Kategorileri Oluştur
-            </button>
-          </form>
-        </div>
-
-        <div class="p-4 bg-darkbg/40 rounded-lg">
-          <h3 class="text-lg font-medium mb-2">Varsayılan Yatırım Türleri</h3>
-          <p class="text-gray-400 text-sm mb-4">Varsayılan yatırım türü yapısını oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
-          <form action="{{ url_for('settings.create_default_investment_types_route') }}" method="POST" class="inline">
-            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm">
-              <i class="fas fa-coins"></i>
-              Varsayılan Yatırım Türlerini Oluştur
-            </button>
-          </form>
-        </div>
-
-        <div class="p-4 bg-darkbg/40 rounded-lg">
-          <h3 class="text-lg font-medium mb-2">Örnek Veriler</h3>
-          <p class="text-gray-400 text-sm mb-4">Örnek kategoriler, etiketler ve işlemler oluşturur. Bu işlem sadece veritabanı boşken yapılabilir.</p>
-          <form action="{{ url_for('settings.create_dummy_data_route') }}" method="POST" class="inline">
-            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm">
-              <i class="fas fa-plus"></i>
-              Örnek Verileri Oluştur
-            </button>
-          </form>
+          <div class="mt-auto">
+            <form action="{{ url_for('settings.reset_database') }}" method="POST" class="inline" onsubmit="return confirm('Tüm veriler silinecek! Bu işlemden emin misiniz?');">
+              <button type="submit" class="inline-flex items-center gap-2 px-3 py-2 rounded-md !bg-red-500 !text-white hover:!bg-red-600 transition text-sm font-medium">
+                <i class="fas fa-trash"></i>
+                Veritabanını Sıfırla
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
