@@ -1,8 +1,12 @@
 import requests
 from datetime import datetime, date
+import logging
 from models.investment import Investment
 from models.investment_history import InvestmentHistory
 from models.__init__ import db
+
+# Loglama ayarları
+logger = logging.getLogger(__name__)
 
 class InvestmentService:
     """Yatırım işlemleri için servis sınıfı."""
@@ -39,8 +43,15 @@ class InvestmentService:
                 )
                 
                 db.session.add(history)
+            else:
+                logger.error(f"{investment.type.name} için fiyat güncellenemedi.")
         
-        db.session.commit()
+        try:
+            db.session.commit()
+            logger.info("Yatırım fiyatları başarıyla güncellendi.")
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Yatırım fiyatları güncellenirken bir hata oluştu: {str(e)}")
     
     @staticmethod
     def _get_gold_price():
@@ -51,7 +62,7 @@ class InvestmentService:
             data = response.json()
             return float(data['price'])
         except Exception as e:
-            print(f"Altın fiyatı alınamadı: {str(e)}")
+            logger.error(f"Altın fiyatı alınamadı: {str(e)}")
             return None
     
     @staticmethod
@@ -63,7 +74,7 @@ class InvestmentService:
             data = response.json()
             return float(data['price'])
         except Exception as e:
-            print(f"Bitcoin fiyatı alınamadı: {str(e)}")
+            logger.error(f"Bitcoin fiyatı alınamadı: {str(e)}")
             return None
     
     @staticmethod
@@ -75,7 +86,7 @@ class InvestmentService:
             data = response.json()
             return float(data['price'])
         except Exception as e:
-            print(f"Ethereum fiyatı alınamadı: {str(e)}")
+            logger.error(f"Ethereum fiyatı alınamadı: {str(e)}")
             return None
     
     @staticmethod
@@ -87,7 +98,7 @@ class InvestmentService:
             data = response.json()
             return float(data['price'])
         except Exception as e:
-            print(f"USD fiyatı alınamadı: {str(e)}")
+            logger.error(f"USD fiyatı alınamadı: {str(e)}")
             return None
     
     @staticmethod
@@ -99,5 +110,5 @@ class InvestmentService:
             data = response.json()
             return float(data['price'])
         except Exception as e:
-            print(f"EUR fiyatı alınamadı: {str(e)}")
+            logger.error(f"EUR fiyatı alınamadı: {str(e)}")
             return None 
