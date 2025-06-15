@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from models.__init__ import db
-from utils import create_dummy_data
+from utils import create_dummy_data, create_default_categories, create_default_tags, create_default_investment_types
 import logging
 
 # Loglama ayarları
@@ -22,6 +22,42 @@ def create_dummy_data_route():
     except Exception as e:
         logger.error(f"Örnek veriler oluşturulurken bir hata oluştu: {str(e)}")
         flash('Örnek veriler oluşturulurken bir hata oluştu.', 'error')
+    return redirect(url_for('settings.index'))
+
+@settings_bp.route('/create-default-categories', methods=['POST'])
+def create_default_categories_route():
+    """Varsayılan kategorileri oluşturur."""
+    try:
+        create_default_categories()
+        flash('Varsayılan kategoriler başarıyla oluşturuldu.', 'success')
+        logger.info("Varsayılan kategoriler başarıyla oluşturuldu.")
+    except Exception as e:
+        logger.error(f"Varsayılan kategoriler oluşturulurken bir hata oluştu: {str(e)}")
+        flash('Varsayılan kategoriler oluşturulurken bir hata oluştu.', 'error')
+    return redirect(url_for('settings.index'))
+
+@settings_bp.route('/create-default-tags', methods=['POST'])
+def create_default_tags_route():
+    """Varsayılan etiketleri oluşturur."""
+    try:
+        create_default_tags()
+        flash('Varsayılan etiketler başarıyla oluşturuldu.', 'success')
+        logger.info("Varsayılan etiketler başarıyla oluşturuldu.")
+    except Exception as e:
+        logger.error(f"Varsayılan etiketler oluşturulurken bir hata oluştu: {str(e)}")
+        flash('Varsayılan etiketler oluşturulurken bir hata oluştu.', 'error')
+    return redirect(url_for('settings.index'))
+
+@settings_bp.route('/create-default-investment-types', methods=['POST'])
+def create_default_investment_types_route():
+    """Varsayılan yatırım türlerini oluşturur."""
+    try:
+        create_default_investment_types()
+        flash('Varsayılan yatırım türleri başarıyla oluşturuldu.', 'success')
+        logger.info("Varsayılan yatırım türleri başarıyla oluşturuldu.")
+    except Exception as e:
+        logger.error(f"Varsayılan yatırım türleri oluşturulurken bir hata oluştu: {str(e)}")
+        flash('Varsayılan yatırım türleri oluşturulurken bir hata oluştu.', 'error')
     return redirect(url_for('settings.index'))
 
 @settings_bp.route('/reset-database', methods=['POST'])
