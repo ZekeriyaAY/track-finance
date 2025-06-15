@@ -6,6 +6,8 @@ from models.investment_history import InvestmentHistory
 from datetime import datetime
 import logging
 
+logger = logging.getLogger(__name__)
+
 investment_bp = Blueprint('investment', __name__, url_prefix='/investments')
 
 @investment_bp.route('/')
@@ -60,7 +62,7 @@ def edit_investment(id):
     return render_template('investments/form.html', investment=investment, types=investment_types)
 
 @investment_bp.route('/delete/<int:id>', methods=['POST'])
-def delete(id):
+def delete_investment(id):
     """Yatırımı siler."""
     investment = Investment.query.get_or_404(id)
     
