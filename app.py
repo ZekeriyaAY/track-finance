@@ -30,7 +30,7 @@ app.register_blueprint(settings_bp)
 
 @app.route('/')
 def index():
-    return redirect(url_for('transaction.index'))
+    return redirect(url_for('cashflow.index'))
 
 if __name__ == '__main__':
     app.run(debug=True) 
