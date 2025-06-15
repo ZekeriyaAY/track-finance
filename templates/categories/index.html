@@ -46,10 +46,13 @@
                   <i class="fas fa-pencil-alt"></i>
                   Düzenle
                 </a>
-                <a href="{{ url_for('category.delete_category', id=category.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')">
-                  <i class="fas fa-trash"></i>
-                  Sil
-                </a>
+                <form action="{{ url_for('category.delete_category', id=category.id) }}" method="POST" style="display:inline;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')">
+                    <i class="fas fa-trash"></i>
+                    Sil
+                  </button>
+                </form>
               </td>
             </tr>
             {% if category.subcategories %}
@@ -76,10 +79,13 @@
                       <i class="fas fa-pencil-alt"></i>
                       Düzenle
                     </a>
-                    <a href="{{ url_for('category.delete_category', id=subcategory.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')">
-                      <i class="fas fa-trash"></i>
-                      Sil
-                    </a>
+                    <form action="{{ url_for('category.delete_category', id=subcategory.id) }}" method="POST" style="display:inline;">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')">
+                        <i class="fas fa-trash"></i>
+                        Sil
+                      </button>
+                    </form>
                   </td>
                 </tr>
               {% endfor %}
