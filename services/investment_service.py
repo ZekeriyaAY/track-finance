@@ -2,7 +2,7 @@ import requests
 from datetime import datetime, date
 import logging
 from models.investment import Investment
-from models.investment_history import InvestmentHistory
+# from models.investment_history import InvestmentHistory
 from models.__init__ import db
 
 # Loglama ayarları
