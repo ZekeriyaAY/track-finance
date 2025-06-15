@@ -16,7 +16,7 @@ def add_tag():
         
         if Tag.query.filter_by(name=name).first():
             flash('Bu tag zaten mevcut!', 'error')
-            return redirect(url_for('tag.add'))
+            return redirect(url_for('tag.add_tag'))
         
         tag = Tag(name=name)
         db.session.add(tag)
