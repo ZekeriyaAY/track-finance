@@ -45,7 +45,7 @@ def edit_tag(id):
     
     return render_template('tags/form.html', tag=tag)
 
-@tag_bp.route('/delete/<int:id>')
+@tag_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_tag(id):
     tag = Tag.query.get_or_404(id)
     

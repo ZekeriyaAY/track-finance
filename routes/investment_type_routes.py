@@ -64,7 +64,7 @@ def edit(id):
     types = InvestmentType.query.filter_by(parent_id=None).all()
     return render_template('investment_types/form.html', type=type, types=types)
 
-@investment_type_bp.route('/delete/<int:id>')
+@investment_type_bp.route('/delete/<int:id>', methods=['POST'])
 def delete(id):
     type = InvestmentType.query.get_or_404(id)
     

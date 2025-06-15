@@ -50,7 +50,7 @@ def edit_category(id):
     categories = Category.query.filter_by(parent_id=None).all()
     return render_template('categories/form.html', category=category, categories=categories)
 
-@category_bp.route('/delete/<int:id>')
+@category_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_category(id):
     category = Category.query.get_or_404(id)
     
