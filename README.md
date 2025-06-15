@@ -92,7 +92,6 @@ track-finance/
 │   ├── transaction.py    # İşlem modeli
 │   ├── investment.py     # Yatırım modeli
 │   ├── investment_type.py # Yatırım türü modeli
-│   └── investment_history.py # Yatırım geçmişi modeli
 ├── routes/               # Route tanımlamaları
 ├── templates/            # HTML şablonları
 │   ├── base.html        # Ana şablon

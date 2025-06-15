@@ -5,8 +5,7 @@ from models.category import Category
 from models.tag import Tag
 from models.transaction import Transaction
 from models.investment_type import InvestmentType
-from models.investment import Investment
-from models.investment_history import InvestmentHistory
+from models.investment import InvestmentTransaction
 
 def create_default_categories():
     """Varsayılan gelir ve gider kategorilerini oluşturur."""
@@ -234,39 +233,23 @@ def create_dummy_investments(start_date, end_date):
                 
                 # Yatırım miktarı ve fiyatları oluştur
                 quantity = round(random.uniform(1, 10), 2)
-                purchase_price = round(random.uniform(100, 1000), 2)
-                current_price = round(purchase_price * random.uniform(0.8, 1.2), 2)  # %20 sapma
+                price = round(random.uniform(100, 1000), 2)
                 
                 # Yatırım işlemini oluştur
-                investment = Investment(
-                    type_id=investment_type.id,
-                    purchase_date=current_date,
-                    purchase_price=purchase_price,
-                    current_price=current_price,
+                transaction = InvestmentTransaction(
+                    investment_type_id=investment_type.id,
+                    transaction_date=current_date,
+                    transaction_type='buy',
+                    price=price,
                     quantity=quantity,
-                    description=f'{investment_type.name} yatırımı'
+                    description=f'{investment_type.name} alım işlemi'
                 )
                 
-                db.session.add(investment)
-                db.session.flush()  # ID'yi almak için flush
-                
-                # Geçmiş verileri oluştur
-                history_date = current_date
-                while history_date <= end_date:
-                    # Her gün için fiyat değişimi oluştur
-                    price_change = random.uniform(-0.02, 0.02)  # %2 sapma
-                    history_price = round(current_price * (1 + price_change), 2)
-                    
-                    history = InvestmentHistory(
-                        investment_id=investment.id,
-                        price=history_price,
-                        date=history_date
-                    )
-                    
-                    db.session.add(history)
-                    history_date += timedelta(days=1)
+                db.session.add(transaction)
         
         current_date += timedelta(days=1)
+    
+    db.session.commit()
 
 def create_dummy_data():
     """Örnek veriler oluşturur."""
