@@ -15,7 +15,7 @@ class InvestmentType(db.Model):
 
     # Relationships
     parent = db.relationship('InvestmentType', remote_side=[id], backref='children')
-    investments = db.relationship('Investment', backref='investment_type', lazy=True)
+    transactions = db.relationship('InvestmentTransaction', backref='investment_type', lazy=True)
 
     def __repr__(self):
         return f'<InvestmentType {self.name}>' 
