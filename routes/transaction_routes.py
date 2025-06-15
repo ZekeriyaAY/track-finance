@@ -5,14 +5,14 @@ from models.transaction import Transaction
 from models.category import Category
 from models.tag import Tag
 
-transaction_bp = Blueprint('transaction', __name__, url_prefix='/transactions')
+cashflow_bp = Blueprint('cashflow', __name__, url_prefix='/cashflow')
 
-@transaction_bp.route('/')
+@cashflow_bp.route('/')
 def index():
     transactions = Transaction.query.order_by(Transaction.date.desc()).all()
-    return render_template('transactions/index.html', transactions=transactions)
+    return render_template('cashflow/index.html', transactions=transactions)
 
-@transaction_bp.route('/add', methods=['GET', 'POST'])
+@cashflow_bp.route('/add', methods=['GET', 'POST'])
 def add_transaction():
     if request.method == 'POST':
         date = datetime.strptime(request.form['date'], '%Y-%m-%d')
@@ -37,14 +37,14 @@ def add_transaction():
         db.session.add(transaction)
         db.session.commit()
         flash('İşlem başarıyla eklendi!', 'success')
-        return redirect(url_for('transaction.index'))
+        return redirect(url_for('cashflow.index'))
 
     categories = Category.query.filter_by(parent_id=None).all()
     tags = Tag.query.all()
     today = datetime.now().strftime('%Y-%m-%d')
-    return render_template('transactions/form.html', categories=categories, tags=tags, today=today)
+    return render_template('cashflow/form.html', categories=categories, tags=tags, today=today)
 
-@transaction_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
+@cashflow_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_transaction(id):
     transaction = Transaction.query.get_or_404(id)
     if request.method == 'POST':
@@ -60,16 +60,16 @@ def edit_transaction(id):
 
         db.session.commit()
         flash('İşlem başarıyla güncellendi!', 'success')
-        return redirect(url_for('transaction.index'))
+        return redirect(url_for('cashflow.index'))
 
     categories = Category.query.filter_by(parent_id=None).all()
     tags = Tag.query.all()
-    return render_template('transactions/form.html', transaction=transaction, categories=categories, tags=tags)
+    return render_template('cashflow/form.html', transaction=transaction, categories=categories, tags=tags)
 
-@transaction_bp.route('/delete/<int:id>', methods=['POST'])
+@cashflow_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_transaction(id):
     transaction = Transaction.query.get_or_404(id)
     db.session.delete(transaction)
     db.session.commit()
     flash('İşlem başarıyla silindi!', 'success')
-    return redirect(url_for('transaction.index')) 
+    return redirect(url_for('cashflow.index')) 
