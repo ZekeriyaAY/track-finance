@@ -62,7 +62,7 @@
                 <i class="fas fa-pencil-alt"></i>
                 Düzenle
               </a>
-              <form action="{{ url_for('transaction.delete', id=transaction.id) }}" method="POST" style="display:inline;">
+              <form action="{{ url_for('transaction.delete_transaction', id=transaction.id) }}" method="POST" style="display:inline;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu işlemi silmek istediğinizden emin misiniz?')">
                   <i class="fas fa-trash"></i>

@@ -66,7 +66,7 @@ def edit_transaction(id):
     tags = Tag.query.all()
     return render_template('transactions/form.html', transaction=transaction, categories=categories, tags=tags)
 
-@transaction_bp.route('/delete/<int:id>')
+@transaction_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_transaction(id):
     transaction = Transaction.query.get_or_404(id)
     db.session.delete(transaction)
