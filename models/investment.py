@@ -3,7 +3,6 @@ from models.__init__ import db
 
 class InvestmentType(db.Model):
     __tablename__ = 'investment_type'
-    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     code = db.Column(db.String(50), nullable=False, unique=True)  # For internal use (e.g., 'stock', 'crypto')
@@ -21,7 +20,6 @@ class InvestmentType(db.Model):
         return f'<InvestmentType {self.name}>'
 
 class InvestmentTransaction(db.Model):
-    """Yatırım işlemlerini (alım/satım) temsil eder."""
     __tablename__ = 'investment_transaction'
     id = db.Column(db.Integer, primary_key=True)
     investment_type_id = db.Column(db.Integer, db.ForeignKey('investment_type.id'), nullable=False)
