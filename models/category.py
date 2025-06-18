@@ -11,10 +11,7 @@ class Category(db.Model):
     transactions = db.relationship('CashflowTransaction', backref='category', lazy=True)
     
     def get_all_transactions_count(self):
-        count = len(self.transactions)
-        for subcategory in self.subcategories:
-            count += subcategory.get_all_transactions_count()
-        return count
+        return self.get_income_count() + self.get_expense_count()
 
     def get_income_count(self):
         count = len([t for t in self.transactions if t.type == 'income'])
