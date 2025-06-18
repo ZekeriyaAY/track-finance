@@ -13,7 +13,7 @@ def index():
     return render_template('cashflow/index.html', transactions=transactions)
 
 @cashflow_bp.route('/add', methods=['GET', 'POST'])
-def add_transaction():
+def add_cashflow():
     if request.method == 'POST':
         date = datetime.strptime(request.form['date'], '%Y-%m-%d')
         amount = float(request.form['amount'])
@@ -45,7 +45,7 @@ def add_transaction():
     return render_template('cashflow/form.html', categories=categories, tags=tags, today=today)
 
 @cashflow_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
-def edit_transaction(id):
+def edit_cashflow(id):
     transaction = CashflowTransaction.query.get_or_404(id)
     if request.method == 'POST':
         transaction.date = datetime.strptime(request.form['date'], '%Y-%m-%d')
@@ -67,7 +67,7 @@ def edit_transaction(id):
     return render_template('cashflow/form.html', transaction=transaction, categories=categories, tags=tags)
 
 @cashflow_bp.route('/delete/<int:id>', methods=['POST'])
-def delete_transaction(id):
+def delete_cashflow(id):
     transaction = CashflowTransaction.query.get_or_404(id)
     db.session.delete(transaction)
     db.session.commit()

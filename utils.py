@@ -59,8 +59,7 @@ def create_default_investment_types():
             'color': '#F59E0B',
             'children': [
                 {'name': 'Bitcoin', 'code': 'btc', 'icon': 'fab fa-bitcoin', 'color': '#F59E0B'},
-                {'name': 'Ethereum', 'code': 'eth', 'icon': 'fab fa-ethereum', 'color': '#6366F1'},
-                {'name': 'Diğer Altcoinler', 'code': 'altcoins', 'icon': 'fas fa-coins', 'color': '#8B5CF6'}
+                {'name': 'Ethereum', 'code': 'eth', 'icon': 'fab fa-ethereum', 'color': '#6366F1'}
             ]
         },
         {
@@ -82,8 +81,7 @@ def create_default_investment_types():
             'children': [
                 {'name': 'USD', 'code': 'usd', 'icon': 'fas fa-dollar-sign', 'color': '#10B981'},
                 {'name': 'EUR', 'code': 'eur', 'icon': 'fas fa-euro-sign', 'color': '#3B82F6'},
-                {'name': 'GBP', 'code': 'gbp', 'icon': 'fas fa-pound-sign', 'color': '#8B5CF6'},
-                {'name': 'Diğer Dövizler', 'code': 'other_forex', 'icon': 'fas fa-money-bill-wave', 'color': '#6366F1'}
+                {'name': 'GBP', 'code': 'gbp', 'icon': 'fas fa-pound-sign', 'color': '#8B5CF6'}
             ]
         },
         {
@@ -93,7 +91,6 @@ def create_default_investment_types():
             'color': '#EC4899',
             'children': [
                 {'name': 'Konut', 'code': 'residential', 'icon': 'fas fa-home', 'color': '#EC4899'},
-                {'name': 'Ticari', 'code': 'commercial', 'icon': 'fas fa-store', 'color': '#8B5CF6'},
                 {'name': 'Arsa', 'code': 'land', 'icon': 'fas fa-mountain', 'color': '#10B981'}
             ]
         },
@@ -233,15 +230,16 @@ def create_dummy_investments(start_date, end_date):
                 # Yatırım miktarı ve fiyatları oluştur
                 quantity = round(random.uniform(1, 10), 2)
                 price = round(random.uniform(100, 1000), 2)
+                type = random.choice(['buy', 'sell'])
                 
                 # Yatırım işlemini oluştur
                 transaction = InvestmentTransaction(
                     investment_type_id=investment_type.id,
                     transaction_date=current_date,
-                    transaction_type='buy',
+                    transaction_type=type,
                     price=price,
                     quantity=quantity,
-                    description=f'{investment_type.name} alım işlemi'
+                    description=f'{investment_type.name} {type} işlemi'
                 )
                 
                 db.session.add(transaction)
