@@ -41,10 +41,10 @@
                 </a>
             </div>
             <div class="flex gap-2">
-                <a href="{{ url_for('cashflow.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['cashflow.index', 'cashflow.add_transaction', 'cashflow.edit_transaction'] %}bg-primary/20 text-primary font-semibold{% endif %}">Nakit Akışı</a>
+                <a href="{{ url_for('cashflow.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['cashflow.index', 'cashflow.add_cashflow', 'cashflow.edit_cashflow'] %}bg-primary/20 text-primary font-semibold{% endif %}">Nakit Akışı</a>
                 <a href="{{ url_for('investment.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment.index', 'investment.add_investment', 'investment.edit_investment'] %}bg-primary/20 text-primary font-semibold{% endif %}">Yatırımlar</a>
                 <div class="relative group">
-                  <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add_category', 'category.edit_category', 'tag.index', 'tag.add_tag', 'tag.edit_tag', 'investment_type.index', 'investment_type.add', 'investment_type.edit', 'settings.index'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                  <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add_category', 'category.edit_category', 'tag.index', 'tag.add_tag', 'tag.edit_tag', 'investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type', 'settings.index'] %}bg-primary/20 text-primary font-semibold{% endif %}">
                     Yönetim
                     <i class="fas fa-chevron-down"></i>
                   </button>
@@ -58,7 +58,7 @@
                         <i class="fas fa-tag"></i>
                         Taglar
                       </a>
-                      <a href="{{ url_for('investment_type.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['investment_type.index', 'investment_type.add', 'investment_type.edit'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
+                      <a href="{{ url_for('investment_type.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         <i class="fas fa-coins"></i>
                         Yatırım Türleri
                       </a>
