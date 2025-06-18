@@ -10,7 +10,7 @@ def index():
     return render_template('investment_type/index.html', types=types)
 
 @investment_type_bp.route('/add', methods=['GET', 'POST'])
-def add():
+def add_investment_type():
     if request.method == 'POST':
         name = request.form['name']
         code = request.form['code']
@@ -20,7 +20,7 @@ def add():
         
         if InvestmentType.query.filter_by(name=name).first():
             flash('Bu yatırım türü zaten mevcut!', 'error')
-            return redirect(url_for('investment_type.add'))
+            return redirect(url_for('investment_type.add_investment_type'))
         
         type = InvestmentType(
             name=name,
@@ -38,7 +38,7 @@ def add():
     return render_template('investment_type/form.html', types=types)
 
 @investment_type_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
-def edit(id):
+def edit_investment_type(id):
     type = InvestmentType.query.get_or_404(id)
     if request.method == 'POST':
         name = request.form['name']
@@ -50,7 +50,7 @@ def edit(id):
         existing = InvestmentType.query.filter_by(name=name).first()
         if existing and existing.id != id:
             flash('Bu yatırım türü zaten mevcut!', 'error')
-            return redirect(url_for('investment_type.edit', id=id))
+            return redirect(url_for('investment_type.edit_investment_type', id=id))
         
         type.name = name
         type.code = code
@@ -65,7 +65,7 @@ def edit(id):
     return render_template('investment_type/form.html', type=type, types=types)
 
 @investment_type_bp.route('/delete/<int:id>', methods=['POST'])
-def delete(id):
+def delete_investment_type(id):
     type = InvestmentType.query.get_or_404(id)
     
     # Check if type has children or investments
