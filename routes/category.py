@@ -8,7 +8,7 @@ category_bp = Blueprint('category', __name__, url_prefix='/categories')
 @category_bp.route('/')
 def index():
     categories = Category.query.filter_by(parent_id=None).all()
-    return render_template('categories/index.html', categories=categories)
+    return render_template('category/index.html', categories=categories)
 
 @category_bp.route('/add', methods=['GET', 'POST'])
 def add_category():
@@ -27,7 +27,7 @@ def add_category():
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
-    return render_template('categories/form.html', categories=categories)
+    return render_template('category/form.html', categories=categories)
 
 @category_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_category(id):
@@ -48,7 +48,7 @@ def edit_category(id):
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
-    return render_template('categories/form.html', category=category, categories=categories)
+    return render_template('category/form.html', category=category, categories=categories)
 
 @category_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_category(id):
