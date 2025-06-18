@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
 from models.category import Category
-from models.transaction import Transaction
+from models.cashflow import CashflowTransaction
 
 category_bp = Blueprint('category', __name__, url_prefix='/categories')
 

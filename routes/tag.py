@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
 from models.tag import Tag
+from models.cashflow import CashflowTransaction
 
 tag_bp = Blueprint('tag', __name__, url_prefix='/tags')
 

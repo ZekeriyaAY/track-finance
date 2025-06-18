@@ -8,7 +8,7 @@ class Category(db.Model):
     
     # Relationships
     subcategories = db.relationship('Category', backref=db.backref('parent', remote_side=[id]))
-    transactions = db.relationship('Transaction', backref='category', lazy=True)
+    transactions = db.relationship('CashflowTransaction', backref='category', lazy=True)
     
     def get_all_transactions_count(self):
         count = len(self.transactions)

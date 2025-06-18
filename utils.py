@@ -3,7 +3,7 @@ import random
 from models.__init__ import db
 from models.category import Category
 from models.tag import Tag
-from models.transaction import Transaction
+from models.cashflow import CashflowTransaction
 from models.investment import InvestmentType, InvestmentTransaction
 
 def create_default_categories():
@@ -203,7 +203,7 @@ def create_dummy_transactions(start_date, end_date):
             selected_tags = random.sample(tags, k=random.randint(0, 3))
             
             # İşlemi oluştur
-            transaction = Transaction(
+            transaction = CashflowTransaction(
                 date=current_date,
                 type=transaction_type,
                 amount=amount,

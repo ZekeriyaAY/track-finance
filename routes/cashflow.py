@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from datetime import datetime
 from models.__init__ import db
-from models.transaction import Transaction
+from models.cashflow import CashflowTransaction
 from models.category import Category
 from models.tag import Tag
 
@@ -9,7 +9,7 @@ cashflow_bp = Blueprint('cashflow', __name__, url_prefix='/cashflow')
 
 @cashflow_bp.route('/')
 def index():
-    transactions = Transaction.query.order_by(Transaction.date.desc()).all()
+    transactions = CashflowTransaction.query.order_by(CashflowTransaction.date.desc()).all()
     return render_template('cashflow/index.html', transactions=transactions)
 
 @cashflow_bp.route('/add', methods=['GET', 'POST'])
@@ -22,7 +22,7 @@ def add_transaction():
         description = request.form['description']
         tag_ids = request.form.getlist('tags')
 
-        transaction = Transaction(
+        transaction = CashflowTransaction(
             date=date,
             amount=amount,
             type=type,
@@ -46,7 +46,7 @@ def add_transaction():
 
 @cashflow_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_transaction(id):
-    transaction = Transaction.query.get_or_404(id)
+    transaction = CashflowTransaction.query.get_or_404(id)
     if request.method == 'POST':
         transaction.date = datetime.strptime(request.form['date'], '%Y-%m-%d')
         transaction.amount = float(request.form['amount'])
@@ -68,7 +68,7 @@ def edit_transaction(id):
 
 @cashflow_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_transaction(id):
-    transaction = Transaction.query.get_or_404(id)
+    transaction = CashflowTransaction.query.get_or_404(id)
     db.session.delete(transaction)
     db.session.commit()
     flash('İşlem başarıyla silindi!', 'success')
