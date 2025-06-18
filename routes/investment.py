@@ -11,7 +11,7 @@ investment_bp = Blueprint('investment', __name__, url_prefix='/investments')
 @investment_bp.route('/')
 def index():
     transactions = InvestmentTransaction.query.order_by(InvestmentTransaction.transaction_date.desc()).all()
-    return render_template('investments/index.html', transactions=transactions)
+    return render_template('investment/index.html', transactions=transactions)
 
 @investment_bp.route('/add', methods=['GET', 'POST'])
 def add_investment():
@@ -39,7 +39,7 @@ def add_investment():
     
     investment_types = InvestmentType.query.all()
     today = datetime.now().strftime('%Y-%m-%d')
-    return render_template('investments/form.html', types=investment_types, today=today)
+    return render_template('investment/form.html', types=investment_types, today=today)
 
 @investment_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_investment(id):
@@ -57,7 +57,7 @@ def edit_investment(id):
         return redirect(url_for('investment.index'))
     
     investment_types = InvestmentType.query.all()
-    return render_template('investments/form.html', transaction=transaction, types=investment_types)
+    return render_template('investment/form.html', transaction=transaction, types=investment_types)
 
 @investment_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_investment(id):

@@ -7,7 +7,7 @@ investment_type_bp = Blueprint('investment_type', __name__, url_prefix='/investm
 @investment_type_bp.route('/')
 def index():
     types = InvestmentType.query.filter_by(parent_id=None).all()
-    return render_template('investment_types/index.html', types=types)
+    return render_template('investment_type/index.html', types=types)
 
 @investment_type_bp.route('/add', methods=['GET', 'POST'])
 def add():
@@ -35,7 +35,7 @@ def add():
         return redirect(url_for('investment_type.index'))
     
     types = InvestmentType.query.filter_by(parent_id=None).all()
-    return render_template('investment_types/form.html', types=types)
+    return render_template('investment_type/form.html', types=types)
 
 @investment_type_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
@@ -62,7 +62,7 @@ def edit(id):
         return redirect(url_for('investment_type.index'))
     
     types = InvestmentType.query.filter_by(parent_id=None).all()
-    return render_template('investment_types/form.html', type=type, types=types)
+    return render_template('investment_type/form.html', type=type, types=types)
 
 @investment_type_bp.route('/delete/<int:id>', methods=['POST'])
 def delete(id):

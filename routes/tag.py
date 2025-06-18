@@ -7,7 +7,7 @@ tag_bp = Blueprint('tag', __name__, url_prefix='/tags')
 @tag_bp.route('/')
 def index():
     tags = Tag.query.order_by(Tag.name).all()
-    return render_template('tags/index.html', tags=tags)
+    return render_template('tag/index.html', tags=tags)
 
 @tag_bp.route('/add', methods=['GET', 'POST'])
 def add_tag():
@@ -24,7 +24,7 @@ def add_tag():
         flash('Tag başarıyla eklendi!', 'success')
         return redirect(url_for('tag.index'))
     
-    return render_template('tags/form.html')
+    return render_template('tag/form.html')
 
 @tag_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_tag(id):
@@ -43,7 +43,7 @@ def edit_tag(id):
         flash('Tag başarıyla güncellendi!', 'success')
         return redirect(url_for('tag.index'))
     
-    return render_template('tags/form.html', tag=tag)
+    return render_template('tag/form.html', tag=tag)
 
 @tag_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_tag(id):
