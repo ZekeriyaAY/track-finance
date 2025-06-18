@@ -13,7 +13,7 @@
   </div>
 
   <div class="bg-card rounded-xl shadow p-6">
-    <form method="POST" action="{{ url_for('investment_type.edit', id=type.id) if type else url_for('investment_type.add') }}" class="space-y-6">
+    <form method="POST" action="{{ url_for('investment_type.edit_investment_type', id=type.id) if type else url_for('investment_type.add_investment_type') }}" class="space-y-6">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-2">
