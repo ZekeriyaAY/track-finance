@@ -23,18 +23,22 @@ def add_investment():
         quantity = float(request.form['quantity'])
         description = request.form['description']
         
-        transaction = InvestmentTransaction(
-            investment_type_id=investment_type_id,
-            transaction_date=transaction_date,
-            transaction_type=transaction_type,
-            price=price,
-            quantity=quantity,
-            description=description
-        )
-        
-        db.session.add(transaction)
-        db.session.commit()
-        flash('Yatırım işlemi başarıyla eklendi!', 'success')
+        try:
+            transaction = InvestmentTransaction(
+                investment_type_id=investment_type_id,
+                transaction_date=transaction_date,
+                transaction_type=transaction_type,
+                price=price,
+                quantity=quantity,
+                description=description
+            )
+            db.session.add(transaction)
+            db.session.commit()
+            flash('Yatırım işlemi başarıyla eklendi!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f'Yatırım işlemi eklenirken bir hata oluştu: {str(e)}')
+            flash('Yatırım işlemi eklenirken bir hata oluştu.', 'error')
         return redirect(url_for('investment.index'))
     
     investment_types = InvestmentType.query.all()
@@ -45,15 +49,20 @@ def add_investment():
 def edit_investment(id):
     transaction = InvestmentTransaction.query.get_or_404(id)
     if request.method == 'POST':
-        transaction.investment_type_id = request.form['investment_type_id']
-        transaction.transaction_date = datetime.strptime(request.form['transaction_date'], '%Y-%m-%d')
-        transaction.transaction_type = request.form['transaction_type']
-        transaction.price = float(request.form['price'])
-        transaction.quantity = float(request.form['quantity'])
-        transaction.description = request.form['description']
-        
-        db.session.commit()
-        flash('Yatırım işlemi başarıyla güncellendi!', 'success')
+        try:
+            transaction.investment_type_id = request.form['investment_type_id']
+            transaction.transaction_date = datetime.strptime(request.form['transaction_date'], '%Y-%m-%d')
+            transaction.transaction_type = request.form['transaction_type']
+            transaction.price = float(request.form['price'])
+            transaction.quantity = float(request.form['quantity'])
+            transaction.description = request.form['description']
+            
+            db.session.commit()
+            flash('Yatırım işlemi başarıyla güncellendi!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f'Yatırım işlemi güncellenirken bir hata oluştu: {str(e)}')
+            flash('Yatırım işlemi güncellenirken bir hata oluştu.', 'error')
         return redirect(url_for('investment.index'))
     
     investment_types = InvestmentType.query.all()
@@ -61,9 +70,7 @@ def edit_investment(id):
 
 @investment_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_investment(id):
-    """Yatırım işlemini siler."""
     transaction = InvestmentTransaction.query.get_or_404(id)
-    
     try:
         db.session.delete(transaction)
         db.session.commit()
@@ -73,5 +80,4 @@ def delete_investment(id):
         db.session.rollback()
         logger.error(f"Yatırım işlemi silinirken bir hata oluştu: {str(e)}")
         flash('Yatırım işlemi silinirken bir hata oluştu.', 'error')
-    
     return redirect(url_for('investment.index')) 

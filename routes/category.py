@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
 from models.category import Category
-from models.cashflow import CashflowTransaction
+import logging
+
+logger = logging.getLogger(__name__)
 
 category_bp = Blueprint('category', __name__, url_prefix='/categories')
 
@@ -20,10 +22,15 @@ def add_category():
             flash('Bu kategori zaten mevcut!', 'error')
             return redirect(url_for('category.add_category'))
         
-        category = Category(name=name, parent_id=parent_id)
-        db.session.add(category)
-        db.session.commit()
-        flash('Kategori başarıyla eklendi!', 'success')
+        try:
+            category = Category(name=name, parent_id=parent_id)
+            db.session.add(category)
+            db.session.commit()
+            flash('Kategori başarıyla eklendi!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f'Kategori eklenirken bir hata oluştu: {str(e)}')
+            flash('Kategori eklenirken bir hata oluştu.', 'error')
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
@@ -41,10 +48,15 @@ def edit_category(id):
             flash('Bu kategori zaten mevcut!', 'error')
             return redirect(url_for('category.edit_category', id=id))
         
-        category.name = name
-        category.parent_id = parent_id
-        db.session.commit()
-        flash('Kategori başarıyla güncellendi!', 'success')
+        try:
+            category.name = name
+            category.parent_id = parent_id
+            db.session.commit()
+            flash('Kategori başarıyla güncellendi!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f'Kategori güncellenirken bir hata oluştu: {str(e)}')
+            flash('Kategori güncellenirken bir hata oluştu.', 'error')
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
@@ -53,8 +65,6 @@ def edit_category(id):
 @category_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_category(id):
     category = Category.query.get_or_404(id)
-    
-    # Check if category has subcategories or transactions
     if category.subcategories:
         flash('Bu kategorinin alt kategorileri var. Önce alt kategorileri silmelisiniz!', 'error')
         return redirect(url_for('category.index'))
@@ -62,7 +72,12 @@ def delete_category(id):
         flash('Bu kategoriye ait işlemler var. Önce işlemleri silmelisiniz!', 'error')
         return redirect(url_for('category.index'))
     
-    db.session.delete(category)
-    db.session.commit()
-    flash('Kategori başarıyla silindi!', 'success')
+    try:
+        db.session.delete(category)
+        db.session.commit()
+        flash('Kategori başarıyla silindi!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f'Kategori silinirken bir hata oluştu: {str(e)}')
+        flash('Kategori silinirken bir hata oluştu.', 'error')
     return redirect(url_for('category.index')) 

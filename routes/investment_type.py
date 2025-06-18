@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
 from models.investment import InvestmentType
+import logging
+
+logger = logging.getLogger(__name__)
 
 investment_type_bp = Blueprint('investment_type', __name__, url_prefix='/investment-types')
 
@@ -22,16 +25,21 @@ def add_investment_type():
             flash('Bu yatırım türü zaten mevcut!', 'error')
             return redirect(url_for('investment_type.add_investment_type'))
         
-        type = InvestmentType(
-            name=name,
-            code=code,
-            icon=icon,
-            color=color,
-            parent_id=parent_id
-        )
-        db.session.add(type)
-        db.session.commit()
-        flash('Yatırım türü başarıyla eklendi!', 'success')
+        try:
+            type = InvestmentType(
+                name=name,
+                code=code,
+                icon=icon,
+                color=color,
+                parent_id=parent_id
+            )
+            db.session.add(type)
+            db.session.commit()
+            flash('Yatırım türü başarıyla eklendi!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f'Yatırım türü eklenirken bir hata oluştu: {str(e)}')
+            flash('Yatırım türü eklenirken bir hata oluştu.', 'error')
         return redirect(url_for('investment_type.index'))
     
     types = InvestmentType.query.filter_by(parent_id=None).all()
@@ -52,13 +60,18 @@ def edit_investment_type(id):
             flash('Bu yatırım türü zaten mevcut!', 'error')
             return redirect(url_for('investment_type.edit_investment_type', id=id))
         
-        type.name = name
-        type.code = code
-        type.icon = icon
-        type.color = color
-        type.parent_id = parent_id
-        db.session.commit()
-        flash('Yatırım türü başarıyla güncellendi!', 'success')
+        try:
+            type.name = name
+            type.code = code
+            type.icon = icon
+            type.color = color
+            type.parent_id = parent_id
+            db.session.commit()
+            flash('Yatırım türü başarıyla güncellendi!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f'Yatırım türü güncellenirken bir hata oluştu: {str(e)}')
+            flash('Yatırım türü güncellenirken bir hata oluştu.', 'error')
         return redirect(url_for('investment_type.index'))
     
     types = InvestmentType.query.filter_by(parent_id=None).all()
@@ -67,8 +80,6 @@ def edit_investment_type(id):
 @investment_type_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_investment_type(id):
     type = InvestmentType.query.get_or_404(id)
-    
-    # Check if type has children or investments
     if type.children:
         flash('Bu yatırım türünün alt türleri var. Önce alt türleri silmelisiniz!', 'error')
         return redirect(url_for('investment_type.index'))
@@ -76,7 +87,12 @@ def delete_investment_type(id):
         flash('Bu yatırım türüne ait yatırımlar var. Önce yatırımları silmelisiniz!', 'error')
         return redirect(url_for('investment_type.index'))
     
-    db.session.delete(type)
-    db.session.commit()
-    flash('Yatırım türü başarıyla silindi!', 'success')
+    try:
+        db.session.delete(type)
+        db.session.commit()
+        flash('Yatırım türü başarıyla silindi!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f'Yatırım türü silinirken bir hata oluştu: {str(e)}')
+        flash('Yatırım türü silinirken bir hata oluştu.', 'error')
     return redirect(url_for('investment_type.index')) 
