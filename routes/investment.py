@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
-from models.investment import InvestmentTransaction
-from models.investment_type import InvestmentType
+from models.investment import InvestmentTransaction, InvestmentType
 from datetime import datetime
 import logging
 

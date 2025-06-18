@@ -4,8 +4,7 @@ from models.__init__ import db
 from models.category import Category
 from models.tag import Tag
 from models.transaction import Transaction
-from models.investment_type import InvestmentType
-from models.investment import InvestmentTransaction
+from models.investment import InvestmentType, InvestmentTransaction
 
 def create_default_categories():
     """Varsayılan gelir ve gider kategorilerini oluşturur."""

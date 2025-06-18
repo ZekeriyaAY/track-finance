@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
-from models.investment_type import InvestmentType
+from models.investment import InvestmentType
 
 investment_type_bp = Blueprint('investment_type', __name__, url_prefix='/investment-types')
 
