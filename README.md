@@ -1,139 +1,118 @@
-# Track Finance
+# 💰 Finance Tracker
 
-Kişisel finans, harcama ve yatırım takibi için geliştirilen, kategoriler, etiketler ve yatırım türleriyle detaylı yönetim sunan bir Flask uygulaması.
+A modern Flask-based web application designed to help you easily track your personal income, expenses, and investments. It offers full control over your financial situation with features like categories, tags, and customizable investment types.
 
-## Özellikler
+## ✨ Features
 
-- **İşlem Takibi:** Gelir ve giderlerinizi kategorilere ve etiketlere göre yönetin
-- **Kategori Yönetimi:** Ana ve alt kategorilerle harcamalarınızı organize edin
-- **Etiket Sistemi:** İşlemlerinize özel etiketler ekleyerek detaylı sınıflandırma yapın
-- **Yatırım Portföyü:** 
-  - Çeşitli yatırım türlerini (hisse, kripto, döviz, değerli metal, bono, gayrimenkul) takip edin
-  - Yatırım türlerini özelleştirin ve yönetin
-  - Otomatik fiyat geçmişi takibi
-- **Kolay Kurulum:** Varsayılan kategori, etiket ve yatırım türü yapısını tek tıkla oluşturun
-- **Modern Arayüz:** Responsive tasarım ve kullanıcı dostu navigasyon
+- **Cash Flow Tracking:** Manage your income and expenses by date, category, and tags.
+- **Investment Portfolio:** Track your various investments, such as stocks, currencies, and cryptocurrencies, along with their transaction history.
+- **Flexible Categorization:** Organize your income and expenses hierarchically with main and sub-categories.
+- **Tagging System:** Assign custom tags to your transactions for more detailed analysis.
+- **Customizable Assets:** Define and manage your own investment types.
+- **Easy Setup:** Get started immediately by creating a default data structure (categories, tags, investment types) with a single click.
+- **Database Management:** Reset the entire database or generate sample data for testing purposes through the settings page.
+- **Modern UI:** A mobile-friendly and user-oriented interface developed with Tailwind CSS.
 
-## Kurulum
+## 🛠️ Tech Stack
 
-### Gereksinimler
+- **Backend:** Python, Flask, SQLAlchemy
+- **Frontend:** HTML, Jinja2, Tailwind CSS, Font Awesome
+- **Database:** SQLite (default)
+- **Database Migrations:** Flask-Migrate, Alembic
 
+## 🚀 Installation & Setup
+
+### Prerequisites
 - Python 3.8+
 - pip
-- SQLite (varsayılan veritabanı)
 
-### Kurulum Adımları
+### Installation Steps
 
-1. Depoyu klonlayın:
-   ```bash
-   git clone https://github.com/kullanici/track-finance.git
-   cd track-finance
-   ```
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/ZekeriyaAY/track-finance.git
+    cd track-finance
+    ```
 
-2. Sanal ortam oluşturun ve aktif edin:
-   ```bash
-   # Windows için
-   python -m venv .venv
-   .venv\Scripts\activate
+2.  **Create and activate a virtual environment:**
+    - **Windows:**
+      ```bash
+      python -m venv .venv
+      .venv\Scripts\activate
+      ```
+    - **Linux/macOS:**
+      ```bash
+      python -m venv .venv
+      source .venv/bin/activate
+      ```
 
-   # Linux/Mac için
-   python -m venv .venv
-   source .venv/bin/activate
-   ```
+3.  **Install the required libraries:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-3. Bağımlılıkları yükleyin:
-   ```bash
-   pip install -r requirements.txt
-   ```
+4.  **Create and migrate the database:**
+    *The application will automatically create the `instance/finance.db` file on the first run.* To apply the migrations, run the following command:
+    ```bash
+    flask db upgrade
+    ```
 
-4. Veritabanını başlatın:
-   ```bash
-   flask db upgrade
-   ```
+5.  **Run the application:**
+    ```bash
+    flask run
+    ```
 
-5. Uygulamayı başlatın:
-   ```bash
-   flask run
-   ```
+6.  Open your browser and navigate to `http://127.0.0.1:5000`.
 
-6. Tarayıcınızda `http://localhost:5000` adresine gidin
+## 📈 Usage
 
-## Kullanım
+After starting the application for the first time, you can quickly set up the data structure:
 
-### İşlemler
-- Ana sayfada tüm işlemlerinizi görüntüleyin
-- Yeni gelir/gider ekleyin
-- Mevcut işlemleri düzenleyin veya silin
+1.  Navigate to **Settings** from the **Management** menu in the top-right corner.
+2.  Use the following buttons to generate default data:
+    - "Create Default Categories"
+    - "Create Default Tags"
+    - "Create Default Investment Types"
+3.  You can also use the "Create Sample Data" button to see how the application works with populated data.
 
-### Kategoriler ve Etiketler
-- Kategoriler menüsünden ana ve alt kategorileri yönetin
-- Etiketler menüsünden özel etiketler oluşturun
-- İşlemlerinizi kategorilere ve etiketlere göre filtreleyin
-
-### Yatırımlar
-- Yatırım türlerini özelleştirin
-- Yeni yatırımlar ekleyin
-- Fiyat geçmişini takip edin
-- Portföy performansını izleyin
-
-### Ayarlar
-- Varsayılan kategori yapısını oluşturun
-- Varsayılan etiketleri ekleyin
-- Varsayılan yatırım türlerini tanımlayın
-- Veritabanını sıfırlayın veya örnek veriler oluşturun
-
-## Proje Yapısı
+## 📂 Project Structure
 
 ```
 track-finance/
-├── models/                 # Veritabanı modelleri
-│   ├── category.py        # Kategori modeli
-│   ├── tag.py            # Etiket modeli
-│   ├── transaction.py    # İşlem modeli
-│   ├── investment.py     # Yatırım modeli
-│   ├── investment_type.py # Yatırım türü modeli
-├── routes/               # Route tanımlamaları
-├── templates/            # HTML şablonları
-│   ├── base.html        # Ana şablon
-│   ├── transactions/    # İşlem sayfaları
-│   ├── categories/      # Kategori sayfaları
-│   ├── tags/           # Etiket sayfaları
-│   ├── investments/    # Yatırım sayfaları
-│   ├── investment_types/ # Yatırım türü sayfaları
-│   └── settings/       # Ayarlar sayfaları
-├── static/              # Statik dosyalar
-│   └── css/            # CSS dosyaları
-├── migrations/          # Veritabanı migrasyon dosyaları
-├── instance/           # Instance-specific dosyalar
-├── utils.py            # Yardımcı fonksiyonlar
-├── app.py              # Ana uygulama dosyası
-└── requirements.txt    # Bağımlılıklar
+├── app.py                  # Main Flask application file
+├── models/                 # SQLAlchemy database models
+│   ├── category.py
+│   ├── tag.py
+│   ├── cashflow.py
+│   └── investment.py
+├── routes/                 # Flask Blueprint routes
+│   ├── category.py
+│   ├── tag.py
+│   ├── cashflow.py
+│   ├── investment.py
+│   ├── investment_type.py
+│   └── settings.py
+├── templates/              # Jinja2 HTML templates
+│   ├── base.html
+│   ├── category/
+│   ├── tag/
+│   ├── cashflow/
+│   ├── investment/
+│   ├── investment_type/
+│   └── settings/
+├── static/                 # Static files (CSS, JS, etc.)
+├── migrations/             # Database migration files
+├── instance/               # Instance-specific files (e.g., database)
+├── utils.py                # Helper functions (data creation, etc.)
+└── requirements.txt        # Python dependencies
 ```
 
-## Geliştirici Notları
+## 🤝 Contributing
 
-- Flask-Migrate ve Alembic ile veritabanı migrasyonları yönetilir
-- SQLAlchemy ORM kullanılarak veritabanı işlemleri yapılır
-- Tailwind CSS ile modern ve responsive arayüz sağlanır
-- Font Awesome ikonları kullanılır
+Contributions are welcome! Please feel free to open a pull request or create an issue.
 
-## Gelecek Özellikler
-
-- [ ] Yatırım performans grafikleri
-- [ ] Çoklu para birimi desteği
-- [ ] Otomatik fiyat güncellemeleri için API entegrasyonu
-- [ ] Dışa/içe aktarma özellikleri (CSV, Excel)
-- [ ] Detaylı raporlama ve analiz araçları
-- [ ] Kullanıcı yönetimi ve çoklu hesap desteği
-
-## Katkıda Bulunma
-
-1. Bu depoyu fork edin
-2. Yeni bir branch oluşturun (`git checkout -b feature/yeniOzellik`)
-3. Değişikliklerinizi commit edin (`git commit -am 'Yeni özellik: Açıklama'`)
-4. Branch'inizi push edin (`git push origin feature/yeniOzellik`)
-5. Pull Request oluşturun
-
-## Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+1.  Fork the project.
+2.  Create a new feature branch (`git checkout -b feature/new-amazing-feature`).
+3.  Commit your changes (`git commit -am 'Add some amazing feature'`).
+4.  Push to the branch (`git push origin feature/new-amazing-feature`).
+5.  Open a Pull Request.
