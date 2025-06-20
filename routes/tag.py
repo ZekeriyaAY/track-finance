@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
 from models.tag import Tag
+from flask_babel import _
 import logging
 
 logger = logging.getLogger(__name__)
@@ -18,18 +19,18 @@ def add_tag():
         name = request.form['name']
         
         if Tag.query.filter_by(name=name).first():
-            flash('Bu tag zaten mevcut!', 'error')
+            flash(_('This tag already exists!'), 'error')
             return redirect(url_for('tag.add_tag'))
         
         try:
             tag = Tag(name=name)
             db.session.add(tag)
             db.session.commit()
-            flash('Tag başarıyla eklendi!', 'success')
+            flash(_('Tag added successfully!'), 'success')
         except Exception as e:
             db.session.rollback()
-            logger.error(f'Tag eklenirken bir hata oluştu: {str(e)}')
-            flash('Tag eklenirken bir hata oluştu.', 'error')
+            logger.error(f'Error adding tag: {str(e)}')
+            flash(_('An error occurred while adding the tag.'), 'error')
         return redirect(url_for('tag.index'))
     return render_template('tag/form.html')
 
@@ -41,17 +42,17 @@ def edit_tag(id):
         
         existing = Tag.query.filter_by(name=name).first()
         if existing and existing.id != id:
-            flash('Bu tag zaten mevcut!', 'error')
+            flash(_('This tag already exists!'), 'error')
             return redirect(url_for('tag.edit_tag', id=id))
         
         try:
             tag.name = name
             db.session.commit()
-            flash('Tag başarıyla güncellendi!', 'success')
+            flash(_('Tag updated successfully!'), 'success')
         except Exception as e:
             db.session.rollback()
-            logger.error(f'Tag güncellenirken bir hata oluştu: {str(e)}')
-            flash('Tag güncellenirken bir hata oluştu.', 'error')
+            logger.error(f'Error updating tag: {str(e)}')
+            flash(_('An error occurred while updating the tag.'), 'error')
         return redirect(url_for('tag.index'))
     return render_template('tag/form.html', tag=tag)
 
@@ -59,15 +60,15 @@ def edit_tag(id):
 def delete_tag(id):
     tag = Tag.query.get_or_404(id)
     if tag.transactions:
-        flash('Bu tage ait işlemler var. Önce işlemleri silmelisiniz!', 'error')
+        flash(_('This tag has associated transactions and cannot be deleted.'), 'error')
         return redirect(url_for('tag.index'))
 
     try:
         db.session.delete(tag)
         db.session.commit()
-        flash('Tag başarıyla silindi!', 'success')
+        flash(_('Tag deleted successfully!'), 'success')
     except Exception as e:
         db.session.rollback()
-        logger.error(f'Tag silinirken bir hata oluştu: {str(e)}')
-        flash('Tag silinirken bir hata oluştu.', 'error')
+        logger.error(f'Error deleting tag: {str(e)}')
+        flash(_('An error occurred while deleting the tag.'), 'error')
     return redirect(url_for('tag.index'))

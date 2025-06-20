@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Kategoriler{% endblock %}
+{% block title %}{{ _('Categories') }}{% endblock %}
 
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-semibold">Kategoriler</h1>
+    <h1 class="text-2xl font-semibold">{{ _('Categories') }}</h1>
     <a href="{{ url_for('category.add_category') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
       <i class="fas fa-plus"></i>
-      Yeni Kategori
+      {{ _('New Category') }}
     </a>
   </div>
 
@@ -17,9 +17,9 @@
       <table class="min-w-full text-sm align-middle">
         <thead>
           <tr class="bg-darkbg/80">
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Kategori Adı</th>
-            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Gelir / Gider</th>
-            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">İşlemler</th>
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">{{ _('Category Name') }}</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">{{ _('Income / Expense') }}</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">{{ _('Actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-800">
@@ -32,11 +32,11 @@
                 </span>
               </td>
               <td class="py-2 px-4 text-right flex flex-row items-center justify-end gap-2">
-                <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="Toplam Gelir">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="{{ _('Total Income') }}">
                   <i class="fas fa-plus"></i>
                   {{ category.get_income_count() }}
                 </span>
-                <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="Toplam Gider">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="{{ _('Total Expense') }}">
                   <i class="fas fa-minus"></i>
                   {{ category.get_expense_count() }}
                 </span>
@@ -44,13 +44,13 @@
               <td class="py-2 px-4 text-right">
                 <a href="{{ url_for('category.edit_category', id=category.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
                   <i class="fas fa-pencil-alt"></i>
-                  Düzenle
+                  {{ _('Edit') }}
                 </a>
                 <form action="{{ url_for('category.delete_category', id=category.id) }}" method="POST" style="display:inline;">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                  <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')">
+                  <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('{{ _('Are you sure you want to delete this category?') }}')">
                     <i class="fas fa-trash"></i>
-                    Sil
+                    {{ _('Delete') }}
                   </button>
                 </form>
               </td>
@@ -65,11 +65,11 @@
                     </span>
                   </td>
                   <td class="py-2 px-4 text-right flex flex-row items-center justify-end gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="Toplam Gelir">
+                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-700/10 text-green-500 text-xs font-medium" title="{{ _('Total Income') }}">
                       <i class="fas fa-plus"></i>
                       {{ subcategory.get_income_count() }}
                     </span>
-                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="Toplam Gider">
+                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-700/10 text-red-500 text-xs font-medium" title="{{ _('Total Expense') }}">
                       <i class="fas fa-minus"></i>
                       {{ subcategory.get_expense_count() }}
                     </span>
@@ -77,13 +77,13 @@
                   <td class="py-2 px-4 text-right">
                     <a href="{{ url_for('category.edit_category', id=subcategory.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
                       <i class="fas fa-pencil-alt"></i>
-                      Düzenle
+                      {{ _('Edit') }}
                     </a>
                     <form action="{{ url_for('category.delete_category', id=subcategory.id) }}" method="POST" style="display:inline;">
                       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                      <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')">
+                      <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('{{ _('Are you sure you want to delete this category?') }}')">
                         <i class="fas fa-trash"></i>
-                        Sil
+                        {{ _('Delete') }}
                       </button>
                     </form>
                   </td>
@@ -98,8 +98,8 @@
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
           <i class="fas fa-folder text-2xl"></i>
         </div>
-        <h3 class="text-lg font-medium text-gray-200 mb-1">Henüz kategori bulunmuyor</h3>
-        <p class="text-gray-400">Yeni bir kategori eklemek için "Yeni Kategori" butonunu kullanabilirsiniz.</p>
+        <h3 class="text-lg font-medium text-gray-200 mb-1">{{ _('No categories found yet') }}</h3>
+        <p class="text-gray-400">{{ _('You can add a new category using the "New Category" button.') }}</p>
       </div>
     {% endif %}
   </div>

@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_babel import _
 from datetime import datetime
 from models.__init__ import db
 from models.cashflow import CashflowTransaction
@@ -38,11 +39,11 @@ def add_cashflow():
                 transaction.tags = tags
             db.session.add(transaction)
             db.session.commit()
-            flash('İşlem başarıyla eklendi!', 'success')
+            flash(_('Transaction added successfully!'), 'success')
         except Exception as e:
             db.session.rollback()
-            logger.error(f'İşlem eklenirken bir hata oluştu: {str(e)}')
-            flash('İşlem eklenirken bir hata oluştu.', 'error')
+            logger.error(f'Error adding transaction: {str(e)}')
+            flash(_('An error occurred while adding the transaction.'), 'error')
         return redirect(url_for('cashflow.index'))
 
     categories = Category.query.filter_by(parent_id=None).all()
@@ -64,11 +65,11 @@ def edit_cashflow(id):
             tag_ids = request.form.getlist('tags')
             transaction.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
             db.session.commit()
-            flash('İşlem başarıyla güncellendi!', 'success')
+            flash(_('Transaction updated successfully!'), 'success')
         except Exception as e:
             db.session.rollback()
-            logger.error(f'İşlem güncellenirken bir hata oluştu: {str(e)}')
-            flash('İşlem güncellenirken bir hata oluştu.', 'error')
+            logger.error(f'Error updating transaction: {str(e)}')
+            flash(_('An error occurred while updating the transaction.'), 'error')
         return redirect(url_for('cashflow.index'))
 
     categories = Category.query.filter_by(parent_id=None).all()
@@ -81,9 +82,9 @@ def delete_cashflow(id):
     try:
         db.session.delete(transaction)
         db.session.commit()
-        flash('İşlem başarıyla silindi!', 'success')
+        flash(_('Transaction deleted successfully!'), 'success')
     except Exception as e:
         db.session.rollback()
-        logger.error(f'İşlem silinirken bir hata oluştu: {str(e)}')
-        flash('İşlem silinirken bir hata oluştu.', 'error')
+        logger.error(f'Error deleting transaction: {str(e)}')
+        flash(_('An error occurred while deleting the transaction.'), 'error')
     return redirect(url_for('cashflow.index')) 

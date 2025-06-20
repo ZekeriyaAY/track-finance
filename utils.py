@@ -7,29 +7,29 @@ from models.cashflow import CashflowTransaction
 from models.investment import InvestmentType, InvestmentTransaction
 
 def create_default_categories():
-    """Varsayılan gelir ve gider kategorilerini oluşturur."""
+    """Creates default income and expense categories."""
     default_categories = {
-        'Gelir': ['Maaş', 'Freelance', 'Yatırım', 'Kira', 'Diğer'],
-        'Ulaşım': ['Uçak', 'Toplu Taşıma', 'Taksi', 'Yakıt'],
-        'Yemek': ['Restoran', 'Market', 'Kahve'],
-        'Alışveriş': ['Giyim', 'Elektronik', 'Ev Eşyaları', 'Kozmetik'],
-        'Sağlık': ['Doktor', 'İlaç', 'Spor', 'Sağlık Sigortası'],
-        'Eğlence': ['Sinema', 'Tiyatro', 'Konser', 'Hobi'],
-        'Konut': ['Kira', 'Faturalar', 'Bakım', 'Mobilya'],
-        'İletişim': ['Telefon', 'İnternet', 'TV', 'Abonelikler'],
-        'Eğitim': ['Kurs', 'Kitap', 'Sınav'],
-        'Seyahat': ['Otel', 'Aktivite'],
-        'Diğer': ['Hediye', 'Bağış', 'Vergi', 'Diğer']
+        'Income': ['Salary', 'Freelance', 'Investment', 'Rent', 'Other'],
+        'Transportation': ['Plane', 'Public Transport', 'Taxi', 'Fuel'],
+        'Food': ['Restaurant', 'Market', 'Coffee'],
+        'Shopping': ['Clothing', 'Electronics', 'Home Goods', 'Cosmetics'],
+        'Health': ['Doctor', 'Medicine', 'Sports', 'Health Insurance'],
+        'Entertainment': ['Cinema', 'Theater', 'Concert', 'Hobby'],
+        'Housing': ['Rent', 'Bills', 'Maintenance', 'Furniture'],
+        'Communication': ['Phone', 'Internet', 'TV', 'Subscriptions'],
+        'Education': ['Course', 'Book', 'Exam'],
+        'Travel': ['Hotel', 'Activity'],
+        'Other': ['Gift', 'Donation', 'Tax', 'Other']
     }
     
     for main_category, subcategories in default_categories.items():
-        # Ana kategoriyi oluştur
+        # Create the main category
         if not Category.query.filter_by(name=main_category).first():
             category = Category(name=main_category)
             db.session.add(category)
-            db.session.flush()  # ID'yi almak için flush
+            db.session.flush()  # Flush to get the ID
             
-            # Alt kategorileri oluştur
+            # Create subcategories
             for subcategory_name in subcategories:
                 if not Category.query.filter_by(name=subcategory_name).first():
                     subcategory = Category(name=subcategory_name, parent_id=category.id)
@@ -38,22 +38,22 @@ def create_default_categories():
     db.session.commit()
 
 def create_default_investment_types():
-    """Varsayılan yatırım türlerini oluşturur."""
+    """Creates default investment types."""
     main_types = [
         {
-            'name': 'Menkul Kıymetler',
+            'name': 'Securities',
             'code': 'securities',
             'icon': 'fas fa-chart-line',
             'color': '#3B82F6',
             'children': [
-                {'name': 'Hisse Senedi', 'code': 'stock', 'icon': 'fas fa-chart-line', 'color': '#3B82F6'},
-                {'name': 'Tahvil/Bono', 'code': 'bond', 'icon': 'fas fa-file-invoice-dollar', 'color': '#10B981'},
-                {'name': 'Vadeli İşlemler', 'code': 'futures', 'icon': 'fas fa-exchange-alt', 'color': '#8B5CF6'},
-                {'name': 'Yatırım Fonu', 'code': 'fund', 'icon': 'fas fa-piggy-bank', 'color': '#EC4899'}
+                {'name': 'Stock', 'code': 'stock', 'icon': 'fas fa-chart-line', 'color': '#3B82F6'},
+                {'name': 'Bond', 'code': 'bond', 'icon': 'fas fa-file-invoice-dollar', 'color': '#10B981'},
+                {'name': 'Futures', 'code': 'futures', 'icon': 'fas fa-exchange-alt', 'color': '#8B5CF6'},
+                {'name': 'Investment Fund', 'code': 'fund', 'icon': 'fas fa-piggy-bank', 'color': '#EC4899'}
             ]
         },
         {
-            'name': 'Kripto Varlıklar',
+            'name': 'Crypto Assets',
             'code': 'crypto_assets',
             'icon': 'fab fa-bitcoin',
             'color': '#F59E0B',
@@ -63,18 +63,18 @@ def create_default_investment_types():
             ]
         },
         {
-            'name': 'Değerli Metaller',
+            'name': 'Precious Metals',
             'code': 'precious_metals',
             'icon': 'fas fa-coins',
             'color': '#FCD34D',
             'children': [
-                {'name': 'Altın', 'code': 'gold', 'icon': 'fas fa-coins', 'color': '#FCD34D'},
-                {'name': 'Gümüş', 'code': 'silver', 'icon': 'fas fa-coins', 'color': '#9CA3AF'},
-                {'name': 'Platin', 'code': 'platinum', 'icon': 'fas fa-coins', 'color': '#6B7280'}
+                {'name': 'Gold', 'code': 'gold', 'icon': 'fas fa-coins', 'color': '#FCD34D'},
+                {'name': 'Silver', 'code': 'silver', 'icon': 'fas fa-coins', 'color': '#9CA3AF'},
+                {'name': 'Platinum', 'code': 'platinum', 'icon': 'fas fa-coins', 'color': '#6B7280'}
             ]
         },
         {
-            'name': 'Döviz',
+            'name': 'Forex',
             'code': 'forex',
             'icon': 'fas fa-dollar-sign',
             'color': '#10B981',
@@ -85,50 +85,50 @@ def create_default_investment_types():
             ]
         },
         {
-            'name': 'Gayrimenkul',
+            'name': 'Real Estate',
             'code': 'real_estate',
             'icon': 'fas fa-home',
             'color': '#EC4899',
             'children': [
-                {'name': 'Konut', 'code': 'residential', 'icon': 'fas fa-home', 'color': '#EC4899'},
-                {'name': 'Arsa', 'code': 'land', 'icon': 'fas fa-mountain', 'color': '#10B981'}
+                {'name': 'Residential', 'code': 'residential', 'icon': 'fas fa-home', 'color': '#EC4899'},
+                {'name': 'Land', 'code': 'land', 'icon': 'fas fa-mountain', 'color': '#10B981'}
             ]
         },
         {
-            'name': 'Emtia',
+            'name': 'Commodity',
             'code': 'commodity',
             'icon': 'fas fa-box',
             'color': '#6366F1',
             'children': [
-                {'name': 'Enerji', 'code': 'energy', 'icon': 'fas fa-bolt', 'color': '#F59E0B'},
-                {'name': 'Tarım', 'code': 'agriculture', 'icon': 'fas fa-seedling', 'color': '#10B981'},
-                {'name': 'Endüstriyel', 'code': 'industrial', 'icon': 'fas fa-industry', 'color': '#6B7280'}
+                {'name': 'Energy', 'code': 'energy', 'icon': 'fas fa-bolt', 'color': '#F59E0B'},
+                {'name': 'Agriculture', 'code': 'agriculture', 'icon': 'fas fa-seedling', 'color': '#10B981'},
+                {'name': 'Industrial', 'code': 'industrial', 'icon': 'fas fa-industry', 'color': '#6B7280'}
             ]
         },
         {
-            'name': 'Diğer',
+            'name': 'Other',
             'code': 'other',
             'icon': 'fas fa-ellipsis-h',
             'color': '#6B7280',
             'children': [
                 {'name': 'NFT', 'code': 'nft', 'icon': 'fas fa-image', 'color': '#8B5CF6'},
-                {'name': 'Koleksiyon', 'code': 'collectibles', 'icon': 'fas fa-gem', 'color': '#EC4899'},
-                {'name': 'Diğer', 'code': 'misc', 'icon': 'fas fa-ellipsis-h', 'color': '#6B7280'}
+                {'name': 'Collectibles', 'code': 'collectibles', 'icon': 'fas fa-gem', 'color': '#EC4899'},
+                {'name': 'Other', 'code': 'misc', 'icon': 'fas fa-ellipsis-h', 'color': '#6B7280'}
             ]
         }
     ]
 
-    # Ana türleri ve alt türleri oluştur
+    # Create main types and subtypes
     for main_type in main_types:
         children = main_type.pop('children', [])
         
-        # Ana türü oluştur
+        # Create main type
         if not InvestmentType.query.filter_by(code=main_type['code']).first():
             parent_type = InvestmentType(**main_type)
             db.session.add(parent_type)
-            db.session.flush()  # ID'yi almak için flush yapıyoruz
+            db.session.flush()  # Flush to get ID
             
-            # Alt türleri oluştur
+            # Create subtypes
             for child in children:
                 if not InvestmentType.query.filter_by(code=child['code']).first():
                     child_type = InvestmentType(**child, parent_id=parent_type.id)
@@ -137,26 +137,14 @@ def create_default_investment_types():
     db.session.commit()
 
 def create_default_tags():
-    """Varsayılan etiketleri oluşturur."""
+    """Creates default tags."""
     default_tags = [
-        'Acil Durum',
-        'Tasarruf',
-        'Yatırım',
-        'Borç',
-        'Gelir',
-        'Gider',
-        'Fatura',
-        'Kira',
-        'Market',
-        'Ulaşım',
-        'Sağlık',
-        'Eğitim',
-        'Eğlence',
-        'Hediye',
-        'Bağış'
+        'Emergency', 'Savings', 'Investment', 'Debt', 'Income', 'Expense',
+        'Bill', 'Rent', 'Market', 'Transportation', 'Health', 'Education',
+        'Entertainment', 'Gift', 'Donation'
     ]
 
-    # Etiketleri oluştur
+    # Create tags
     for tag_name in default_tags:
         if not Tag.query.filter_by(name=tag_name).first():
             tag = Tag(name=tag_name)
@@ -165,41 +153,41 @@ def create_default_tags():
     db.session.commit()
 
 def create_dummy_transactions(start_date, end_date):
-    """Belirtilen tarih aralığında örnek işlemler oluşturur."""
-    # Kategorileri ve etiketleri al
+    """Creates sample transactions within the specified date range."""
+    # Get categories and tags
     categories = Category.query.all()
     tags = Tag.query.all()
     
-    # Örnek işlem açıklamaları
+    # Sample transaction descriptions
     descriptions = [
-        'Market alışverişi', 'Restoran yemeği', 'Sinema bileti',
-        'Kira ödemesi', 'Elektrik faturası', 'Su faturası',
-        'İnternet faturası', 'Telefon faturası', 'Maaş',
-        'Freelance proje', 'Hediye', 'Tatil', 'Spor salonu üyeliği',
-        'Kitap alışverişi', 'Kıyafet alışverişi', 'Toplu taşıma',
-        'Taksi', 'Yakıt', 'Sağlık sigortası', 'Doktor randevusu'
+        'Market shopping', 'Restaurant meal', 'Cinema ticket',
+        'Rent payment', 'Electricity bill', 'Water bill',
+        'Internet bill', 'Phone bill', 'Salary',
+        'Freelance project', 'Gift', 'Holiday', 'Gym membership',
+        'Book shopping', 'Clothing shopping', 'Public transport',
+        'Taxi', 'Fuel', 'Health insurance', 'Doctor appointment'
     ]
     
     current_date = start_date
     while current_date <= end_date:
-        # Her gün 1-3 işlem oluştur
+        # Create 1-3 transactions per day
         num_transactions = random.randint(1, 3)
         
         for _ in range(num_transactions):
-            # Rastgele işlem tipi seç
+            # Choose a random transaction type
             transaction_type = random.choice(['income', 'expense'])
             
-            # İşlem tipine göre rastgele tutar oluştur
+            # Create a random amount based on the transaction type
             if transaction_type == 'income':
                 amount = round(random.uniform(1000, 10000), 2)
             else:
                 amount = round(random.uniform(50, 2000), 2)
             
-            # Rastgele kategori ve etiket seç
+            # Choose a random category and tags
             category = random.choice(categories)
             selected_tags = random.sample(tags, k=random.randint(0, 3))
             
-            # İşlemi oluştur
+            # Create the transaction
             transaction = CashflowTransaction(
                 date=current_date,
                 type=transaction_type,
@@ -214,32 +202,32 @@ def create_dummy_transactions(start_date, end_date):
         current_date += timedelta(days=1)
 
 def create_dummy_investments(start_date, end_date):
-    """Belirtilen tarih aralığında örnek yatırım işlemleri oluşturur."""
-    # Yatırım türlerini al
+    """Creates sample investment transactions within the specified date range."""
+    # Get investment types
     investment_types = InvestmentType.query.all()
     
     current_date = start_date
     while current_date <= end_date:
-        # Her ayın 1'inde 1-2 yatırım işlemi oluştur
+        # Create 1-2 investment transactions on the 1st of each month
         if current_date.day == 1:
             num_investments = random.randint(1, 2)
             for _ in range(num_investments):
-                # Rastgele yatırım türü seç
+                # Choose a random investment type
                 investment_type = random.choice(investment_types)
                 
-                # Yatırım miktarı ve fiyatları oluştur
+                # Create investment quantity and prices
                 quantity = round(random.uniform(1, 10), 2)
                 price = round(random.uniform(100, 1000), 2)
                 type = random.choice(['buy', 'sell'])
                 
-                # Yatırım işlemini oluştur
+                # Create the investment transaction
                 transaction = InvestmentTransaction(
                     investment_type_id=investment_type.id,
                     transaction_date=current_date,
                     transaction_type=type,
                     price=price,
                     quantity=quantity,
-                    description=f'{investment_type.name} {type} işlemi'
+                    description=f'{investment_type.name} {type} transaction'
                 )
                 
                 db.session.add(transaction)
@@ -249,17 +237,14 @@ def create_dummy_investments(start_date, end_date):
     db.session.commit()
 
 def create_dummy_data():
-    """Örnek veriler oluşturur."""
-    # Varsayılan verileri oluştur
+    """Creates default categories, tags, investment types, and dummy transactions."""
     create_default_categories()
     create_default_tags()
     create_default_investment_types()
     
-    # Son 3 ay için tarih aralığını belirle
-    end_date = datetime.now().date()
-    start_date = end_date - timedelta(days=90)
+    start_date = datetime.now() - timedelta(days=90)
+    end_date = datetime.now()
     
-    # Örnek işlemleri oluştur
     create_dummy_transactions(start_date, end_date)
     create_dummy_investments(start_date, end_date)
     

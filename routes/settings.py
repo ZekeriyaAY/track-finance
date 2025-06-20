@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
+from flask_babel import _
 from models.__init__ import db
 from utils import create_dummy_data, create_default_categories, create_default_tags, create_default_investment_types
 import logging
@@ -15,48 +16,48 @@ def index():
 def create_dummy_data_route():
     try:
         create_dummy_data()
-        flash('Örnek veriler başarıyla oluşturuldu.', 'success')
-        logger.info("Örnek veriler başarıyla oluşturuldu.")
+        flash(_('Dummy data created successfully.'), 'success')
+        logger.info("Dummy data created successfully.")
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Örnek veriler oluşturulurken bir hata oluştu: {str(e)}")
-        flash('Örnek veriler oluşturulurken bir hata oluştu.', 'error')
+        logger.error(f"An error occurred while creating dummy data: {str(e)}")
+        flash(_('An error occurred while creating dummy data.'), 'error')
     return redirect(url_for('settings.index'))
 
 @settings_bp.route('/create-default-categories', methods=['POST'])
 def create_default_categories_route():
     try:
         create_default_categories()
-        flash('Varsayılan kategoriler başarıyla oluşturuldu.', 'success')
-        logger.info("Varsayılan kategoriler başarıyla oluşturuldu.")
+        flash(_('Default categories created successfully.'), 'success')
+        logger.info("Default categories created successfully.")
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Varsayılan kategoriler oluşturulurken bir hata oluştu: {str(e)}")
-        flash('Varsayılan kategoriler oluşturulurken bir hata oluştu.', 'error')
+        logger.error(f"An error occurred while creating default categories: {str(e)}")
+        flash(_('An error occurred while creating default categories.'), 'error')
     return redirect(url_for('settings.index'))
 
 @settings_bp.route('/create-default-tags', methods=['POST'])
 def create_default_tags_route():
     try:
         create_default_tags()
-        flash('Varsayılan etiketler başarıyla oluşturuldu.', 'success')
-        logger.info("Varsayılan etiketler başarıyla oluşturuldu.")
+        flash(_('Default tags created successfully.'), 'success')
+        logger.info("Default tags created successfully.")
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Varsayılan etiketler oluşturulurken bir hata oluştu: {str(e)}")
-        flash('Varsayılan etiketler oluşturulurken bir hata oluştu.', 'error')
+        logger.error(f"An error occurred while creating default tags: {str(e)}")
+        flash(_('An error occurred while creating default tags.'), 'error')
     return redirect(url_for('settings.index'))
 
 @settings_bp.route('/create-default-investment-types', methods=['POST'])
 def create_default_investment_types_route():
     try:
         create_default_investment_types()
-        flash('Varsayılan yatırım türleri başarıyla oluşturuldu.', 'success')
-        logger.info("Varsayılan yatırım türleri başarıyla oluşturuldu.")
+        flash(_('Default investment types created successfully.'), 'success')
+        logger.info("Default investment types created successfully.")
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Varsayılan yatırım türleri oluşturulurken bir hata oluştu: {str(e)}")
-        flash('Varsayılan yatırım türleri oluşturulurken bir hata oluştu.', 'error')
+        logger.error(f"An error occurred while creating default investment types: {str(e)}")
+        flash(_('An error occurred while creating default investment types.'), 'error')
     return redirect(url_for('settings.index'))
 
 @settings_bp.route('/reset-database', methods=['POST'])
@@ -64,10 +65,10 @@ def reset_database():
     try:
         db.drop_all()
         db.create_all()
-        flash('Veritabanı başarıyla sıfırlandı.', 'success')
-        logger.info("Veritabanı başarıyla sıfırlandı.")
+        flash(_('Database reset successfully.'), 'success')
+        logger.info("Database reset successfully.")
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Veritabanı sıfırlanırken bir hata oluştu: {str(e)}")
-        flash('Veritabanı sıfırlanırken bir hata oluştu.', 'error')
+        logger.error(f"An error occurred while resetting the database: {str(e)}")
+        flash(_('An error occurred while resetting the database.'), 'error')
     return redirect(url_for('settings.index')) 

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.__init__ import db
 from models.category import Category
+from flask_babel import _
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,18 +20,18 @@ def add_category():
         parent_id = request.form['parent_id'] if request.form['parent_id'] else None
         
         if Category.query.filter_by(name=name, parent_id=parent_id).first():
-            flash('Bu kategori zaten mevcut!', 'error')
+            flash(_('This category already exists!'), 'error')
             return redirect(url_for('category.add_category'))
         
         try:
             category = Category(name=name, parent_id=parent_id)
             db.session.add(category)
             db.session.commit()
-            flash('Kategori başarıyla eklendi!', 'success')
+            flash(_('Category added successfully!'), 'success')
         except Exception as e:
             db.session.rollback()
-            logger.error(f'Kategori eklenirken bir hata oluştu: {str(e)}')
-            flash('Kategori eklenirken bir hata oluştu.', 'error')
+            logger.error(f'Error adding category: {str(e)}')
+            flash(_('An error occurred while adding the category.'), 'error')
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
@@ -45,18 +46,18 @@ def edit_category(id):
         
         existing = Category.query.filter_by(name=name, parent_id=parent_id).first()
         if existing and existing.id != id:
-            flash('Bu kategori zaten mevcut!', 'error')
+            flash(_('This category already exists!'), 'error')
             return redirect(url_for('category.edit_category', id=id))
         
         try:
             category.name = name
             category.parent_id = parent_id
             db.session.commit()
-            flash('Kategori başarıyla güncellendi!', 'success')
+            flash(_('Category updated successfully!'), 'success')
         except Exception as e:
             db.session.rollback()
-            logger.error(f'Kategori güncellenirken bir hata oluştu: {str(e)}')
-            flash('Kategori güncellenirken bir hata oluştu.', 'error')
+            logger.error(f'Error updating category: {str(e)}')
+            flash(_('An error occurred while updating the category.'), 'error')
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
@@ -66,18 +67,18 @@ def edit_category(id):
 def delete_category(id):
     category = Category.query.get_or_404(id)
     if category.subcategories:
-        flash('Bu kategorinin alt kategorileri var. Önce alt kategorileri silmelisiniz!', 'error')
+        flash(_('This category has subcategories. You must delete them first!'), 'error')
         return redirect(url_for('category.index'))
     if category.transactions:
-        flash('Bu kategoriye ait işlemler var. Önce işlemleri silmelisiniz!', 'error')
+        flash(_('This category has associated transactions and cannot be deleted.'), 'error')
         return redirect(url_for('category.index'))
     
     try:
         db.session.delete(category)
         db.session.commit()
-        flash('Kategori başarıyla silindi!', 'success')
+        flash(_('Category deleted successfully!'), 'success')
     except Exception as e:
         db.session.rollback()
-        logger.error(f'Kategori silinirken bir hata oluştu: {str(e)}')
-        flash('Kategori silinirken bir hata oluştu.', 'error')
+        logger.error(f'Error deleting category: {str(e)}')
+        flash(_('An error occurred while deleting the category.'), 'error')
     return redirect(url_for('category.index')) 

@@ -1,7 +1,8 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, request
 from flask_migrate import Migrate
 from models.__init__ import db
 from flask_wtf import CSRFProtect
+from flask_babel import Babel
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
@@ -11,6 +12,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 csrf = CSRFProtect(app)
+
+# Babel Configuration
+def get_locale():
+    # Kullanıcının tarayıcısından gelen dil tercihlerini al
+    # ve desteklediğimiz diller arasından en iyisini seç
+    return request.accept_languages.best_match(['en', 'tr'], 'en')
+
+babel = Babel(app, locale_selector=get_locale)
+
+@app.context_processor
+def inject_locale():
+    return dict(get_locale=get_locale)
 
 # Blueprint'leri import et
 from routes.cashflow import cashflow_bp

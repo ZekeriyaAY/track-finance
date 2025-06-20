@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}{{ 'Yatırım Türü Düzenle' if type else 'Yeni Yatırım Türü' }}{% endblock %}
+{% block title %}{{ _('Edit Investment Type') if type else _('New Investment Type') }}{% endblock %}
 
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold">{{ 'Yatırım Türü Düzenle' if type else 'Yeni Yatırım Türü Ekle' }}</h1>
+    <h1 class="text-2xl font-bold">{{ _('Edit Investment Type') if type else _('Add New Investment Type') }}</h1>
     <a href="{{ url_for('investment_type.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
       <i class="fas fa-arrow-left"></i>
-      Geri Dön
+      {{ _('Go Back') }}
     </a>
   </div>
 
@@ -17,14 +17,14 @@
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-2">
-          <label for="name" class="block text-sm font-medium text-gray-300">Tür Adı</label>
+          <label for="name" class="block text-sm font-medium text-gray-300">{{ _('Type Name') }}</label>
           <input type="text" id="name" name="name" value="{{ type.name if type else '' }}" required 
                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                  oninput="updateIconPreview()">
         </div>
 
         <div class="space-y-2">
-          <label for="code" class="block text-sm font-medium text-gray-300">Kod</label>
+          <label for="code" class="block text-sm font-medium text-gray-300">{{ _('Code') }}</label>
           <input type="text" id="code" name="code" value="{{ type.code if type else '' }}" required 
                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
         </div>
@@ -32,15 +32,15 @@
         <div class="space-y-2 md:col-span-2">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="space-y-2">
-              <label for="icon" class="block text-sm font-medium text-gray-300">İkon</label>
+              <label for="icon" class="block text-sm font-medium text-gray-300">{{ _('Icon') }}</label>
               <input type="text" id="icon" name="icon" value="{{ type.icon if type else 'fas fa-chart-pie' }}" 
                      class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                      oninput="updateIconPreview()">
-              <p class="text-sm text-gray-400">Font Awesome ikon sınıfı</p>
+              <p class="text-sm text-gray-400">{{ _('Font Awesome icon class') }}</p>
             </div>
 
             <div class="space-y-2">
-              <label for="color" class="block text-sm font-medium text-gray-300">Renk</label>
+              <label for="color" class="block text-sm font-medium text-gray-300">{{ _('Color') }}</label>
               <div class="h-[34px]">
                 <input type="color" id="color" name="color" value="{{ type.color if type else '#3B82F6' }}" 
                        class="w-full h-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
@@ -49,7 +49,7 @@
             </div>
 
             <div class="space-y-2">
-              <label class="block text-sm font-medium text-gray-300">Önizleme</label>
+              <label class="block text-sm font-medium text-gray-300">{{ _('Preview') }}</label>
               <div class="p-2 bg-darkbg border border-gray-700 rounded-md h-[34px] flex items-center">
                 <div class="flex items-center gap-2">
                   <i id="iconPreview" class="{{ type.icon if type else 'fas fa-chart-pie' }}" style="color: {{ type.color if type else '#3B82F6' }}"></i>
@@ -61,10 +61,10 @@
         </div>
 
         <div class="space-y-2 md:col-span-2">
-          <label for="parent_id" class="block text-sm font-medium text-gray-300">Üst Tür</label>
+          <label for="parent_id" class="block text-sm font-medium text-gray-300">{{ _('Parent Type') }}</label>
           <select id="parent_id" name="parent_id" 
                   class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-            <option value="">Ana Tür</option>
+            <option value="">{{ _('Main Type') }}</option>
             {% for parent in types %}
               {% if not parent.parent_id and (not type or parent.id != type.id) %}
               <option value="{{ parent.id }}" {% if type and type.parent_id == parent.id %}selected{% endif %}>{{ parent.name }}</option>
@@ -77,11 +77,11 @@
       <div class="flex justify-end gap-3 mt-6">
         <a href="{{ url_for('investment_type.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition">
           <i class="fas fa-times"></i>
-          İptal
+          {{ _('Cancel') }}
         </a>
         <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
           <i class="fas fa-save"></i>
-          Kaydet
+          {{ _('Save') }}
         </button>
       </div>
     </form>
