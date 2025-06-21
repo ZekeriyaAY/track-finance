@@ -6,10 +6,12 @@
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">{{ _('Edit Transaction') if transaction else _('Add New Transaction') }}</h1>
-    <a href="{{ url_for('investment.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
-      <i class="fas fa-arrow-left"></i>
-      {{ _('Go Back') }}
-    </a>
+    <form method="get" action="{{ url_for('investment.index') }}">
+      <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+        <i class="fas fa-arrow-left"></i>
+        {{ _('Go Back') }}
+      </button>
+    </form>
   </div>
 
   <div class="bg-card rounded-xl shadow p-6">
@@ -53,32 +55,26 @@
         </div>
 
         <div class="space-y-2">
-          <label for="price" class="block text-sm font-medium text-gray-300">{{ _('Unit Price') }}</label>
-          <input type="number" step="0.01" name="price" id="price" required 
-                 value="{{ "%.2f"|format(transaction.price) if transaction else '' }}" 
+          <label for="amount" class="block text-sm font-medium text-gray-300">{{ _('Amount') }}</label>
+          <input type="number" name="amount" id="amount" step="0.01" required 
+                 value="{{ transaction.amount if transaction else '' }}" 
                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
         </div>
 
         <div class="space-y-2">
-          <label for="quantity" class="block text-sm font-medium text-gray-300">{{ _('Quantity') }}</label>
-          <input type="number" step="0.01" name="quantity" id="quantity" required 
-                 value="{{ "%.2f"|format(transaction.quantity) if transaction else '' }}" 
-                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-        </div>
-
-        <div class="space-y-2">
-          <label for="description" class="block text-sm font-medium text-gray-300">{{ _('Description') }}</label>
-          <input type="text" name="description" id="description" 
-                 value="{{ transaction.description if transaction else '' }}" 
+          <label for="price" class="block text-sm font-medium text-gray-300">{{ _('Price') }}</label>
+          <input type="number" name="price" id="price" step="0.01" required 
+                 value="{{ transaction.price if transaction else '' }}" 
                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
         </div>
       </div>
-
       <div class="flex justify-end gap-3 mt-6">
-        <a href="{{ url_for('investment.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition">
-          <i class="fas fa-times"></i>
-          {{ _('Cancel') }}
-        </a>
+        <form method="get" action="{{ url_for('investment.index') }}">
+          <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition">
+            <i class="fas fa-times"></i>
+            {{ _('Cancel') }}
+          </button>
+        </form>
         <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
           <i class="fas fa-save"></i>
           {{ _('Save') }}
@@ -87,4 +83,4 @@
     </form>
   </div>
 </div>
-{% endblock %} 
+{% endblock %}
