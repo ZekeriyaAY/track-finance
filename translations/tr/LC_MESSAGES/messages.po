@@ -20,586 +20,586 @@ msgstr ""
 
 #: routes/cashflow.py:42
 msgid "Transaction added successfully!"
-msgstr ""
+msgstr "İşlem başarıyla eklendi!"
 
 #: routes/cashflow.py:46
 msgid "An error occurred while adding the transaction."
-msgstr ""
+msgstr "İşlem eklenirken bir hata oluştu."
 
 #: routes/cashflow.py:68
 msgid "Transaction updated successfully!"
-msgstr ""
+msgstr "İşlem başarıyla güncellendi!"
 
 #: routes/cashflow.py:72
 msgid "An error occurred while updating the transaction."
-msgstr ""
+msgstr "İşlem güncellenirken bir hata oluştu."
 
 #: routes/cashflow.py:85
 msgid "Transaction deleted successfully!"
-msgstr ""
+msgstr "İşlem başarıyla silindi!"
 
 #: routes/cashflow.py:89
 msgid "An error occurred while deleting the transaction."
-msgstr ""
+msgstr "İşlem silinirken bir hata oluştu."
 
 #: routes/category.py:23 routes/category.py:49
 msgid "This category already exists!"
-msgstr ""
+msgstr "Bu kategori zaten mevcut!"
 
 #: routes/category.py:30
 msgid "Category added successfully!"
-msgstr ""
+msgstr "Kategori başarıyla eklendi!"
 
 #: routes/category.py:34
 msgid "An error occurred while adding the category."
-msgstr ""
+msgstr "Kategori eklenirken bir hata oluştu."
 
 #: routes/category.py:56
 msgid "Category updated successfully!"
-msgstr ""
+msgstr "Kategori başarıyla güncellendi!"
 
 #: routes/category.py:60
 msgid "An error occurred while updating the category."
-msgstr ""
+msgstr "Kategori güncellenirken bir hata oluştu."
 
 #: routes/category.py:70
 msgid "This category has subcategories. You must delete them first!"
-msgstr ""
+msgstr "Bu kategorinin alt kategorileri var. Önce onları silmelisiniz!"
 
 #: routes/category.py:73
 msgid "This category has associated transactions and cannot be deleted."
-msgstr ""
+msgstr "Bu kategoriye bağlı işlemler var ve silinemez."
 
 #: routes/category.py:79
 msgid "Category deleted successfully!"
-msgstr ""
+msgstr "Kategori başarıyla silindi!"
 
 #: routes/category.py:83
 msgid "An error occurred while deleting the category."
-msgstr ""
+msgstr "Kategori silinirken bir hata oluştu."
 
 #: routes/investment.py:38
 msgid "Investment transaction added successfully!"
-msgstr ""
+msgstr "Yatırım işlemi başarıyla eklendi!"
 
 #: routes/investment.py:42
 msgid "An error occurred while adding the investment transaction."
-msgstr ""
+msgstr "Yatırım işlemi eklenirken bir hata oluştu."
 
 #: routes/investment.py:62
 msgid "Investment transaction updated successfully!"
-msgstr ""
+msgstr "Yatırım işlemi başarıyla güncellendi!"
 
 #: routes/investment.py:66
 msgid "An error occurred while updating the investment transaction."
-msgstr ""
+msgstr "Yatırım işlemi güncellenirken bir hata oluştu."
 
 #: routes/investment.py:78
 msgid "Investment transaction deleted successfully."
-msgstr ""
+msgstr "Yatırım işlemi başarıyla silindi."
 
 #: routes/investment.py:83
 msgid "An error occurred while deleting the investment transaction."
-msgstr ""
+msgstr "Yatırım işlemi silinirken bir hata oluştu."
 
 #: routes/investment_type.py:26 routes/investment_type.py:61
 msgid "This investment type already exists!"
-msgstr ""
+msgstr "Bu yatırım türü zaten mevcut!"
 
 #: routes/investment_type.py:39
 msgid "Investment type added successfully!"
-msgstr ""
+msgstr "Yatırım türü başarıyla eklendi!"
 
 #: routes/investment_type.py:43
 msgid "An error occurred while adding the investment type."
-msgstr ""
+msgstr "Yatırım türü eklenirken bir hata oluştu."
 
 #: routes/investment_type.py:71
 msgid "Investment type updated successfully!"
-msgstr ""
+msgstr "Yatırım türü başarıyla güncellendi!"
 
 #: routes/investment_type.py:75
 msgid "An error occurred while updating the investment type."
-msgstr ""
+msgstr "Yatırım türü güncellenirken bir hata oluştu."
 
 #: routes/investment_type.py:85
 msgid "This investment type has subtypes. You must delete them first!"
-msgstr ""
+msgstr "Bu yatırım türünün alt türleri var. Önce onları silmelisiniz!"
 
 #: routes/investment_type.py:88
 msgid "This investment type has associated investments and cannot be deleted."
-msgstr ""
+msgstr "Bu yatırım türüne bağlı yatırımlar var ve silinemez."
 
 #: routes/investment_type.py:94
 msgid "Investment type deleted successfully!"
-msgstr ""
+msgstr "Yatırım türü başarıyla silindi!"
 
 #: routes/investment_type.py:98
 msgid "An error occurred while deleting the investment type."
-msgstr ""
+msgstr "Yatırım türü silinirken bir hata oluştu."
 
 #: routes/settings.py:19
 msgid "Dummy data created successfully."
-msgstr ""
+msgstr "Sahte veriler başarıyla oluşturuldu."
 
 #: routes/settings.py:24
 msgid "An error occurred while creating dummy data."
-msgstr ""
+msgstr "Sahte veriler oluşturulurken bir hata oluştu."
 
 #: routes/settings.py:31
 msgid "Default categories created successfully."
-msgstr ""
+msgstr "Varsayılan kategoriler başarıyla oluşturuldu."
 
 #: routes/settings.py:36
 msgid "An error occurred while creating default categories."
-msgstr ""
+msgstr "Varsayılan kategoriler oluşturulurken bir hata oluştu."
 
 #: routes/settings.py:43
 msgid "Default tags created successfully."
-msgstr ""
+msgstr "Varsayılan etiketler başarıyla oluşturuldu."
 
 #: routes/settings.py:48
 msgid "An error occurred while creating default tags."
-msgstr ""
+msgstr "Varsayılan etiketler oluşturulurken bir hata oluştu."
 
 #: routes/settings.py:55
 msgid "Default investment types created successfully."
-msgstr ""
+msgstr "Varsayılan yatırım türleri başarıyla oluşturuldu."
 
 #: routes/settings.py:60
 msgid "An error occurred while creating default investment types."
-msgstr ""
+msgstr "Varsayılan yatırım türleri oluşturulurken bir hata oluştu."
 
 #: routes/settings.py:68
 msgid "Database reset successfully."
-msgstr ""
+msgstr "Veritabanı başarıyla sıfırlandı."
 
 #: routes/settings.py:73
 msgid "An error occurred while resetting the database."
-msgstr ""
+msgstr "Veritabanı sıfırlanırken bir hata oluştu."
 
 #: routes/tag.py:22 routes/tag.py:45
 msgid "This tag already exists!"
-msgstr ""
+msgstr "Bu etiket zaten mevcut!"
 
 #: routes/tag.py:29
 msgid "Tag added successfully!"
-msgstr ""
+msgstr "Etiket başarıyla eklendi!"
 
 #: routes/tag.py:33
 msgid "An error occurred while adding the tag."
-msgstr ""
+msgstr "Etiket eklenirken bir hata oluştu."
 
 #: routes/tag.py:51
 msgid "Tag updated successfully!"
-msgstr ""
+msgstr "Etiket başarıyla güncellendi!"
 
 #: routes/tag.py:55
 msgid "An error occurred while updating the tag."
-msgstr ""
+msgstr "Etiket güncellenirken bir hata oluştu."
 
 #: routes/tag.py:63
 msgid "This tag has associated transactions and cannot be deleted."
-msgstr ""
+msgstr "Bu etikete bağlı işlemler var ve silinemez."
 
 #: routes/tag.py:69
 msgid "Tag deleted successfully!"
-msgstr ""
+msgstr "Etiket başarıyla silindi!"
 
 #: routes/tag.py:73
 msgid "An error occurred while deleting the tag."
-msgstr ""
+msgstr "Etiket silinirken bir hata oluştu."
 
 #: templates/base.html:7 templates/base.html:40
 msgid "Finance Tracker"
-msgstr ""
+msgstr "Finans Takipçisi"
 
 #: templates/base.html:44
 msgid "Cash Flow"
-msgstr ""
+msgstr "Nakit Akışı"
 
 #: templates/base.html:45
 msgid "Investments"
-msgstr ""
+msgstr "Yatırımlar"
 
 #: templates/base.html:48
 msgid "Management"
-msgstr ""
+msgstr "Yönetim"
 
 #: templates/base.html:55 templates/category/index.html:3
 #: templates/category/index.html:8
 msgid "Categories"
-msgstr ""
+msgstr "Kategoriler"
 
 #: templates/base.html:59 templates/cashflow/form.html:66
 #: templates/cashflow/index.html:22 templates/tag/index.html:3
 #: templates/tag/index.html:8
 msgid "Tags"
-msgstr ""
+msgstr "Etiketler"
 
 #: templates/base.html:63 templates/investment_type/index.html:3
 #: templates/investment_type/index.html:8
 msgid "Investment Types"
-msgstr ""
+msgstr "Yatırım Türleri"
 
 #: templates/base.html:67 templates/settings/index.html:3
 #: templates/settings/index.html:8
 msgid "Settings"
-msgstr ""
+msgstr "Ayarlar"
 
 #: templates/cashflow/form.html:3 templates/cashflow/form.html:8
 #: templates/investment/form.html:3 templates/investment/form.html:8
 msgid "Edit Transaction"
-msgstr ""
+msgstr "İşlemi Düzenle"
 
 #: templates/cashflow/form.html:3 templates/cashflow/index.html:11
 #: templates/investment/index.html:11
 msgid "New Transaction"
-msgstr ""
+msgstr "Yeni İşlem"
 
 #: templates/cashflow/form.html:8 templates/investment/form.html:3
 #: templates/investment/form.html:8
 msgid "Add New Transaction"
-msgstr ""
+msgstr "Yeni İşlem Ekle"
 
 #: templates/cashflow/form.html:11 templates/category/form.html:11
 #: templates/investment/form.html:11 templates/investment_type/form.html:11
 #: templates/tag/form.html:11
 msgid "Go Back"
-msgstr ""
+msgstr "Geri Dön"
 
 #: templates/cashflow/form.html:20 templates/cashflow/index.html:19
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #: templates/cashflow/form.html:27 templates/cashflow/index.html:20
 msgid "Amount"
-msgstr ""
+msgstr "Tutar"
 
 #: templates/cashflow/form.html:34 templates/investment/form.html:47
 msgid "Transaction Type"
-msgstr ""
+msgstr "İşlem Türü"
 
 #: templates/cashflow/form.html:37
 msgid "Income"
-msgstr ""
+msgstr "Gelir"
 
 #: templates/cashflow/form.html:38
 msgid "Expense"
-msgstr ""
+msgstr "Gider"
 
 #: templates/cashflow/form.html:43 templates/cashflow/index.html:21
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #: templates/cashflow/form.html:59 templates/cashflow/index.html:23
 #: templates/investment/form.html:70 templates/investment/index.html:25
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #: templates/cashflow/form.html:83 templates/category/form.html:44
 #: templates/investment/form.html:80 templates/investment_type/form.html:80
 #: templates/tag/form.html:27
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #: templates/cashflow/form.html:87 templates/category/form.html:48
 #: templates/investment/form.html:84 templates/investment_type/form.html:84
 #: templates/tag/form.html:31
 msgid "Save"
-msgstr ""
+msgstr "Kaydet"
 
 #: templates/cashflow/index.html:3 templates/cashflow/index.html:8
-msgid "Transactions"
-msgstr ""
+msgid "Cashflow Transactions"
+msgstr "Nakit Akışı İşlemleri"
 
 #: templates/cashflow/index.html:24 templates/category/index.html:22
 #: templates/investment/index.html:26 templates/investment_type/index.html:23
 #: templates/tag/index.html:21
 msgid "Actions"
-msgstr ""
+msgstr "İşlemler"
 
 #: templates/cashflow/index.html:63 templates/category/index.html:47
 #: templates/category/index.html:80 templates/investment/index.html:59
 #: templates/investment_type/index.html:45
 #: templates/investment_type/index.html:75 templates/tag/index.html:46
 msgid "Edit"
-msgstr ""
+msgstr "Düzenle"
 
 #: templates/cashflow/index.html:67 templates/investment/index.html:63
 msgid "Are you sure you want to delete this transaction?"
-msgstr ""
+msgstr "Bu işlemi silmek istediğinizden emin misiniz?"
 
 #: templates/cashflow/index.html:69 templates/category/index.html:53
 #: templates/category/index.html:86 templates/investment/index.html:65
 #: templates/investment_type/index.html:51
 #: templates/investment_type/index.html:81 templates/tag/index.html:52
 msgid "Delete"
-msgstr ""
+msgstr "Sil"
 
 #: templates/cashflow/index.html:82 templates/investment/index.html:78
 msgid "No transactions found yet"
-msgstr ""
+msgstr "Henüz işlem bulunamadı"
 
 #: templates/cashflow/index.html:83 templates/investment/index.html:79
 msgid "You can add a new transaction using the \"New Transaction\" button."
-msgstr ""
+msgstr "\"Yeni İşlem\" butonunu kullanarak yeni bir işlem ekleyebilirsiniz."
 
 #: templates/category/form.html:3 templates/category/form.html:8
 msgid "Edit Category"
-msgstr ""
+msgstr "Kategoriyi Düzenle"
 
 #: templates/category/form.html:3 templates/category/form.html:8
 msgid "Add New Category"
-msgstr ""
+msgstr "Yeni Kategori Ekle"
 
 #: templates/category/form.html:19 templates/category/index.html:20
 msgid "Category Name"
-msgstr ""
+msgstr "Kategori Adı"
 
 #: templates/category/form.html:25
 msgid "Parent Category"
-msgstr ""
+msgstr "Üst Kategori"
 
 #: templates/category/form.html:28
 msgid "Main Category"
-msgstr ""
+msgstr "Ana Kategori"
 
 #: templates/category/index.html:11
 msgid "New Category"
-msgstr ""
+msgstr "Yeni Kategori"
 
 #: templates/category/index.html:21 templates/tag/index.html:20
 msgid "Income / Expense"
-msgstr ""
+msgstr "Gelir / Gider"
 
 #: templates/category/index.html:35 templates/category/index.html:68
 #: templates/tag/index.html:34
 msgid "Total Income"
-msgstr ""
+msgstr "Toplam Gelir"
 
 #: templates/category/index.html:39 templates/category/index.html:72
 #: templates/tag/index.html:38
 msgid "Total Expense"
-msgstr ""
+msgstr "Toplam Gider"
 
 #: templates/category/index.html:51 templates/category/index.html:84
 msgid "Are you sure you want to delete this category?"
-msgstr ""
+msgstr "Bu kategoriyi silmek istediğinizden emin misiniz?"
 
 #: templates/category/index.html:101
 msgid "No categories found yet"
-msgstr ""
+msgstr "Henüz kategori bulunamadı"
 
 #: templates/category/index.html:102
 msgid "You can add a new category using the \"New Category\" button."
-msgstr ""
+msgstr "\"Yeni Kategori\" butonunu kullanarak yeni bir kategori ekleyebilirsiniz."
 
 #: templates/investment/form.html:20 templates/investment/index.html:21
 msgid "Investment Type"
-msgstr ""
+msgstr "Yatırım Türü"
 
 #: templates/investment/form.html:40 templates/investment/index.html:20
 msgid "Transaction Date"
-msgstr ""
+msgstr "İşlem Tarihi"
 
 #: templates/investment/form.html:50
 msgid "Buy"
-msgstr ""
+msgstr "Alış"
 
 #: templates/investment/form.html:51
 msgid "Sell"
-msgstr ""
+msgstr "Satış"
 
 #: templates/investment/form.html:56 templates/investment/index.html:23
 msgid "Unit Price"
-msgstr ""
+msgstr "Birim Fiyat"
 
 #: templates/investment/form.html:63 templates/investment/index.html:22
 msgid "Quantity"
-msgstr ""
+msgstr "Miktar"
 
 #: templates/investment/index.html:3 templates/investment/index.html:8
 msgid "Investment Transactions"
-msgstr ""
+msgstr "Yatırım İşlemleri"
 
 #: templates/investment/index.html:24
 msgid "Total Amount"
-msgstr ""
+msgstr "Toplam Tutar"
 
 #: templates/investment_type/form.html:3 templates/investment_type/form.html:8
 msgid "Edit Investment Type"
-msgstr ""
+msgstr "Yatırım Türünü Düzenle"
 
 #: templates/investment_type/form.html:3
 msgid "New Investment Type"
-msgstr ""
+msgstr "Yeni Yatırım Türü"
 
 #: templates/investment_type/form.html:8
 msgid "Add New Investment Type"
-msgstr ""
+msgstr "Yeni Yatırım Türü Ekle"
 
 #: templates/investment_type/form.html:20
 #: templates/investment_type/index.html:20
 msgid "Type Name"
-msgstr ""
+msgstr "Tür Adı"
 
 #: templates/investment_type/form.html:27
 #: templates/investment_type/index.html:21
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #: templates/investment_type/form.html:35
 msgid "Icon"
-msgstr ""
+msgstr "Simge"
 
 #: templates/investment_type/form.html:39
 msgid "Font Awesome icon class"
-msgstr ""
+msgstr "Font Awesome simge sınıfı"
 
 #: templates/investment_type/form.html:43
 msgid "Color"
-msgstr ""
+msgstr "Renk"
 
 #: templates/investment_type/form.html:52
 msgid "Preview"
-msgstr ""
+msgstr "Önizleme"
 
 #: templates/investment_type/form.html:64
 msgid "Parent Type"
-msgstr ""
+msgstr "Üst Tür"
 
 #: templates/investment_type/form.html:67
 msgid "Main Type"
-msgstr ""
+msgstr "Ana Tür"
 
 #: templates/investment_type/index.html:11
 msgid "New Type"
-msgstr ""
+msgstr "Yeni Tür"
 
 #: templates/investment_type/index.html:22
 msgid "Number of Investments"
-msgstr ""
+msgstr "Yatırım Sayısı"
 
 #: templates/investment_type/index.html:37
 #: templates/investment_type/index.html:67
 msgid "Total Investments"
-msgstr ""
+msgstr "Toplam Yatırım"
 
 #: templates/investment_type/index.html:49
 #: templates/investment_type/index.html:79
 msgid "Are you sure you want to delete this investment type?"
-msgstr ""
+msgstr "Bu yatırım türünü silmek istediğinizden emin misiniz?"
 
 #: templates/investment_type/index.html:96
 msgid "No investment types found yet"
-msgstr ""
+msgstr "Henüz yatırım türü bulunamadı"
 
 #: templates/investment_type/index.html:97
 msgid "You can add a new investment type using the \"New Type\" button."
-msgstr ""
+msgstr "\"Yeni Tür\" butonunu kullanarak yeni bir yatırım türü ekleyebilirsiniz."
 
 #: templates/settings/index.html:14
 msgid "Default Data"
-msgstr ""
+msgstr "Varsayılan Veri"
 
 #: templates/settings/index.html:15
 msgid "Existing data will not be recreated, only missing data will be added."
-msgstr ""
+msgstr "Mevcut veriler yeniden oluşturulmaz, sadece eksik olanlar eklenir."
 
 #: templates/settings/index.html:20
 msgid "Default Categories"
-msgstr ""
+msgstr "Varsayılan Kategoriler"
 
 #: templates/settings/index.html:21
 msgid "Creates income and expense categories."
-msgstr ""
+msgstr "Gelir ve gider kategorileri oluşturur."
 
 #: templates/settings/index.html:27
 msgid "Create Categories"
-msgstr ""
+msgstr "Kategorileri Oluştur"
 
 #: templates/settings/index.html:35
 msgid "Default Tags"
-msgstr ""
+msgstr "Varsayılan Etiketler"
 
 #: templates/settings/index.html:36
 msgid "Creates default tags to be used for tagging transactions."
-msgstr ""
+msgstr "İşlemleri etiketlemek için varsayılan etiketler oluşturur."
 
 #: templates/settings/index.html:42
 msgid "Create Tags"
-msgstr ""
+msgstr "Etiketleri Oluştur"
 
 #: templates/settings/index.html:50
 msgid "Default Investment Types"
-msgstr ""
+msgstr "Varsayılan Yatırım Türleri"
 
 #: templates/settings/index.html:51
 msgid "Creates default investment types to categorize investments."
-msgstr ""
+msgstr "Yatırımları kategorize etmek için varsayılan yatırım türleri oluşturur."
 
 #: templates/settings/index.html:57
 msgid "Create Investment Types"
-msgstr ""
+msgstr "Yatırım Türlerini Oluştur"
 
 #: templates/settings/index.html:69
 msgid "Database Management"
-msgstr ""
+msgstr "Veritabanı Yönetimi"
 
 #: templates/settings/index.html:74
 msgid "Dummy Data"
-msgstr ""
+msgstr "Sahte Veri"
 
 #: templates/settings/index.html:75
 msgid ""
 "Creates default categories, tags, investment types and sample "
 "transactions."
-msgstr ""
+msgstr "Varsayılan kategoriler, etiketler, yatırım türleri ve örnek işlemler oluşturur."
 
 #: templates/settings/index.html:81
 msgid "Create Dummy Data"
-msgstr ""
+msgstr "Sahte Veriyi Oluştur"
 
 #: templates/settings/index.html:89 templates/settings/index.html:96
 msgid "Reset Database"
-msgstr ""
+msgstr "Veritabanını Sıfırla"
 
 #: templates/settings/index.html:90
 msgid "Deletes all data and resets the database. This action cannot be undone!"
-msgstr ""
+msgstr "Tüm verileri siler ve veritabanını sıfırlar. Bu işlem geri alınamaz!"
 
 #: templates/settings/index.html:92
 msgid "All data will be deleted! Are you sure about this action?"
-msgstr ""
+msgstr "Tüm veriler silinecek! Bu işlemden emin misiniz?"
 
 #: templates/tag/form.html:3 templates/tag/form.html:8
 msgid "Edit Tag"
-msgstr ""
+msgstr "Etiketi Düzenle"
 
 #: templates/tag/form.html:3 templates/tag/form.html:8
 msgid "Add Tag"
-msgstr ""
+msgstr "Etiket Ekle"
 
 #: templates/tag/form.html:19 templates/tag/index.html:19
 msgid "Tag Name"
-msgstr ""
+msgstr "Etiket Adı"
 
 #: templates/tag/index.html:11
 msgid "New Tag"
-msgstr ""
+msgstr "Yeni Etiket"
 
 #: templates/tag/index.html:50
 msgid "Are you sure you want to delete this tag?"
-msgstr ""
+msgstr "Bu etiketi silmek istediğinizden emin misiniz?"
 
 #: templates/tag/index.html:65
 msgid "No tags found yet"
-msgstr ""
+msgstr "Henüz etiket bulunamadı"
 
 #: templates/tag/index.html:66
 msgid "You can add a new tag using the \"New Tag\" button."
-msgstr ""
+msgstr "\"Yeni Etiket\" butonunu kullanarak yeni bir etiket ekleyebilirsiniz."
 
 #~ msgid "Back to Tags"
 #~ msgstr ""
