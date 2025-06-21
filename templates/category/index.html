@@ -6,10 +6,12 @@
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-semibold">{{ _('Categories') }}</h1>
-    <a href="{{ url_for('category.add_category') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
-      <i class="fas fa-plus"></i>
-      {{ _('New Category') }}
-    </a>
+    <form action="{{ url_for('category.add_category') }}" method="get" style="display:inline;">
+      <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+        <i class="fas fa-plus"></i>
+        {{ _('New Category') }}
+      </button>
+    </form>
   </div>
 
   <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
@@ -42,13 +44,15 @@
                 </span>
               </td>
               <td class="py-2 px-4 text-right">
-                <a href="{{ url_for('category.edit_category', id=category.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-                  <i class="fas fa-pencil-alt"></i>
-                  {{ _('Edit') }}
-                </a>
+                <form action="{{ url_for('category.edit_category', id=category.id) }}" method="get" style="display:inline;">
+                  <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
+                    <i class="fas fa-pencil-alt"></i>
+                    {{ _('Edit') }}
+                  </button>
+                </form>
                 <form action="{{ url_for('category.delete_category', id=category.id) }}" method="POST" style="display:inline;">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                  <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('{{ _('Are you sure you want to delete this category?') }}')">
+                  <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm(&quot;{{ _('Are you sure you want to delete this category?') }}&quot;)">
                     <i class="fas fa-trash"></i>
                     {{ _('Delete') }}
                   </button>
@@ -75,13 +79,15 @@
                     </span>
                   </td>
                   <td class="py-2 px-4 text-right">
-                    <a href="{{ url_for('category.edit_category', id=subcategory.id) }}" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-                      <i class="fas fa-pencil-alt"></i>
-                      {{ _('Edit') }}
-                    </a>
+                    <form action="{{ url_for('category.edit_category', id=subcategory.id) }}" method="get" style="display:inline;">
+                      <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
+                        <i class="fas fa-pencil-alt"></i>
+                        {{ _('Edit') }}
+                      </button>
+                    </form>
                     <form action="{{ url_for('category.delete_category', id=subcategory.id) }}" method="POST" style="display:inline;">
                       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                      <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('{{ _('Are you sure you want to delete this category?') }}')">
+                      <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm(&quot;{{ _('Are you sure you want to delete this category?') }}&quot;)">
                         <i class="fas fa-trash"></i>
                         {{ _('Delete') }}
                       </button>
@@ -104,4 +110,4 @@
     {% endif %}
   </div>
 </div>
-{% endblock %} 
+{% endblock %}
