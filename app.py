@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, request
+from flask import Flask, redirect, url_for, request, session, g
 from flask_migrate import Migrate
 from models.__init__ import db
 from flask_wtf import CSRFProtect
@@ -15,15 +15,21 @@ csrf = CSRFProtect(app)
 
 # Babel Configuration
 def get_locale():
-    # Kullanıcının tarayıcısından gelen dil tercihlerini al
-    # ve desteklediğimiz diller arasından en iyisini seç
+    # Önce session'dan bak, yoksa tarayıcıdan gelen dile bak
+    lang = session.get('lang')
+    if lang in ['en', 'tr']:
+        return lang
     return request.accept_languages.best_match(['en', 'tr'], 'en')
 
 babel = Babel(app, locale_selector=get_locale)
 
+@app.before_request
+def set_lang_code():
+    g.lang_code = get_locale()
+
 @app.context_processor
 def inject_locale():
-    return dict(get_locale=get_locale)
+    return dict(get_locale=get_locale, lang_code=g.get('lang_code', 'en'))
 
 # Blueprint'leri import et
 from routes.cashflow import cashflow_bp
@@ -46,4 +52,4 @@ def index():
     return redirect(url_for('cashflow.index'))
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)

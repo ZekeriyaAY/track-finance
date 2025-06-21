@@ -6,6 +6,14 @@
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">{{ _('Settings') }}</h1>
+    <form method="post" action="{{ url_for('settings.change_language') }}" class="flex items-center gap-2">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="language" class="text-sm text-gray-400">{{ _('Language') }}:</label>
+      <select name="language" id="language" class="rounded-md border border-gray-600 bg-darkbg/40 text-white px-2 py-1 text-sm" onchange="this.form.submit()">
+        <option value="en" {% if g.get('lang_code', 'en') == 'en' %}selected{% endif %}>English</option>
+        <option value="tr" {% if g.get('lang_code', 'en') == 'tr' %}selected{% endif %}>Türkçe</option>
+      </select>
+    </form>
   </div>
 
   <!-- Default Data -->
@@ -102,4 +110,4 @@
     </div>
   </div>
 </div>
-{% endblock %} 
+{% endblock %}

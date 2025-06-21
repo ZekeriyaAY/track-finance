@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g
 from flask_babel import _
 from models.__init__ import db
 from utils import create_dummy_data, create_default_categories, create_default_tags, create_default_investment_types
@@ -7,6 +7,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 settings_bp = Blueprint('settings', __name__, url_prefix='/settings')
+
+@settings_bp.route('/change-language', methods=['POST'])
+def change_language():
+    lang = request.form.get('language')
+    if lang in ['en', 'tr']:
+        session['lang'] = lang
+    return redirect(url_for('settings.index'))
 
 @settings_bp.route('/')
 def index():
@@ -71,4 +78,4 @@ def reset_database():
         db.session.rollback()
         logger.error(f"An error occurred while resetting the database: {str(e)}")
         flash(_('An error occurred while resetting the database.'), 'error')
-    return redirect(url_for('settings.index')) 
+    return redirect(url_for('settings.index'))
