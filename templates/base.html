@@ -43,6 +43,7 @@
             <div class="flex gap-2">
                 <a href="{{ url_for('cashflow.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['cashflow.index', 'cashflow.add_cashflow', 'cashflow.edit_cashflow'] %}bg-primary/20 text-primary font-semibold{% endif %}">{{ _('Cash Flow') }}</a>
                 <a href="{{ url_for('investment.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment.index', 'investment.add_investment', 'investment.edit_investment'] %}bg-primary/20 text-primary font-semibold{% endif %}">{{ _('Investments') }}</a>
+                <a href="{{ url_for('dashboard.dashboard_cashflow') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'dashboard.dashboard_cashflow' %}bg-primary/20 text-primary font-semibold{% endif %}"><i class="fa-solid fa-chart-line"></i> {{ _('Dashboard') }}</a>
                 <div class="relative group">
                   <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add_category', 'category.edit_category', 'tag.index', 'tag.add_tag', 'tag.edit_tag', 'investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type', 'settings.index'] %}bg-primary/20 text-primary font-semibold{% endif %}">
                     {{ _('Management') }}

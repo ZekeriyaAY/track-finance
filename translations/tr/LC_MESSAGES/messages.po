@@ -274,7 +274,7 @@ msgstr "Tarih"
 
 #: templates/cashflow/form.html:27 templates/cashflow/index.html:20
 msgid "Amount"
-msgstr "Tutar"
+msgstr "Miktar"
 
 #: templates/cashflow/form.html:34 templates/investment/form.html:47
 msgid "Transaction Type"

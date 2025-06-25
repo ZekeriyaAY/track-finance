@@ -38,6 +38,7 @@ from routes.tag import tag_bp
 from routes.investment import investment_bp
 from routes.investment_type import investment_type_bp
 from routes.settings import settings_bp
+from routes.dashboard import dashboard_bp
 
 # Blueprint'leri kaydet
 app.register_blueprint(cashflow_bp)
@@ -46,6 +47,7 @@ app.register_blueprint(tag_bp)
 app.register_blueprint(investment_bp)
 app.register_blueprint(investment_type_bp)
 app.register_blueprint(settings_bp)
+app.register_blueprint(dashboard_bp)
 
 @app.route('/')
 def index():
