@@ -601,6 +601,10 @@ msgstr "Henüz etiket bulunamadı"
 msgid "You can add a new tag using the \"New Tag\" button."
 msgstr "\"Yeni Etiket\" butonunu kullanarak yeni bir etiket ekleyebilirsiniz."
 
+#: templates/investment/form.html:64
+msgid "Price"
+msgstr "Fiyat"
+
 #~ msgid "Back to Tags"
 #~ msgstr ""
 
