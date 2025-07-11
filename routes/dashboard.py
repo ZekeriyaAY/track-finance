@@ -9,7 +9,7 @@ dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
 @dashboard_bp.route('/cashflow')
 def dashboard_cashflow():
-    # Aylara göre gelir ve gider toplamlarını çek
+    # Get monthly income and expense totals
     results = db.session.query(
         extract('year', CashflowTransaction.date).label('year'),
         extract('month', CashflowTransaction.date).label('month'),
@@ -17,7 +17,7 @@ def dashboard_cashflow():
         func.sum(CashflowTransaction.amount).label('total')
     ).group_by('year', 'month', CashflowTransaction.type).order_by('year', 'month').all()
 
-    # Sonuçları frontend için işleyelim
+    # Process results for frontend
     monthly_data = {}
     for year, month, ttype, total in results:
         key = f"{int(year)}-{int(month):02d}"
@@ -25,19 +25,19 @@ def dashboard_cashflow():
             monthly_data[key] = {'income': 0, 'expense': 0}
         monthly_data[key][ttype] = float(total)
 
-    # Grafik için x ve y eksenlerini hazırla
+    # Prepare x and y axes for chart
     labels = sorted(monthly_data.keys())
     income = [monthly_data[label]['income'] for label in labels]
     expense = [monthly_data[label]['expense'] for label in labels]
 
-    # Kategoriye göre gelir ve gider toplamlarını çek
+    # Get income and expense totals by category
     category_results = db.session.query(
         Category.name,
         CashflowTransaction.type,
         func.sum(CashflowTransaction.amount)
     ).join(Category, CashflowTransaction.category_id == Category.id).group_by(Category.name, CashflowTransaction.type).all()
 
-    # Sonuçları frontend için işleyelim
+    # Process results for frontend
     category_data = {}
     for cat_name, ttype, total in category_results:
         if cat_name not in category_data:
@@ -48,12 +48,12 @@ def dashboard_cashflow():
     category_income = [category_data[label]['income'] if category_data[label]['income'] is not None else 0 for label in category_labels]
     category_expense = [category_data[label]['expense'] if category_data[label]['expense'] is not None else 0 for label in category_labels]
 
-    # Toplam gelir, gider ve net bakiye
+    # Total income, expense and net balance
     total_income = db.session.query(func.sum(CashflowTransaction.amount)).filter(CashflowTransaction.type == 'income').scalar() or 0
     total_expense = db.session.query(func.sum(CashflowTransaction.amount)).filter(CashflowTransaction.type == 'expense').scalar() or 0
     net_balance = total_income - total_expense
 
-    # En çok harcama yapılan ilk 5 kategori (gider)
+    # Top 5 expense categories by amount
     top_expense_results = db.session.query(
         Category.name,
         func.sum(CashflowTransaction.amount).label('total_expense')

@@ -1,7 +1,7 @@
 from models.__init__ import db
 from datetime import datetime, date
 
-# CashflowTransaction-Tag ilişki tablosu
+# CashflowTransaction-Tag relationship table
 cashflow_transaction_tags = db.Table('cashflow_transaction_tags',
     db.Column('cashflow_transaction_id', db.Integer, db.ForeignKey('cashflow_transaction.id'), primary_key=True),
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True)
