@@ -2,6 +2,19 @@
 
 A modern Flask-based web application designed to help you easily track your personal income, expenses, and investments. It offers full control over your financial situation with features like categories, tags, and customizable investment types.
 
+## 🚀 Quick Start with Docker
+
+```bash
+# Clone and start in one command
+git clone <your-repo-url>
+cd track-finance
+make init
+```
+
+Visit: http://localhost
+
+For detailed deployment options, see [DEPLOYMENT.md](DEPLOYMENT.md)
+
 ## ✨ Features
 
 - **Cash Flow Tracking:** Manage your income and expenses by date, category, and tags.
@@ -13,11 +26,14 @@ A modern Flask-based web application designed to help you easily track your pers
 - **Database Management:** Reset the entire database or generate sample data for testing purposes through the settings page.
 - **Multi-language Support:** Internationalization (i18n) support with Flask-Babel for Turkish and English languages.
 - **Modern UI:** A mobile-friendly and user-oriented interface developed with Tailwind CSS.
+- **Docker Ready:** Production-ready Docker configuration with PostgreSQL and Nginx.
 
 ## 🛠️ Tech Stack
 
 - **Backend:** Python, Flask, SQLAlchemy
 - **Frontend:** HTML, Jinja2, Tailwind CSS, Font Awesome
+- **Database:** PostgreSQL (Production), SQLite (Development)
+- **Deployment:** Docker, Docker Compose, Gunicorn, Nginx
 - **Database:** SQLite (default)
 - **Database Migrations:** Flask-Migrate, Alembic
 - **Internationalization:** Flask-Babel for multi-language support
