@@ -9,17 +9,17 @@ from models.investment import InvestmentType, InvestmentTransaction
 def create_default_categories():
     """Creates default income and expense categories."""
     default_categories = {
-        'Income': ['Salary', 'Freelance', 'Investment', 'Rent', 'Other'],
-        'Transportation': ['Plane', 'Public Transport', 'Taxi', 'Fuel'],
-        'Food': ['Restaurant', 'Market', 'Coffee'],
-        'Shopping': ['Clothing', 'Electronics', 'Home Goods', 'Cosmetics'],
-        'Health': ['Doctor', 'Medicine', 'Sports', 'Health Insurance'],
-        'Entertainment': ['Cinema', 'Theater', 'Concert', 'Hobby'],
-        'Housing': ['Rent', 'Bills', 'Maintenance', 'Furniture'],
-        'Communication': ['Phone', 'Internet', 'TV', 'Subscriptions'],
-        'Education': ['Course', 'Book', 'Exam'],
-        'Travel': ['Hotel', 'Activity'],
-        'Other': ['Gift', 'Donation', 'Tax', 'Other']
+        'Income': ['Salary', 'Freelance', 'Investment', 'Rental'],
+        'Food': ['Restaurant', 'Groceries', 'Coffee'],
+        'Transportation': ['Public Transport', 'Fuel', 'Taxi', 'Flight'],
+        'Housing': ['Rent', 'Utilities', 'Maintenance'],
+        'Shopping': ['Clothing', 'Electronics', 'Other'],
+        'Health': ['Doctor', 'Pharmacy', 'Gym'],
+        'Entertainment': ['Cinema', 'Streaming', 'Hobbies'],
+        'Bills': ['Phone', 'Internet', 'Subscriptions'],
+        'Education': ['Courses', 'Books'],
+        'Travel': ['Hotels', 'Transport'],
+        'Other': ['Gifts', 'Miscellaneous']
     }
     
     for main_category, subcategories in default_categories.items():
@@ -46,15 +46,13 @@ def create_default_investment_types():
             'icon': 'fas fa-chart-line',
             'color': '#3B82F6',
             'children': [
-                {'name': 'Stock', 'code': 'stock', 'icon': 'fas fa-chart-line', 'color': '#3B82F6'},
-                {'name': 'Bond', 'code': 'bond', 'icon': 'fas fa-file-invoice-dollar', 'color': '#10B981'},
-                {'name': 'Futures', 'code': 'futures', 'icon': 'fas fa-exchange-alt', 'color': '#8B5CF6'},
-                {'name': 'Investment Fund', 'code': 'fund', 'icon': 'fas fa-piggy-bank', 'color': '#EC4899'}
+                {'name': 'Stocks', 'code': 'stocks', 'icon': 'fas fa-chart-line', 'color': '#3B82F6'},
+                {'name': 'ETF', 'code': 'etf', 'icon': 'fas fa-chart-bar', 'color': '#8B5CF6'}
             ]
         },
         {
-            'name': 'Crypto Assets',
-            'code': 'crypto_assets',
+            'name': 'Crypto',
+            'code': 'crypto',
             'icon': 'fab fa-bitcoin',
             'color': '#F59E0B',
             'children': [
@@ -63,46 +61,23 @@ def create_default_investment_types():
             ]
         },
         {
-            'name': 'Precious Metals',
-            'code': 'precious_metals',
+            'name': 'Metals',
+            'code': 'metals',
             'icon': 'fas fa-coins',
             'color': '#FCD34D',
             'children': [
                 {'name': 'Gold', 'code': 'gold', 'icon': 'fas fa-coins', 'color': '#FCD34D'},
-                {'name': 'Silver', 'code': 'silver', 'icon': 'fas fa-coins', 'color': '#9CA3AF'},
-                {'name': 'Platinum', 'code': 'platinum', 'icon': 'fas fa-coins', 'color': '#6B7280'}
+                {'name': 'Silver', 'code': 'silver', 'icon': 'fas fa-medal', 'color': '#9CA3AF'}
             ]
         },
         {
-            'name': 'Forex',
-            'code': 'forex',
+            'name': 'Currency',
+            'code': 'currency',
             'icon': 'fas fa-dollar-sign',
             'color': '#10B981',
             'children': [
                 {'name': 'USD', 'code': 'usd', 'icon': 'fas fa-dollar-sign', 'color': '#10B981'},
-                {'name': 'EUR', 'code': 'eur', 'icon': 'fas fa-euro-sign', 'color': '#3B82F6'},
-                {'name': 'GBP', 'code': 'gbp', 'icon': 'fas fa-pound-sign', 'color': '#8B5CF6'}
-            ]
-        },
-        {
-            'name': 'Real Estate',
-            'code': 'real_estate',
-            'icon': 'fas fa-home',
-            'color': '#EC4899',
-            'children': [
-                {'name': 'Residential', 'code': 'residential', 'icon': 'fas fa-home', 'color': '#EC4899'},
-                {'name': 'Land', 'code': 'land', 'icon': 'fas fa-mountain', 'color': '#10B981'}
-            ]
-        },
-        {
-            'name': 'Commodity',
-            'code': 'commodity',
-            'icon': 'fas fa-box',
-            'color': '#6366F1',
-            'children': [
-                {'name': 'Energy', 'code': 'energy', 'icon': 'fas fa-bolt', 'color': '#F59E0B'},
-                {'name': 'Agriculture', 'code': 'agriculture', 'icon': 'fas fa-seedling', 'color': '#10B981'},
-                {'name': 'Industrial', 'code': 'industrial', 'icon': 'fas fa-industry', 'color': '#6B7280'}
+                {'name': 'EUR', 'code': 'eur', 'icon': 'fas fa-euro-sign', 'color': '#3B82F6'}
             ]
         },
         {
@@ -111,9 +86,9 @@ def create_default_investment_types():
             'icon': 'fas fa-ellipsis-h',
             'color': '#6B7280',
             'children': [
-                {'name': 'NFT', 'code': 'nft', 'icon': 'fas fa-image', 'color': '#8B5CF6'},
-                {'name': 'Collectibles', 'code': 'collectibles', 'icon': 'fas fa-gem', 'color': '#EC4899'},
-                {'name': 'Other', 'code': 'misc', 'icon': 'fas fa-ellipsis-h', 'color': '#6B7280'}
+                {'name': 'Real Estate', 'code': 'real_estate', 'icon': 'fas fa-home', 'color': '#EC4899'},
+                {'name': 'Bonds', 'code': 'bonds', 'icon': 'fas fa-file-contract', 'color': '#059669'},
+                {'name': 'Other', 'code': 'misc', 'icon': 'fas fa-question', 'color': '#6B7280'}
             ]
         }
     ]
@@ -139,9 +114,9 @@ def create_default_investment_types():
 def create_default_tags():
     """Creates default tags."""
     default_tags = [
-        'Emergency', 'Savings', 'Investment', 'Debt', 'Income', 'Expense',
-        'Bill', 'Rent', 'Market', 'Transportation', 'Health', 'Education',
-        'Entertainment', 'Gift', 'Donation'
+        'Recurring', 'One-time', 'Emergency', 'Planned',
+        'Personal', 'Business', 'Cash', 'Card',
+        'Essential', 'Optional'
     ]
 
     # Create tags
