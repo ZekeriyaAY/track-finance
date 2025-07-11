@@ -4,7 +4,7 @@
     {% block head %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %} - {{ _('Finance Tracker') }}</title>
+    <title>{% block title %}{% endblock %} - Finance Tracker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,19 +31,19 @@
     </script>
     {% endblock %}
 </head>
-<body class="bg-darkbg text-gray-100 font-inter min-h-screen flex flex-col" data-tables-language-url="{{ url_for('static', filename='i18n/tr.json') }}">
+<body class="bg-darkbg text-gray-100 font-inter min-h-screen flex flex-col" data-tables-language-url="{{ url_for('static', filename='i18n/' + get_locale() + '.json') }}">
     <nav class="bg-card shadow-md mb-8">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
                 <a class="font-bold text-lg flex items-center gap-2" href="{{ url_for('cashflow.index') }}">
                     <i class="fa-solid fa-arrow-trend-up text-2xl -mt-1"></i>
-                    {{ _('Finance Tracker') }}
+                    Finance Tracker
                 </a>
             </div>
             <div class="flex gap-2">
                 <a href="{{ url_for('cashflow.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['cashflow.index', 'cashflow.add_cashflow', 'cashflow.edit_cashflow'] %}bg-primary/20 text-primary font-semibold{% endif %}">{{ _('Cash Flow') }}</a>
                 <a href="{{ url_for('investment.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment.index', 'investment.add_investment', 'investment.edit_investment'] %}bg-primary/20 text-primary font-semibold{% endif %}">{{ _('Investments') }}</a>
-                <a href="{{ url_for('dashboard.dashboard_cashflow') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'dashboard.dashboard_cashflow' %}bg-primary/20 text-primary font-semibold{% endif %}"><i class="fa-solid fa-chart-line"></i> {{ _('Dashboard') }}</a>
+                <a href="{{ url_for('dashboard.dashboard_cashflow') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'dashboard.dashboard_cashflow' %}bg-primary/20 text-primary font-semibold{% endif %}"> {{ _('Dashboard') }}</a>
                 <div class="relative group">
                   <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add_category', 'category.edit_category', 'tag.index', 'tag.add_tag', 'tag.edit_tag', 'investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type', 'settings.index'] %}bg-primary/20 text-primary font-semibold{% endif %}">
                     {{ _('Management') }}

@@ -11,6 +11,7 @@ A modern Flask-based web application designed to help you easily track your pers
 - **Customizable Assets:** Define and manage your own investment types.
 - **Easy Setup:** Get started immediately by creating a default data structure (categories, tags, investment types) with a single click.
 - **Database Management:** Reset the entire database or generate sample data for testing purposes through the settings page.
+- **Multi-language Support:** Internationalization (i18n) support with Flask-Babel for Turkish and English languages.
 - **Modern UI:** A mobile-friendly and user-oriented interface developed with Tailwind CSS.
 
 ## 🛠️ Tech Stack
@@ -19,6 +20,7 @@ A modern Flask-based web application designed to help you easily track your pers
 - **Frontend:** HTML, Jinja2, Tailwind CSS, Font Awesome
 - **Database:** SQLite (default)
 - **Database Migrations:** Flask-Migrate, Alembic
+- **Internationalization:** Flask-Babel for multi-language support
 
 ## 🚀 Installation & Setup
 
@@ -102,8 +104,12 @@ track-finance/
 │   └── settings/
 ├── static/                 # Static files (CSS, JS, etc.)
 ├── migrations/             # Database migration files
+├── translations/           # Internationalization files
+│   ├── en/                # English translations
+│   └── tr/                # Turkish translations  
 ├── instance/               # Instance-specific files (e.g., database)
 ├── utils.py                # Helper functions (data creation, etc.)
+├── messages.pot            # Translation template file
 └── requirements.txt        # Python dependencies
 ```
 
@@ -111,11 +117,101 @@ track-finance/
 
 Contributions are welcome! Please feel free to open a pull request or create an issue.
 
+### General Contribution Steps
+
 1.  Fork the project.
 2.  Create a new feature branch (`git checkout -b feature/new-amazing-feature`).
 3.  Commit your changes (`git commit -am 'Add some amazing feature'`).
 4.  Push to the branch (`git push origin feature/new-amazing-feature`).
 5.  Open a Pull Request.
+
+### 🌍 Translation Contributions
+
+The project supports internationalization (i18n) using Flask-Babel. Currently supported languages:
+- **English (en)** - Default language
+- **Turkish (tr)** - Turkish translation
+
+#### Adding a New Language
+
+1.  **Initialize a new language:**
+    ```bash
+    # Replace 'de' with your language code (e.g., 'fr', 'es', 'de')
+    pybabel init -i messages.pot -d translations -l de
+    ```
+
+2.  **Translate the messages:**
+    - Navigate to `translations/{language_code}/LC_MESSAGES/messages.po`
+    - Translate the `msgstr` entries for each `msgid`
+
+3.  **Compile the translations:**
+    ```bash
+    pybabel compile -d translations
+    ```
+
+4.  **Update the language selector:**
+    - Add your language code to the `get_locale()` function in `app.py`
+    - Update the language list: `if lang in ['en', 'tr', 'de']:`
+
+#### Updating Existing Translations
+
+1.  **Extract new translatable strings:**
+    ```bash
+    pybabel extract -F babel.cfg -k _l -o messages.pot .
+    ```
+
+2.  **Update existing translation files:**
+    ```bash
+    pybabel update -i messages.pot -d translations
+    ```
+
+3.  **Translate new/updated strings:**
+    - Edit the respective `.po` files in `translations/{language_code}/LC_MESSAGES/`
+
+4.  **Compile the translations:**
+    ```bash
+    pybabel compile -d translations
+    ```
+
+#### Babel Configuration
+
+The project uses a `babel.cfg` file for configuration. If you need to add it, create it in the root directory:
+
+```ini
+[python: **.py]
+[jinja2: **/templates/**.html]
+extensions=jinja2.ext.autoescape,jinja2.ext.with_
+```
+
+#### Translation Workflow for Developers
+
+When adding new translatable strings to the code:
+
+1.  **In Python files:** Use `_('Your text here')` or `gettext('Your text here')`
+2.  **In Jinja2 templates:** Use `{{ _('Your text here') }}`
+3.  **Extract and update translations** using the commands above
+4.  **Always compile translations** before testing
+
+#### Translation Guidelines
+
+- Keep translations contextually appropriate
+- Maintain consistent terminology across the application
+- Test the UI with different languages to ensure proper layout
+- Consider text expansion/contraction in different languages
+
+### 🛠️ Development Setup for Babel
+
+If you're working on the internationalization features:
+
+1.  **Install Babel CLI:**
+    ```bash
+    pip install Babel
+    ```
+
+2.  **Verify current translations:**
+    ```bash
+    # Check translation statistics
+    pybabel compile -d translations --statistics
+    ```
 
 ## 📄 License
 

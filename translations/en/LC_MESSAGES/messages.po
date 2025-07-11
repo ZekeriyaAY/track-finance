@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-21 00:26+0300\n"
+"POT-Creation-Date: 2025-07-12 00:13+0300\n"
 "PO-Revision-Date: 2025-06-20 23:52+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -20,586 +20,620 @@ msgstr ""
 
 #: routes/cashflow.py:42
 msgid "Transaction added successfully!"
-msgstr ""
+msgstr "Transaction added successfully!"
 
 #: routes/cashflow.py:46
 msgid "An error occurred while adding the transaction."
-msgstr ""
+msgstr "An error occurred while adding the transaction."
 
 #: routes/cashflow.py:68
 msgid "Transaction updated successfully!"
-msgstr ""
+msgstr "Transaction updated successfully!"
 
 #: routes/cashflow.py:72
 msgid "An error occurred while updating the transaction."
-msgstr ""
+msgstr "An error occurred while updating the transaction."
 
 #: routes/cashflow.py:85
 msgid "Transaction deleted successfully!"
-msgstr ""
+msgstr "Transaction deleted successfully!"
 
 #: routes/cashflow.py:89
 msgid "An error occurred while deleting the transaction."
-msgstr ""
+msgstr "An error occurred while deleting the transaction."
 
 #: routes/category.py:23 routes/category.py:49
 msgid "This category already exists!"
-msgstr ""
+msgstr "This category already exists!"
 
 #: routes/category.py:30
 msgid "Category added successfully!"
-msgstr ""
+msgstr "Category added successfully!"
 
 #: routes/category.py:34
 msgid "An error occurred while adding the category."
-msgstr ""
+msgstr "An error occurred while adding the category."
 
 #: routes/category.py:56
 msgid "Category updated successfully!"
-msgstr ""
+msgstr "Category updated successfully!"
 
 #: routes/category.py:60
 msgid "An error occurred while updating the category."
-msgstr ""
+msgstr "An error occurred while updating the category."
 
 #: routes/category.py:70
 msgid "This category has subcategories. You must delete them first!"
-msgstr ""
+msgstr "This category has subcategories. You must delete them first!"
 
 #: routes/category.py:73
 msgid "This category has associated transactions and cannot be deleted."
-msgstr ""
+msgstr "This category has associated transactions and cannot be deleted."
 
 #: routes/category.py:79
 msgid "Category deleted successfully!"
-msgstr ""
+msgstr "Category deleted successfully!"
 
 #: routes/category.py:83
 msgid "An error occurred while deleting the category."
-msgstr ""
+msgstr "An error occurred while deleting the category."
 
 #: routes/investment.py:38
 msgid "Investment transaction added successfully!"
-msgstr ""
+msgstr "Investment transaction added successfully!"
 
 #: routes/investment.py:42
 msgid "An error occurred while adding the investment transaction."
-msgstr ""
+msgstr "An error occurred while adding the investment transaction."
 
 #: routes/investment.py:62
 msgid "Investment transaction updated successfully!"
-msgstr ""
+msgstr "Investment transaction updated successfully!"
 
 #: routes/investment.py:66
 msgid "An error occurred while updating the investment transaction."
-msgstr ""
+msgstr "An error occurred while updating the investment transaction."
 
 #: routes/investment.py:78
 msgid "Investment transaction deleted successfully."
-msgstr ""
+msgstr "Investment transaction deleted successfully."
 
 #: routes/investment.py:83
 msgid "An error occurred while deleting the investment transaction."
-msgstr ""
+msgstr "An error occurred while deleting the investment transaction."
 
 #: routes/investment_type.py:26 routes/investment_type.py:61
 msgid "This investment type already exists!"
-msgstr ""
+msgstr "This investment type already exists!"
 
 #: routes/investment_type.py:39
 msgid "Investment type added successfully!"
-msgstr ""
+msgstr "Investment type added successfully!"
 
 #: routes/investment_type.py:43
 msgid "An error occurred while adding the investment type."
-msgstr ""
+msgstr "An error occurred while adding the investment type."
 
 #: routes/investment_type.py:71
 msgid "Investment type updated successfully!"
-msgstr ""
+msgstr "Investment type updated successfully!"
 
 #: routes/investment_type.py:75
 msgid "An error occurred while updating the investment type."
-msgstr ""
+msgstr "An error occurred while updating the investment type."
 
 #: routes/investment_type.py:85
 msgid "This investment type has subtypes. You must delete them first!"
-msgstr ""
+msgstr "This investment type has subtypes. You must delete them first!"
 
 #: routes/investment_type.py:88
 msgid "This investment type has associated investments and cannot be deleted."
-msgstr ""
+msgstr "This investment type has associated investments and cannot be deleted."
 
 #: routes/investment_type.py:94
 msgid "Investment type deleted successfully!"
-msgstr ""
+msgstr "Investment type deleted successfully!"
 
 #: routes/investment_type.py:98
 msgid "An error occurred while deleting the investment type."
-msgstr ""
+msgstr "An error occurred while deleting the investment type."
 
-#: routes/settings.py:19
+#: routes/settings.py:26
 msgid "Dummy data created successfully."
-msgstr ""
-
-#: routes/settings.py:24
-msgid "An error occurred while creating dummy data."
-msgstr ""
+msgstr "Dummy data created successfully."
 
 #: routes/settings.py:31
-msgid "Default categories created successfully."
-msgstr ""
+msgid "An error occurred while creating dummy data."
+msgstr "An error occurred while creating dummy data."
 
-#: routes/settings.py:36
-msgid "An error occurred while creating default categories."
-msgstr ""
+#: routes/settings.py:38
+msgid "Default categories created successfully."
+msgstr "Default categories created successfully."
 
 #: routes/settings.py:43
-msgid "Default tags created successfully."
-msgstr ""
+msgid "An error occurred while creating default categories."
+msgstr "An error occurred while creating default categories."
 
-#: routes/settings.py:48
-msgid "An error occurred while creating default tags."
-msgstr ""
+#: routes/settings.py:50
+msgid "Default tags created successfully."
+msgstr "Default tags created successfully."
 
 #: routes/settings.py:55
+msgid "An error occurred while creating default tags."
+msgstr "An error occurred while creating default tags."
+
+#: routes/settings.py:62
 msgid "Default investment types created successfully."
-msgstr ""
+msgstr "Default investment types created successfully."
 
-#: routes/settings.py:60
+#: routes/settings.py:67
 msgid "An error occurred while creating default investment types."
-msgstr ""
+msgstr "An error occurred while creating default investment types."
 
-#: routes/settings.py:68
+#: routes/settings.py:75
 msgid "Database reset successfully."
-msgstr ""
+msgstr "Database reset successfully."
 
-#: routes/settings.py:73
+#: routes/settings.py:80
 msgid "An error occurred while resetting the database."
-msgstr ""
+msgstr "An error occurred while resetting the database."
 
 #: routes/tag.py:22 routes/tag.py:45
 msgid "This tag already exists!"
-msgstr ""
+msgstr "This tag already exists!"
 
 #: routes/tag.py:29
 msgid "Tag added successfully!"
-msgstr ""
+msgstr "Tag added successfully!"
 
 #: routes/tag.py:33
 msgid "An error occurred while adding the tag."
-msgstr ""
+msgstr "An error occurred while adding the tag."
 
 #: routes/tag.py:51
 msgid "Tag updated successfully!"
-msgstr ""
+msgstr "Tag updated successfully!"
 
 #: routes/tag.py:55
 msgid "An error occurred while updating the tag."
-msgstr ""
+msgstr "An error occurred while updating the tag."
 
 #: routes/tag.py:63
 msgid "This tag has associated transactions and cannot be deleted."
-msgstr ""
+msgstr "This tag has associated transactions and cannot be deleted."
 
 #: routes/tag.py:69
 msgid "Tag deleted successfully!"
-msgstr ""
+msgstr "Tag deleted successfully!"
 
 #: routes/tag.py:73
 msgid "An error occurred while deleting the tag."
-msgstr ""
-
-#: templates/base.html:7 templates/base.html:40
-msgid "Finance Tracker"
-msgstr ""
+msgstr "An error occurred while deleting the tag."
 
 #: templates/base.html:44
 msgid "Cash Flow"
-msgstr ""
+msgstr "Cash Flow"
 
 #: templates/base.html:45
 msgid "Investments"
-msgstr ""
+msgstr "Investments"
 
-#: templates/base.html:48
+#: templates/base.html:46
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: templates/base.html:49
 msgid "Management"
-msgstr ""
+msgstr "Management"
 
-#: templates/base.html:55 templates/category/index.html:3
+#: templates/base.html:56 templates/category/index.html:3
 #: templates/category/index.html:8
 msgid "Categories"
-msgstr ""
+msgstr "Categories"
 
-#: templates/base.html:59 templates/cashflow/form.html:66
-#: templates/cashflow/index.html:22 templates/tag/index.html:3
+#: templates/base.html:60 templates/cashflow/form.html:68
+#: templates/cashflow/index.html:24 templates/tag/index.html:3
 #: templates/tag/index.html:8
 msgid "Tags"
-msgstr ""
+msgstr "Tags"
 
-#: templates/base.html:63 templates/investment_type/index.html:3
+#: templates/base.html:64 templates/investment_type/index.html:3
 #: templates/investment_type/index.html:8
 msgid "Investment Types"
-msgstr ""
+msgstr "Investment Types"
 
-#: templates/base.html:67 templates/settings/index.html:3
+#: templates/base.html:68 templates/settings/index.html:3
 #: templates/settings/index.html:8
 msgid "Settings"
-msgstr ""
+msgstr "Settings"
 
 #: templates/cashflow/form.html:3 templates/cashflow/form.html:8
 #: templates/investment/form.html:3 templates/investment/form.html:8
 msgid "Edit Transaction"
-msgstr ""
+msgstr "Edit Transaction"
 
-#: templates/cashflow/form.html:3 templates/cashflow/index.html:11
-#: templates/investment/index.html:11
+#: templates/cashflow/form.html:3 templates/cashflow/index.html:12
+#: templates/investment/index.html:12
 msgid "New Transaction"
-msgstr ""
+msgstr "New Transaction"
 
 #: templates/cashflow/form.html:8 templates/investment/form.html:3
 #: templates/investment/form.html:8
 msgid "Add New Transaction"
-msgstr ""
+msgstr "Add New Transaction"
 
-#: templates/cashflow/form.html:11 templates/category/form.html:11
-#: templates/investment/form.html:11 templates/investment_type/form.html:11
-#: templates/tag/form.html:11
+#: templates/cashflow/form.html:12 templates/category/form.html:12
+#: templates/investment/form.html:12 templates/investment_type/form.html:12
+#: templates/tag/form.html:12
 msgid "Go Back"
-msgstr ""
+msgstr "Go Back"
 
-#: templates/cashflow/form.html:20 templates/cashflow/index.html:19
+#: templates/cashflow/form.html:22 templates/cashflow/index.html:21
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
-#: templates/cashflow/form.html:27 templates/cashflow/index.html:20
+#: templates/cashflow/form.html:29 templates/cashflow/index.html:22
+#: templates/investment/form.html:58
 msgid "Amount"
-msgstr ""
+msgstr "Amount"
 
-#: templates/cashflow/form.html:34 templates/investment/form.html:47
+#: templates/cashflow/form.html:36 templates/investment/form.html:49
 msgid "Transaction Type"
-msgstr ""
+msgstr "Transaction Type"
 
-#: templates/cashflow/form.html:37
+#: templates/cashflow/form.html:39 templates/dashboard/cashflow.html:64
 msgid "Income"
-msgstr ""
+msgstr "Income"
 
-#: templates/cashflow/form.html:38
+#: templates/cashflow/form.html:40 templates/dashboard/cashflow.html:72
+#: templates/dashboard/cashflow.html:171
 msgid "Expense"
-msgstr ""
+msgstr "Expense"
 
-#: templates/cashflow/form.html:43 templates/cashflow/index.html:21
+#: templates/cashflow/form.html:45 templates/cashflow/index.html:23
 msgid "Category"
-msgstr ""
+msgstr "Category"
 
-#: templates/cashflow/form.html:59 templates/cashflow/index.html:23
-#: templates/investment/form.html:70 templates/investment/index.html:25
+#: templates/cashflow/form.html:61 templates/cashflow/index.html:25
+#: templates/investment/index.html:27
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
-#: templates/cashflow/form.html:83 templates/category/form.html:44
-#: templates/investment/form.html:80 templates/investment_type/form.html:80
-#: templates/tag/form.html:27
+#: templates/cashflow/form.html:86 templates/category/form.html:47
+#: templates/investment/form.html:75 templates/investment_type/form.html:83
+#: templates/tag/form.html:30
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel"
 
-#: templates/cashflow/form.html:87 templates/category/form.html:48
-#: templates/investment/form.html:84 templates/investment_type/form.html:84
-#: templates/tag/form.html:31
+#: templates/cashflow/form.html:91 templates/category/form.html:52
+#: templates/investment/form.html:80 templates/investment_type/form.html:88
+#: templates/tag/form.html:35
 msgid "Save"
-msgstr ""
+msgstr "Save"
 
 #: templates/cashflow/index.html:3 templates/cashflow/index.html:8
-msgid "Transactions"
-msgstr ""
+msgid "Cashflow Transactions"
+msgstr "Cashflow Transactions"
 
-#: templates/cashflow/index.html:24 templates/category/index.html:22
-#: templates/investment/index.html:26 templates/investment_type/index.html:23
-#: templates/tag/index.html:21
+#: templates/cashflow/index.html:26 templates/category/index.html:24
+#: templates/investment/index.html:28 templates/investment_type/index.html:25
+#: templates/tag/index.html:23
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
-#: templates/cashflow/index.html:63 templates/category/index.html:47
-#: templates/category/index.html:80 templates/investment/index.html:59
-#: templates/investment_type/index.html:45
-#: templates/investment_type/index.html:75 templates/tag/index.html:46
+#: templates/cashflow/index.html:66 templates/category/index.html:50
+#: templates/category/index.html:85 templates/investment/index.html:62
+#: templates/investment_type/index.html:48
+#: templates/investment_type/index.html:80 templates/tag/index.html:49
 msgid "Edit"
-msgstr ""
+msgstr "Edit"
 
-#: templates/cashflow/index.html:67 templates/investment/index.html:63
+#: templates/cashflow/index.html:71 templates/investment/index.html:67
 msgid "Are you sure you want to delete this transaction?"
-msgstr ""
+msgstr "Are you sure you want to delete this transaction?"
 
-#: templates/cashflow/index.html:69 templates/category/index.html:53
-#: templates/category/index.html:86 templates/investment/index.html:65
-#: templates/investment_type/index.html:51
-#: templates/investment_type/index.html:81 templates/tag/index.html:52
+#: templates/cashflow/index.html:73 templates/category/index.html:57
+#: templates/category/index.html:92 templates/investment/index.html:69
+#: templates/investment_type/index.html:55
+#: templates/investment_type/index.html:87 templates/tag/index.html:56
 msgid "Delete"
-msgstr ""
+msgstr "Delete"
 
-#: templates/cashflow/index.html:82 templates/investment/index.html:78
+#: templates/cashflow/index.html:86 templates/investment/index.html:82
 msgid "No transactions found yet"
-msgstr ""
+msgstr "No transactions found yet"
 
-#: templates/cashflow/index.html:83 templates/investment/index.html:79
+#: templates/cashflow/index.html:87 templates/investment/index.html:83
 msgid "You can add a new transaction using the \"New Transaction\" button."
-msgstr ""
+msgstr "You can add a new transaction using the \"New Transaction\" button."
 
 #: templates/category/form.html:3 templates/category/form.html:8
 msgid "Edit Category"
-msgstr ""
+msgstr "Edit Category"
 
 #: templates/category/form.html:3 templates/category/form.html:8
 msgid "Add New Category"
-msgstr ""
+msgstr "Add New Category"
 
-#: templates/category/form.html:19 templates/category/index.html:20
+#: templates/category/form.html:21 templates/category/index.html:22
 msgid "Category Name"
-msgstr ""
+msgstr "Category Name"
 
-#: templates/category/form.html:25
+#: templates/category/form.html:27
 msgid "Parent Category"
-msgstr ""
+msgstr "Parent Category"
 
-#: templates/category/form.html:28
+#: templates/category/form.html:30
 msgid "Main Category"
-msgstr ""
+msgstr "Main Category"
 
-#: templates/category/index.html:11
+#: templates/category/index.html:12
 msgid "New Category"
-msgstr ""
+msgstr "New Category"
 
-#: templates/category/index.html:21 templates/tag/index.html:20
+#: templates/category/index.html:23 templates/tag/index.html:22
 msgid "Income / Expense"
-msgstr ""
+msgstr "Income / Expense"
 
-#: templates/category/index.html:35 templates/category/index.html:68
-#: templates/tag/index.html:34
+#: templates/category/index.html:37 templates/category/index.html:72
+#: templates/dashboard/cashflow.html:9 templates/tag/index.html:36
 msgid "Total Income"
-msgstr ""
+msgstr "Total Income"
 
-#: templates/category/index.html:39 templates/category/index.html:72
-#: templates/tag/index.html:38
+#: templates/category/index.html:41 templates/category/index.html:76
+#: templates/dashboard/cashflow.html:13 templates/tag/index.html:40
 msgid "Total Expense"
-msgstr ""
+msgstr "Total Expense"
 
-#: templates/category/index.html:51 templates/category/index.html:84
+#: templates/category/index.html:55 templates/category/index.html:90
 msgid "Are you sure you want to delete this category?"
-msgstr ""
+msgstr "Are you sure you want to delete this category?"
 
-#: templates/category/index.html:101
+#: templates/category/index.html:107
 msgid "No categories found yet"
-msgstr ""
+msgstr "No categories found yet"
 
-#: templates/category/index.html:102
+#: templates/category/index.html:108
 msgid "You can add a new category using the \"New Category\" button."
-msgstr ""
+msgstr "You can add a new category using the \"New Category\" button."
 
-#: templates/investment/form.html:20 templates/investment/index.html:21
+#: templates/dashboard/cashflow.html:5
+msgid "Cashflow Dashboard"
+msgstr "Cashflow Dashboard"
+
+#: templates/dashboard/cashflow.html:17
+msgid "Net Balance"
+msgstr "Net Balance"
+
+#: templates/dashboard/cashflow.html:24 templates/dashboard/cashflow.html:89
+msgid "Monthly Income/Expense"
+msgstr "Monthly Income/Expense"
+
+#: templates/dashboard/cashflow.html:28
+msgid "Top 5 Expense Categories"
+msgstr "Top 5 Expense Categories"
+
+#: templates/dashboard/cashflow.html:34
+msgid "Income Distribution by Category"
+msgstr "Income Distribution by Category"
+
+#: templates/dashboard/cashflow.html:38
+msgid "Expense Distribution by Category"
+msgstr "Expense Distribution by Category"
+
+#: templates/investment/form.html:22 templates/investment/index.html:23
 msgid "Investment Type"
-msgstr ""
+msgstr "Investment Type"
 
-#: templates/investment/form.html:40 templates/investment/index.html:20
+#: templates/investment/form.html:42 templates/investment/index.html:22
 msgid "Transaction Date"
-msgstr ""
+msgstr "Transaction Date"
 
-#: templates/investment/form.html:50
+#: templates/investment/form.html:52
 msgid "Buy"
-msgstr ""
+msgstr "Buy"
 
-#: templates/investment/form.html:51
+#: templates/investment/form.html:53
 msgid "Sell"
-msgstr ""
+msgstr "Sell"
 
-#: templates/investment/form.html:56 templates/investment/index.html:23
-msgid "Unit Price"
-msgstr ""
-
-#: templates/investment/form.html:63 templates/investment/index.html:22
-msgid "Quantity"
-msgstr ""
+#: templates/investment/form.html:65
+msgid "Price"
+msgstr "Price"
 
 #: templates/investment/index.html:3 templates/investment/index.html:8
 msgid "Investment Transactions"
-msgstr ""
+msgstr "Investment Transactions"
 
 #: templates/investment/index.html:24
+msgid "Quantity"
+msgstr "Quantity"
+
+#: templates/investment/index.html:25
+msgid "Unit Price"
+msgstr "Unit Price"
+
+#: templates/investment/index.html:26
 msgid "Total Amount"
-msgstr ""
+msgstr "Total Amount"
 
 #: templates/investment_type/form.html:3 templates/investment_type/form.html:8
 msgid "Edit Investment Type"
-msgstr ""
+msgstr "Edit Investment Type"
 
 #: templates/investment_type/form.html:3
 msgid "New Investment Type"
-msgstr ""
+msgstr "New Investment Type"
 
 #: templates/investment_type/form.html:8
 msgid "Add New Investment Type"
-msgstr ""
+msgstr "Add New Investment Type"
 
-#: templates/investment_type/form.html:20
-#: templates/investment_type/index.html:20
-msgid "Type Name"
-msgstr ""
-
-#: templates/investment_type/form.html:27
-#: templates/investment_type/index.html:21
-msgid "Code"
-msgstr ""
-
-#: templates/investment_type/form.html:35
-msgid "Icon"
-msgstr ""
-
-#: templates/investment_type/form.html:39
-msgid "Font Awesome icon class"
-msgstr ""
-
-#: templates/investment_type/form.html:43
-msgid "Color"
-msgstr ""
-
-#: templates/investment_type/form.html:52
-msgid "Preview"
-msgstr ""
-
-#: templates/investment_type/form.html:64
-msgid "Parent Type"
-msgstr ""
-
-#: templates/investment_type/form.html:67
-msgid "Main Type"
-msgstr ""
-
-#: templates/investment_type/index.html:11
-msgid "New Type"
-msgstr ""
-
+#: templates/investment_type/form.html:22
 #: templates/investment_type/index.html:22
+msgid "Type Name"
+msgstr "Type Name"
+
+#: templates/investment_type/form.html:29
+#: templates/investment_type/index.html:23
+msgid "Code"
+msgstr "Code"
+
+#: templates/investment_type/form.html:37
+msgid "Icon"
+msgstr "Icon"
+
+#: templates/investment_type/form.html:41
+msgid "Font Awesome icon class"
+msgstr "Font Awesome icon class"
+
+#: templates/investment_type/form.html:45
+msgid "Color"
+msgstr "Color"
+
+#: templates/investment_type/form.html:54
+msgid "Preview"
+msgstr "Preview"
+
+#: templates/investment_type/form.html:66
+msgid "Parent Type"
+msgstr "Parent Type"
+
+#: templates/investment_type/form.html:69
+msgid "Main Type"
+msgstr "Main Type"
+
+#: templates/investment_type/index.html:12
+msgid "New Type"
+msgstr "New Type"
+
+#: templates/investment_type/index.html:24
 msgid "Number of Investments"
-msgstr ""
+msgstr "Number of Investments"
 
-#: templates/investment_type/index.html:37
-#: templates/investment_type/index.html:67
+#: templates/investment_type/index.html:39
+#: templates/investment_type/index.html:71
 msgid "Total Investments"
-msgstr ""
+msgstr "Total Investments"
 
-#: templates/investment_type/index.html:49
-#: templates/investment_type/index.html:79
+#: templates/investment_type/index.html:53
+#: templates/investment_type/index.html:85
 msgid "Are you sure you want to delete this investment type?"
-msgstr ""
+msgstr "Are you sure you want to delete this investment type?"
 
-#: templates/investment_type/index.html:96
+#: templates/investment_type/index.html:102
 msgid "No investment types found yet"
-msgstr ""
+msgstr "No investment types found yet"
 
-#: templates/investment_type/index.html:97
+#: templates/investment_type/index.html:103
 msgid "You can add a new investment type using the \"New Type\" button."
-msgstr ""
+msgstr "You can add a new investment type using the \"New Type\" button."
 
-#: templates/settings/index.html:14
+#: templates/settings/index.html:11
+msgid "Language"
+msgstr "Language"
+
+#: templates/settings/index.html:22
 msgid "Default Data"
-msgstr ""
+msgstr "Default Data"
 
-#: templates/settings/index.html:15
+#: templates/settings/index.html:23
 msgid "Existing data will not be recreated, only missing data will be added."
-msgstr ""
+msgstr "Existing data will not be recreated, only missing data will be added."
 
-#: templates/settings/index.html:20
+#: templates/settings/index.html:28
 msgid "Default Categories"
-msgstr ""
+msgstr "Default Categories"
 
-#: templates/settings/index.html:21
+#: templates/settings/index.html:29
 msgid "Creates income and expense categories."
-msgstr ""
-
-#: templates/settings/index.html:27
-msgid "Create Categories"
-msgstr ""
+msgstr "Creates income and expense categories."
 
 #: templates/settings/index.html:35
+msgid "Create Categories"
+msgstr "Create Categories"
+
+#: templates/settings/index.html:43
 msgid "Default Tags"
-msgstr ""
+msgstr "Default Tags"
 
-#: templates/settings/index.html:36
+#: templates/settings/index.html:44
 msgid "Creates default tags to be used for tagging transactions."
-msgstr ""
-
-#: templates/settings/index.html:42
-msgid "Create Tags"
-msgstr ""
+msgstr "Creates default tags to be used for tagging transactions."
 
 #: templates/settings/index.html:50
+msgid "Create Tags"
+msgstr "Create Tags"
+
+#: templates/settings/index.html:58
 msgid "Default Investment Types"
-msgstr ""
+msgstr "Default Investment Types"
 
-#: templates/settings/index.html:51
+#: templates/settings/index.html:59
 msgid "Creates default investment types to categorize investments."
-msgstr ""
+msgstr "Creates default investment types to categorize investments."
 
-#: templates/settings/index.html:57
+#: templates/settings/index.html:65
 msgid "Create Investment Types"
-msgstr ""
+msgstr "Create Investment Types"
 
-#: templates/settings/index.html:69
+#: templates/settings/index.html:77
 msgid "Database Management"
-msgstr ""
+msgstr "Database Management"
 
-#: templates/settings/index.html:74
+#: templates/settings/index.html:82
 msgid "Dummy Data"
-msgstr ""
+msgstr "Dummy Data"
 
-#: templates/settings/index.html:75
+#: templates/settings/index.html:83
 msgid ""
 "Creates default categories, tags, investment types and sample "
 "transactions."
 msgstr ""
 
-#: templates/settings/index.html:81
+#: templates/settings/index.html:89
 msgid "Create Dummy Data"
-msgstr ""
+msgstr "Create Dummy Data"
 
-#: templates/settings/index.html:89 templates/settings/index.html:96
+#: templates/settings/index.html:97 templates/settings/index.html:104
 msgid "Reset Database"
-msgstr ""
+msgstr "Reset Database"
 
-#: templates/settings/index.html:90
+#: templates/settings/index.html:98
 msgid "Deletes all data and resets the database. This action cannot be undone!"
-msgstr ""
+msgstr "Deletes all data and resets the database. This action cannot be undone!"
 
-#: templates/settings/index.html:92
+#: templates/settings/index.html:100
 msgid "All data will be deleted! Are you sure about this action?"
-msgstr ""
+msgstr "All data will be deleted! Are you sure about this action?"
 
 #: templates/tag/form.html:3 templates/tag/form.html:8
 msgid "Edit Tag"
-msgstr ""
+msgstr "Edit Tag"
 
 #: templates/tag/form.html:3 templates/tag/form.html:8
 msgid "Add Tag"
-msgstr ""
+msgstr "Add Tag"
 
-#: templates/tag/form.html:19 templates/tag/index.html:19
+#: templates/tag/form.html:21 templates/tag/index.html:21
 msgid "Tag Name"
-msgstr ""
+msgstr "Tag Name"
 
-#: templates/tag/index.html:11
+#: templates/tag/index.html:12
 msgid "New Tag"
-msgstr ""
+msgstr "New Tag"
 
-#: templates/tag/index.html:50
+#: templates/tag/index.html:54
 msgid "Are you sure you want to delete this tag?"
-msgstr ""
+msgstr "Are you sure you want to delete this tag?"
 
-#: templates/tag/index.html:65
+#: templates/tag/index.html:69
 msgid "No tags found yet"
-msgstr ""
+msgstr "No tags found yet"
 
-#: templates/tag/index.html:66
+#: templates/tag/index.html:70
 msgid "You can add a new tag using the \"New Tag\" button."
-msgstr ""
+msgstr "You can add a new tag using the \"New Tag\" button."
 
 #~ msgid "Back to Tags"
 #~ msgstr ""
@@ -621,4 +655,31 @@ msgstr ""
 
 #~ msgid "You can add a new tag by clicking the \"New Tag\" button."
 #~ msgstr ""
+
+#~ msgid "Transactions"
+#~ msgstr ""
+
+#~ msgid "Toplam Gelir"
+#~ msgstr ""
+
+#~ msgid "Toplam Gider"
+#~ msgstr ""
+
+#~ msgid "Net Bakiye"
+#~ msgstr ""
+
+#~ msgid "Aylara Göre Gelir/Gider"
+#~ msgstr ""
+
+#~ msgid "En Büyük 5 Gider Kategorisi"
+#~ msgstr ""
+
+#~ msgid "Kategoriye Göre Gelir Dağılımı"
+#~ msgstr ""
+
+#~ msgid "Kategoriye Göre Gider Dağılımı"
+#~ msgstr ""
+
+#~ msgid "Finance Tracker"
+#~ msgstr "Finance Tracker"
 
