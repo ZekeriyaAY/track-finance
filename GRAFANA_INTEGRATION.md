@@ -96,73 +96,73 @@
 
 ## Grafana Integration Complete! 🎉
 
-Track Finance artık profesyonel Grafana dashboardları ile entegre! Bu kurulum ile:
+Track Finance is now integrated with professional Grafana dashboards! This setup provides:
 
-### ✅ Tamamlanan Özellikler:
-- **Grafana Service**: Docker Compose'a Grafana servisi eklendi
-- **PostgreSQL Data Source**: Otomatik veri kaynağı konfigürasyonu
-- **Environment Variables**: Grafana için güvenli ortam değişkenleri
-- **Database Views**: Grafana için optimize edilmiş görünümler
-- **Makefile Commands**: Grafana yönetim komutları
+### ✅ Completed Features:
+- **Grafana Service**: Added Grafana service to Docker Compose
+- **PostgreSQL Data Source**: Automatic data source configuration
+- **Environment Variables**: Secure environment variables for Grafana
+- **Database Views**: Optimized views for Grafana
+- **Makefile Commands**: Grafana management commands
 
-### 🚀 Hızlı Başlangıç:
+### 🚀 Quick Start:
 
 ```bash
-# Tüm servisleri başlat (Track Finance + Grafana)
+# Start all services (Track Finance + Grafana)
 make up
 
-# Grafana database görünümlerini oluştur
+# Create Grafana database views
 make setup_grafana_views
 
-# Grafana durumunu kontrol et
+# Check Grafana status
 make show_grafana
 ```
 
-### 📊 Erişim Bilgileri:
+### 📊 Access Information:
 
 - **Track Finance Web**: http://localhost:5001
 - **Grafana Dashboard**: http://localhost:3000
 - **pgAdmin**: http://localhost:8080
 
-**Grafana Giriş:**
-- Kullanıcı: `admin`
-- Şifre: `.env.docker` dosyasında `GRAFANA_ADMIN_PASSWORD`
+**Grafana Login:**
+- Username: `admin`
+- Password: `GRAFANA_ADMIN_PASSWORD` in `.env.docker` file
 
-### 📈 Hazır Database Views:
+### 📈 Ready Database Views:
 
-1. **grafana_monthly_summary**: Aylık gelir/gider özeti
-2. **grafana_category_trends**: Kategori bazlı trend analizi
-3. **grafana_investment_performance**: Yatırım performans analizi
-4. **grafana_cashflow_analysis**: Detaylı nakit akışı analizi
+1. **grafana_monthly_summary**: Monthly income/expense summary
+2. **grafana_category_trends**: Category-based trend analysis
+3. **grafana_investment_performance**: Investment performance analysis
+4. **grafana_cashflow_analysis**: Detailed cash flow analysis
 
-### 🎨 Dashboard Örnekleri:
+### 🎨 Dashboard Examples:
 
-Bu görünümlerle oluşturabileceğiniz dashboard'lar:
-- Aylık gelir/gider grafikleri
-- Kategori bazlı harcama dağılımı
-- Yatırım portföyü performansı
-- Nakit akışı trendi
-- Haftalık/günlük harcama analizi
+Dashboards you can create with these views:
+- Monthly income/expense charts
+- Category-based spending distribution
+- Investment portfolio performance
+- Cash flow trends
+- Weekly/daily spending analysis
 
-### 🔧 Gelişmiş Kullanım:
+### 🔧 Advanced Usage:
 
 ```bash
-# Grafana loglarını izle
+# Monitor Grafana logs
 make grafana_logs
 
-# Grafana'yı yeniden başlat
+# Restart Grafana
 make restart_grafana
 
-# Tüm servisleri durdur
+# Stop all services
 make down
 ```
 
-### 📝 Sonraki Adımlar:
+### 📝 Next Steps:
 
-1. Grafana'ya giriş yap (http://localhost:3000)
-2. PostgreSQL data source otomatik yüklenecek
-3. Hazır database view'larını kullanarak dashboard'lar oluştur
-4. Track Finance'ı data girişi için kullan
-5. Grafana'da profesyonel analizleri görüntüle
+1. Login to Grafana (http://localhost:3000)
+2. PostgreSQL data source will be loaded automatically
+3. Create dashboards using the ready database views
+4. Use Track Finance for data input
+5. View professional analytics in Grafana
 
-**Artık Track Finance sadece veri girişi için, Grafana ise profesyonel analizler için kullanılabilir!** 📊✨
+**Now Track Finance is for data input only, and Grafana is for professional analytics!** 📊✨
