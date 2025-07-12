@@ -1,5 +1,9 @@
 # Finance Tracker Docker Commands
-.PHONY: help build up down logs restart clean migrate shell backup update
+.PHONY: help build up down logs restart clean migrate shell backup update dbadmin
+
+# Load environment variables
+include .env.docker
+export
 
 help: ## Show this help message
 	@echo "Finance Tracker Docker Commands:"
@@ -12,8 +16,9 @@ build: ## Build the Docker images
 up: ## Start all services
 	docker-compose up -d
 	@echo "🚀 Finance Tracker is starting..."
-	@echo "📱 Web app: http://localhost:5001"
+	@echo "📱 Web app: http://localhost:$(WEB_PORT)"
 	@echo "🗄️  Database: PostgreSQL on port 5432"
+	@echo "🔧 Database Admin: http://localhost:$(PGADMIN_PORT)"
 
 down: ## Stop all services
 	docker-compose down
@@ -37,7 +42,7 @@ shell: ## Open a shell in the web container
 
 backup: ## Backup the database
 	@echo "Creating database backup..."
-	docker-compose exec db pg_dump -U finance_user finance_db > backup_$(shell date +%Y%m%d_%H%M%S).sql
+	docker-compose exec db pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB) > backup_$(shell date +%Y%m%d_%H%M%S).sql
 	@echo "✅ Backup completed: backup_$(shell date +%Y%m%d_%H%M%S).sql"
 
 init: ## Initialize the application (first time setup)
@@ -47,22 +52,30 @@ init: ## Initialize the application (first time setup)
 	sleep 10
 	make migrate
 	@echo "✅ Finance Tracker initialized successfully!"
-	@echo "🌐 Visit: http://localhost:5001"
+	@echo "📱 Web app: http://localhost:$(WEB_PORT)"
+	@echo "🗄️  Database: PostgreSQL on port 5432"
+	@echo "🔧 Database Admin: http://localhost:$(PGADMIN_PORT)"
+	@echo "🌐 Visit: http://localhost:$(WEB_PORT)"
 
-update: ## Update server with latest code changes
-	@echo "🔄 Updating Finance Tracker..."
-	@echo "📦 Creating backup..."
-	-make backup
-	@echo "⬇️  Pulling latest changes..."
-	git pull origin main
-	@echo "🔨 Rebuilding containers..."
-	make down
-	docker-compose build --no-cache
-	make up
-	@echo "⏳ Waiting for containers..."
-	sleep 10
-	@echo "🗄️  Running migrations..."
-	-make migrate
-	@echo "✅ Update completed!"
-	@echo "🌐 App running at: http://$$(hostname -I | awk '{print $$1}'):5001"
-	@make logs
+update: ## Update running containers with latest configuration  
+	@echo "🔄 Updating containers with latest configuration..."
+	docker-compose up -d --force-recreate
+	@echo "✅ Containers updated successfully!"
+	@echo "📱 Web app: http://localhost:$(WEB_PORT)"
+	@echo "🗄️  Database: PostgreSQL on port 5432"
+	@echo "🔧 Database Admin: http://localhost:$(PGADMIN_PORT)"
+
+dbadmin: ## Open database admin interface in browser
+	@echo "🔧 Opening pgAdmin interface..."
+	@echo "📊 pgAdmin: http://localhost:$(PGADMIN_PORT)"
+	@echo "🗄️  Login credentials:"
+	@echo "   Email: $(PGADMIN_DEFAULT_EMAIL)"
+	@echo "   Password: $(PGADMIN_DEFAULT_PASSWORD)"
+	@echo ""
+	@echo "📋 Database connection info (add server in pgAdmin):"
+	@echo "   Host: db"
+	@echo "   Port: 5432"
+	@echo "   Username: $(POSTGRES_USER)"
+	@echo "   Password: $(POSTGRES_PASSWORD)"
+	@echo "   Database: $(POSTGRES_DB)"
+	@which open >/dev/null 2>&1 && open http://localhost:$(PGADMIN_PORT) || echo "🌐 Please open http://localhost:$(PGADMIN_PORT) in your browser"
