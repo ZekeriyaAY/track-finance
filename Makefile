@@ -1,5 +1,5 @@
 # Finance Tracker Docker Commands
-.PHONY: help build up down logs restart clean migrate shell backup setup dev pgadmin update init-db
+.PHONY: help build up down logs restart clean migrate shell backup setup dev pgadmin update init-db status setup_grafana
 
 # Load environment variables
 include .env
@@ -23,6 +23,7 @@ setup: ## First time setup (copies .env.example and starts services)
 		make up; \
 		sleep 10; \
 		make migrate; \
+		make setup_grafana; \
 		@echo "✅ Finance Tracker initialized successfully!"; \
 		@echo "📱 Web app: http://localhost:$(WEB_PORT)"; \
 		@echo "🔧 Database Admin: http://localhost:$(PGADMIN_PORT)"; \
@@ -83,6 +84,21 @@ backup: ## Backup the database
 	@echo "✅ Backup completed: backup_$(shell date +%Y%m%d_%H%M%S).sql"
 
 # Utility commands
+status: ## Show status of all services
+	@echo "=== Finance Tracker Services Status ==="
+	@echo ""
+	@docker-compose ps
+	@echo ""
+	@echo "=== Health Checks ==="
+	@echo "🔍 Web App Health:"
+	@curl -s http://localhost:$(WEB_PORT)/health 2>/dev/null && echo " ✅ Web app is healthy" || echo " ❌ Web app is not responding"
+	@echo "🔍 Database Connection:"
+	@docker-compose exec -T db pg_isready -U $(POSTGRES_USER) -d $(POSTGRES_DB) 2>/dev/null && echo " ✅ Database is ready" || echo " ❌ Database is not ready"
+	@echo "🔍 Grafana:"
+	@curl -s http://localhost:$(GRAFANA_PORT)/api/health 2>/dev/null | grep -q "ok" && echo " ✅ Grafana is healthy" || echo " ❌ Grafana is not responding"
+	@echo "🔍 pgAdmin:"
+	@curl -s http://localhost:$(PGADMIN_PORT)/misc/ping 2>/dev/null && echo " ✅ pgAdmin is healthy" || echo " ❌ pgAdmin is not responding"
+
 shell: ## Open a shell in the web container
 	docker-compose exec web bash
 
@@ -98,41 +114,10 @@ update: ## Update running containers with latest configuration
 	@echo "✅ Containers updated successfully!"
 
 # Grafana commands
-setup_grafana_views: ## Set up Grafana database views
-	@echo "=== Setting up Grafana Database Views ==="
-	@docker-compose exec db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /dev/stdin <<< "\
-		DROP VIEW IF EXISTS grafana_monthly_summary CASCADE; \
-		DROP VIEW IF EXISTS grafana_category_trends CASCADE; \
-		DROP VIEW IF EXISTS grafana_investment_performance CASCADE; \
-		DROP VIEW IF EXISTS grafana_cashflow_analysis CASCADE; \
-		CREATE VIEW grafana_monthly_summary AS \
-		SELECT DATE_TRUNC('month', date) as month, \
-			SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) as total_income, \
-			SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END) as total_expenses, \
-			SUM(amount) as net_cashflow, \
-			COUNT(*) as transaction_count \
-		FROM cashflow GROUP BY DATE_TRUNC('month', date) ORDER BY month; \
-		CREATE VIEW grafana_category_trends AS \
-		SELECT c.name as category_name, \
-			DATE_TRUNC('month', cf.date) as month, \
-			SUM(CASE WHEN cf.amount < 0 THEN ABS(cf.amount) ELSE 0 END) as expenses, \
-			SUM(CASE WHEN cf.amount > 0 THEN cf.amount ELSE 0 END) as income, \
-			COUNT(*) as transaction_count \
-		FROM cashflow cf JOIN category c ON cf.category_id = c.id \
-		GROUP BY c.name, DATE_TRUNC('month', cf.date) ORDER BY month, category_name; \
-		CREATE VIEW grafana_investment_performance AS \
-		SELECT i.name as investment_name, it.name as investment_type, \
-			i.purchase_price, i.current_value, \
-			(i.current_value - i.purchase_price) as profit_loss, \
-			CASE WHEN i.purchase_price > 0 THEN ((i.current_value - i.purchase_price) / i.purchase_price) * 100 ELSE 0 END as profit_loss_percentage, \
-			i.purchase_date, i.created_at \
-		FROM investment i JOIN investment_type it ON i.investment_type_id = it.id ORDER BY i.purchase_date; \
-		CREATE VIEW grafana_cashflow_analysis AS \
-		SELECT cf.id, cf.date, cf.amount, cf.description, c.name as category_name, \
-			CASE WHEN cf.amount > 0 THEN 'Income' ELSE 'Expense' END as transaction_type, \
-			ABS(cf.amount) as absolute_amount, \
-			DATE_PART('year', cf.date) as year, DATE_PART('month', cf.date) as month, \
-			DATE_PART('day', cf.date) as day, TO_CHAR(cf.date, 'Day') as day_of_week, \
-			cf.created_at \
-		FROM cashflow cf JOIN category c ON cf.category_id = c.id ORDER BY cf.date DESC;"
+setup_grafana: ## Set up Grafana database views and configuration
+	@echo "=== Setting up Grafana for Finance Tracker ==="
+	@docker cp grafana/sql/views.sql $$(docker-compose ps -q db):/tmp/views.sql
+	@docker-compose exec -T db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /tmp/views.sql
 	@echo "✅ Grafana database views created successfully!"
+	@echo "📊 Grafana: http://localhost:$(GRAFANA_PORT)"
+	@echo "🔑 Login: $(GRAFANA_ADMIN_USER) / $(GRAFANA_ADMIN_PASSWORD)"
