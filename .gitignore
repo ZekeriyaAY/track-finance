@@ -29,6 +29,8 @@ migrations/
 
 # Environment variables
 .env
+.env.local
+.env.docker
 .venv
 env/
 venv/
