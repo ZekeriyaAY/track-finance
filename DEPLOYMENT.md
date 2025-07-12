@@ -25,7 +25,7 @@ cd track-finance
 make init
 ```
 
-That's it! Your Finance Tracker will be running at http://localhost:5001
+That's it! Your Finance Tracker will be running at http://localhost:${WEB_PORT} (default: 5001)
 
 ### Manual Setup (Alternative)
 
@@ -73,24 +73,64 @@ docker-compose up -d              # Start services
 docker-compose down               # Stop services
 docker-compose logs -f            # View logs
 docker-compose exec web bash     # Access web container
-docker-compose exec db psql -U finance_user finance_db  # Access database
+docker-compose exec db psql -U ${POSTGRES_USER} ${POSTGRES_DB}  # Access database
 ```
 
 ## 🔧 Configuration
 
 ### Environment Variables
-Edit `.env` file for custom configuration:
+The application uses environment variables for configuration. Copy the example file and customize:
 
 ```bash
-FLASK_ENV=production
-SECRET_KEY=your-super-secret-key-change-this
-DATABASE_URL=postgresql://finance_user:finance_pass@db:5432/finance_db
+# Copy example environment file
+cp .env.example .env.docker
+
+# Edit environment variables
+nano .env.docker
 ```
 
-### Database Configuration
-- **Default**: PostgreSQL in Docker container
-- **External DB**: Set `DATABASE_URL` to external PostgreSQL instance
-- **Backup**: Use `make backup` for database dumps
+### Environment Variables
+
+All configuration is managed through environment variables. Here's a quick reference:
+
+**Application Configuration:**
+- `FLASK_ENV`: Application environment (development/production)
+- `SECRET_KEY`: Flask security secret (change for production!)
+- `WEB_PORT`: Web application port (default: 5001)
+
+**Database Configuration:**
+- `POSTGRES_DB`: Database name (default: finance_db)
+- `POSTGRES_USER`: Database username (default: finance_user)  
+- `POSTGRES_PASSWORD`: Database password (default: finance_pass)
+- `DATABASE_URL`: Full database connection string
+
+**pgAdmin Configuration:**
+- `PGADMIN_PORT`: pgAdmin web interface port (default: 8080)
+- `PGADMIN_DEFAULT_EMAIL`: pgAdmin login email
+- `PGADMIN_DEFAULT_PASSWORD`: pgAdmin login password
+
+**Health Check Configuration:**
+- `HEALTH_CHECK_INTERVAL`: Web app health check frequency (default: 30s)
+- `HEALTH_CHECK_TIMEOUT`: Health check timeout (default: 10s)
+- `HEALTH_CHECK_RETRIES`: Health check retry attempts (default: 3)
+- `DB_HEALTH_CHECK_*`: Database-specific health check settings
+
+**Security & Internationalization:**
+- `CSRF_ENABLED`: Enable CSRF protection (default: True)
+- `LANGUAGES`: Supported languages (default: en,tr)
+
+For complete list with detailed descriptions, see `.env.example` file.
+
+### Port Configuration
+- **Web App**: Configured via `WEB_PORT` (default: 5001)
+- **pgAdmin**: Configured via `PGADMIN_PORT` (default: 8080)  
+- **Database**: Internal PostgreSQL port 5432
+
+### Security Notes
+- Change default passwords in production
+- Use strong `SECRET_KEY` values
+- Consider using Docker secrets for sensitive data
+- The `.env.docker` file is excluded from git for security
 
 ## Home Server Development Workflow
 
@@ -108,7 +148,8 @@ cd track-finance
 # Initialize the application
 make init
 
-# Your app is now running at http://your-server-ip:5001
+# Your app is now running at http://your-server-ip:${WEB_PORT}
+# Default port is 5001, but configurable via .env.docker
 ```
 
 ### Development & Update Workflow
@@ -137,8 +178,8 @@ make restart
 
 ### Network Access Options
 
-- **Local network**: `http://192.168.1.x:5001`
-- **Internet access**: Port forward 5001 or use reverse proxy
+- **Local network**: `http://192.168.1.x:${WEB_PORT}` (default port 5001)
+- **Internet access**: Port forward `${WEB_PORT}` or use reverse proxy
 - **Custom domain**: Setup DNS + reverse proxy for HTTPS
 
 ### Tips for Home Server Usage
@@ -180,7 +221,7 @@ nano .env
 docker-compose ps
 
 # Check application health
-curl http://localhost:5001/
+curl http://localhost:${WEB_PORT}/
 
 # View resource usage
 docker stats
@@ -216,7 +257,7 @@ make backup  # Creates timestamped SQL dump
 ### Database Restore
 ```bash
 # Restore from backup file
-docker-compose exec db psql -U finance_user finance_db < backup_YYYYMMDD_HHMMSS.sql
+docker-compose exec db psql -U ${POSTGRES_USER} ${POSTGRES_DB} < backup_YYYYMMDD_HHMMSS.sql
 ```
 
 ### Full System Backup
@@ -236,7 +277,7 @@ docker-compose logs db   # Check database logs
 ### Database Connection Issues
 ```bash
 # Check database container
-docker-compose exec db pg_isready -U finance_user
+docker-compose exec db pg_isready -U ${POSTGRES_USER}
 
 # Reset database
 docker-compose down
@@ -246,9 +287,9 @@ make init
 
 ### Port Conflicts
 ```bash
-# Change ports in docker-compose.yml
-ports:
-  - "8080:5000"  # Use port 8080 instead of 5000
+# Change ports in .env.docker
+WEB_PORT=8080     # Use port 8080 instead of 5001
+PGADMIN_PORT=9090 # Change pgAdmin port if needed
 ```
 
 ### Performance Issues
@@ -271,4 +312,51 @@ FLASK_ENV=development docker-compose up
 
 # Access container shell
 make shell
+```
+
+## 🔧 Database Management
+
+### pgAdmin Web Interface
+The application includes pgAdmin, a comprehensive web-based PostgreSQL administration tool:
+
+1. **Access pgAdmin**: Navigate to http://localhost:${PGADMIN_PORT}
+2. **Login credentials** (configurable in .env.docker):
+   - Email: `${PGADMIN_DEFAULT_EMAIL}`
+   - Password: `${PGADMIN_DEFAULT_PASSWORD}`
+
+3. **Add Database Server** (first time setup):
+   - Right-click "Servers" → "Create" → "Server"
+   - **General Tab**:
+     - Name: `Finance Tracker DB`
+   - **Connection Tab**:
+     - Host: `db`
+     - Port: `5432`
+     - Username: `${POSTGRES_USER}`
+     - Password: `${POSTGRES_PASSWORD}`
+     - Database: `${POSTGRES_DB}`
+
+4. **Features available**:
+   - Advanced query editor with syntax highlighting
+   - Visual database schema browser
+   - Data import/export tools
+   - User and permission management
+   - Performance monitoring and statistics
+   - Backup and restore operations
+   - Visual query planner
+
+### Quick Access
+```bash
+make dbadmin    # Opens pgAdmin in browser with connection info
+```
+
+### Direct Database Access
+```bash
+# Access PostgreSQL directly
+docker-compose exec db psql -U ${POSTGRES_USER} ${POSTGRES_DB}
+
+# View database logs
+docker-compose logs db
+
+# Create database backup
+make backup
 ```
