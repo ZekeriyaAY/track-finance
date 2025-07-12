@@ -55,11 +55,17 @@ def create_app(config_name=None):
     def index():
         return redirect(url_for('cashflow.index'))
     
+    @app.route('/health')
+    def health_check():
+        return {'status': 'healthy', 'service': 'track-finance'}, 200
+    
     return app
 
 # Create app instance
 app = create_app()
 
 if __name__ == '__main__':
+    # Get debug mode from environment
+    debug_mode = os.environ.get('FLASK_DEBUG', '0') == '1'
     # Production configuration for Docker
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=debug_mode)

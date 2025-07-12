@@ -7,11 +7,32 @@ A modern Flask-based web application for tracking personal income, expenses, and
 ```bash
 git clone <your-repo-url>
 cd track-finance
-make init
+
+# First time setup
+make setup
+
+# Or manually:
+cp .env.example .env
+# Edit .env with your settings
+make up
+```
+
+### 🔧 Development/Debug Mode
+
+To enable debug mode with detailed error messages:
+
+```bash
+# Method 1: Temporary debug mode
+make debug
+
+# Method 2: Permanent debug mode
+# Edit .env file and change:
+# FLASK_ENV=development
+# FLASK_DEBUG=1
 ```
 
 **Access Points:**
-- **Web App**: http://localhost:5001
+- **Web App**: http://localhost:5000
 - **Grafana Analytics**: http://localhost:3000  
 - **pgAdmin**: http://localhost:8080
 
@@ -34,52 +55,46 @@ make init
 
 ## 📊 Grafana Analytics
 
-### Ready Database Views:
-1. **grafana_monthly_summary**: Monthly income/expense summary
-2. **grafana_category_trends**: Category-based trend analysis  
-3. **grafana_investment_performance**: Investment performance analysis
-4. **grafana_cashflow_analysis**: Detailed cash flow analysis
+Integrated Grafana provides professional analytics with pre-built database views:
 
-### Setup Grafana:
+1. **grafana_monthly_summary**: Monthly income/expense overview
+2. **grafana_category_trends**: Category-based spending analysis  
+3. **grafana_investment_performance**: Investment portfolio tracking
+4. **grafana_cashflow_analysis**: Detailed cash flow insights
+
 ```bash
-make up                     # Start all services
-make setup_grafana_views    # Create database views
-make show_grafana          # Check Grafana status
+make up                      # Starts Grafana with other services
+make setup_grafana_views     # Creates database views for dashboards
 ```
 
-**Grafana Login**: admin / `GRAFANA_ADMIN_PASSWORD` (in .env.docker)
+**Grafana Access**: http://localhost:3000 (admin / `GRAFANA_ADMIN_PASSWORD`)
 
-## 🚀 Development Setup
+## 📋 Configuration & Commands
 
-### Docker (Recommended)
+### Environment Variables (.env)
+- **Database**: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
+- **Flask**: `FLASK_ENV`, `FLASK_DEBUG`, `SECRET_KEY`
+- **Ports**: `WEB_PORT`, `PGADMIN_PORT`, `GRAFANA_PORT`
+- **Admin**: `PGADMIN_DEFAULT_EMAIL`, `GRAFANA_ADMIN_PASSWORD`
+
+### Available Commands
 ```bash
-git clone https://github.com/ZekeriyaAY/track-finance.git
-cd track-finance
-make init
+make help           # Show all available commands
+make setup          # First time setup (copies .env.example)
+make up             # Start services (production mode)
+make debug          # Start with debug mode enabled
+make down           # Stop services
+make logs           # Show logs
+make backup         # Backup database
 ```
 
-### Local Development
+### Local Development (Without Docker)
 ```bash
-# Setup virtual environment
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS
-
-# Install and run
 pip install -r requirements.txt
 flask db upgrade
 flask run
-```
-
-## ⚙️ Configuration
-
-Key environment variables (`.env.docker`):
-```bash
-WEB_PORT=5001
-GRAFANA_PORT=3000
-PGADMIN_PORT=8080
-SECRET_KEY=your-secret-key
-POSTGRES_PASSWORD=secure-password
-GRAFANA_ADMIN_PASSWORD=secure-password
 ```
 
 ## 📈 Usage
@@ -87,16 +102,17 @@ GRAFANA_ADMIN_PASSWORD=secure-password
 1. Navigate to **Settings** → **Management**
 2. Create default categories, tags, and investment types
 3. Start adding transactions and investments
-4. View analytics in Grafana
+## 📈 Quick Usage
 
-## 🤝 Contributing
+1. **Add Categories**: Create income/expense categories
+2. **Track Cash Flow**: Record income and expenses with tags  
+3. **Manage Investments**: Add portfolio positions and transactions
+4. **Analyze Data**: View insights in Grafana dashboards
 
-1. Fork the project
-2. Create feature branch
-3. Commit changes
-4. Push and open Pull Request
+## 📚 Documentation
 
-For deployment and operations, see [DEPLOYMENT.md](DEPLOYMENT.md)
+- **[DEPLOYMENT.md](DEPLOYMENT.md)**: Operations and troubleshooting guide
+- **Makefile**: Run `make help` for all available commands
 
 ## 📄 License
 
