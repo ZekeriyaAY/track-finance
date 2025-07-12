@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-07-12 00:13+0300\n"
+"POT-Creation-Date: 2025-07-12 18:21+0300\n"
 "PO-Revision-Date: 2025-06-20 23:52+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: tr\n"
@@ -218,31 +218,31 @@ msgstr "Nakit Akışı"
 msgid "Investments"
 msgstr "Yatırımlar"
 
-#: templates/base.html:46
-msgid "Dashboard"
-msgstr "Panel"
+#: templates/base.html:47
+msgid "Grafana Analytics"
+msgstr "Grafana Analitiği"
 
-#: templates/base.html:49
+#: templates/base.html:51
 msgid "Management"
 msgstr "Yönetim"
 
-#: templates/base.html:56 templates/category/index.html:3
+#: templates/base.html:58 templates/category/index.html:3
 #: templates/category/index.html:8
 msgid "Categories"
 msgstr "Kategoriler"
 
-#: templates/base.html:60 templates/cashflow/form.html:68
+#: templates/base.html:62 templates/cashflow/form.html:68
 #: templates/cashflow/index.html:24 templates/tag/index.html:3
 #: templates/tag/index.html:8
 msgid "Tags"
 msgstr "Etiketler"
 
-#: templates/base.html:64 templates/investment_type/index.html:3
+#: templates/base.html:66 templates/investment_type/index.html:3
 #: templates/investment_type/index.html:8
 msgid "Investment Types"
 msgstr "Yatırım Türleri"
 
-#: templates/base.html:68 templates/settings/index.html:3
+#: templates/base.html:70 templates/settings/index.html:3
 #: templates/settings/index.html:8
 msgid "Settings"
 msgstr "Ayarlar"
@@ -281,12 +281,11 @@ msgstr "Miktar"
 msgid "Transaction Type"
 msgstr "İşlem Türü"
 
-#: templates/cashflow/form.html:39 templates/dashboard/cashflow.html:64
+#: templates/cashflow/form.html:39
 msgid "Income"
 msgstr "Gelir"
 
-#: templates/cashflow/form.html:40 templates/dashboard/cashflow.html:72
-#: templates/dashboard/cashflow.html:171
+#: templates/cashflow/form.html:40
 msgid "Expense"
 msgstr "Gider"
 
@@ -376,12 +375,12 @@ msgid "Income / Expense"
 msgstr "Gelir / Gider"
 
 #: templates/category/index.html:37 templates/category/index.html:72
-#: templates/dashboard/cashflow.html:9 templates/tag/index.html:36
+#: templates/tag/index.html:36
 msgid "Total Income"
 msgstr "Toplam Gelir"
 
 #: templates/category/index.html:41 templates/category/index.html:76
-#: templates/dashboard/cashflow.html:13 templates/tag/index.html:40
+#: templates/tag/index.html:40
 msgid "Total Expense"
 msgstr "Toplam Gider"
 
@@ -396,30 +395,6 @@ msgstr "Henüz kategori bulunamadı"
 #: templates/category/index.html:108
 msgid "You can add a new category using the \"New Category\" button."
 msgstr "\"Yeni Kategori\" butonunu kullanarak yeni bir kategori ekleyebilirsiniz."
-
-#: templates/dashboard/cashflow.html:5
-msgid "Cashflow Dashboard"
-msgstr "Nakit Akışı Paneli"
-
-#: templates/dashboard/cashflow.html:17
-msgid "Net Balance"
-msgstr "Net Bakiye"
-
-#: templates/dashboard/cashflow.html:24 templates/dashboard/cashflow.html:89
-msgid "Monthly Income/Expense"
-msgstr "Aylık Gelir/Gider"
-
-#: templates/dashboard/cashflow.html:28
-msgid "Top 5 Expense Categories"
-msgstr "En Büyük 5 Gider Kategorisi"
-
-#: templates/dashboard/cashflow.html:34
-msgid "Income Distribution by Category"
-msgstr "Kategoriye Göre Gelir Dağılımı"
-
-#: templates/dashboard/cashflow.html:38
-msgid "Expense Distribution by Category"
-msgstr "Kategoriye Göre Gider Dağılımı"
 
 #: templates/investment/form.html:22 templates/investment/index.html:23
 msgid "Investment Type"
@@ -678,4 +653,22 @@ msgstr "\"Yeni Etiket\" butonunu kullanarak yeni bir etiket ekleyebilirsiniz."
 
 #~ msgid "Finance Tracker"
 #~ msgstr "Finans Takipçisi"
+
+#~ msgid "Cashflow Dashboard"
+#~ msgstr "Nakit Akışı Paneli"
+
+#~ msgid "Net Balance"
+#~ msgstr "Net Bakiye"
+
+#~ msgid "Monthly Income/Expense"
+#~ msgstr "Aylık Gelir/Gider"
+
+#~ msgid "Top 5 Expense Categories"
+#~ msgstr "En Büyük 5 Gider Kategorisi"
+
+#~ msgid "Income Distribution by Category"
+#~ msgstr "Kategoriye Göre Gelir Dağılımı"
+
+#~ msgid "Expense Distribution by Category"
+#~ msgstr "Kategoriye Göre Gider Dağılımı"
 

@@ -11,7 +11,7 @@ cd track-finance
 make init
 ```
 
-Visit: http://localhost
+Visit: http://localhost:${WEB_PORT} (default: 5001)
 
 For detailed deployment options, see [DEPLOYMENT.md](DEPLOYMENT.md)
 
@@ -33,7 +33,7 @@ For detailed deployment options, see [DEPLOYMENT.md](DEPLOYMENT.md)
 - **Backend:** Python, Flask, SQLAlchemy
 - **Frontend:** HTML, Jinja2, Tailwind CSS, Font Awesome
 - **Database:** PostgreSQL (Production), SQLite (Development)
-- **Deployment:** Docker, Docker Compose, Gunicorn, Nginx
+- **Deployment:** Docker, Docker Compose, PostgreSQL
 - **Database:** SQLite (default)
 - **Database Migrations:** Flask-Migrate, Alembic
 - **Internationalization:** Flask-Babel for multi-language support
@@ -128,6 +128,29 @@ track-finance/
 ├── messages.pot            # Translation template file
 └── requirements.txt        # Python dependencies
 ```
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+The application supports configuration through environment variables. Copy the example file and customize:
+
+```bash
+# Copy example environment file  
+cp .env.example .env
+
+# Edit configuration
+nano .env
+```
+
+**Key Variables:**
+- `FLASK_ENV`: Application environment (development/production)
+- `SECRET_KEY`: Flask secret key for security
+- `DATABASE_URL`: Database connection string
+- `WEB_PORT`: Web application port (default: 5001)
+- `PGADMIN_PORT`: pgAdmin interface port (default: 8080)
+
+See `.env.example` for full configuration options.
 
 ## 🤝 Contributing
 
