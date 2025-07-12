@@ -1,5 +1,5 @@
 # Finance Tracker Docker Commands
-.PHONY: help build up down logs restart clean migrate shell backup setup debug pgadmin update init-db
+.PHONY: help build up down logs restart clean migrate shell backup setup dev pgadmin update init-db
 
 # Load environment variables
 include .env
@@ -41,7 +41,7 @@ up: ## Start all services (production mode)
 	@echo ""
 	@echo "⚠️  Don't forget to run migrations if needed: make migrate"
 
-debug: ## Start with debug mode enabled
+dev: ## Start with debug mode enabled
 	FLASK_ENV=development FLASK_DEBUG=1 docker-compose up -d
 	@echo "🚀 Finance Tracker is starting in DEBUG MODE..."
 	@echo "📱 Web app: http://localhost:$(WEB_PORT) (debug enabled)"
