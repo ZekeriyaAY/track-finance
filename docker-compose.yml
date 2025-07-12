@@ -1,36 +1,57 @@
 services:
   web:
     build: .
+    env_file:
+      - .env.docker
     ports:
-      - "5001:5000"
+      - "${WEB_PORT:-5001}:5000"
     environment:
-      - FLASK_ENV=production
+      - FLASK_ENV=${FLASK_ENV:-production}
       - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-this}
-      - DATABASE_URL=postgresql://finance_user:finance_pass@db:5432/finance_db
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: ${HEALTH_CHECK_INTERVAL:-30s}
+      timeout: ${HEALTH_CHECK_TIMEOUT:-10s}
+      retries: ${HEALTH_CHECK_RETRIES:-3}
 
   db:
     image: postgres:15-alpine
+    env_file:
+      - .env.docker
     environment:
-      - POSTGRES_DB=finance_db
-      - POSTGRES_USER=finance_user
-      - POSTGRES_PASSWORD=finance_pass
+      - POSTGRES_DB=${POSTGRES_DB:-finance_db}
+      - POSTGRES_USER=${POSTGRES_USER:-finance_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-finance_pass}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U finance_user -d finance_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-finance_user} -d ${POSTGRES_DB:-finance_db}"]
+      interval: ${DB_HEALTH_CHECK_INTERVAL:-10s}
+      timeout: ${DB_HEALTH_CHECK_TIMEOUT:-5s}
+      retries: ${DB_HEALTH_CHECK_RETRIES:-5}
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    env_file:
+      - .env.docker
+    restart: unless-stopped
+    ports:
+      - "${PGADMIN_PORT:-8080}:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@trackfinance.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD:-admin123}
+      - PGADMIN_CONFIG_SERVER_MODE=${PGADMIN_CONFIG_SERVER_MODE:-False}
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
 
 volumes:
   postgres_data:
+  pgadmin_data:
