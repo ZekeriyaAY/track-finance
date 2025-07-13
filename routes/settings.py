@@ -72,13 +72,20 @@ def create_default_investment_types_route():
 def reset_database():
     try:
         # Clear all data from tables (but keep table structure and views)
-        # Order matters: child tables first, then parent tables
+        # Using DELETE instead of TRUNCATE for better PostgreSQL compatibility
         clear_data_sql = """
-        TRUNCATE TABLE IF EXISTS investment_transaction RESTART IDENTITY CASCADE;
-        TRUNCATE TABLE IF EXISTS cashflow_transaction RESTART IDENTITY CASCADE;
-        TRUNCATE TABLE IF EXISTS investment_type RESTART IDENTITY CASCADE;
-        TRUNCATE TABLE IF EXISTS tag RESTART IDENTITY CASCADE;
-        TRUNCATE TABLE IF EXISTS category RESTART IDENTITY CASCADE;
+        DELETE FROM investment_transaction;
+        DELETE FROM cashflow_transaction;
+        DELETE FROM investment_type;
+        DELETE FROM tag;
+        DELETE FROM category;
+        
+        -- Reset sequences (equivalent to RESTART IDENTITY)
+        ALTER SEQUENCE IF EXISTS investment_transaction_id_seq RESTART WITH 1;
+        ALTER SEQUENCE IF EXISTS cashflow_transaction_id_seq RESTART WITH 1;
+        ALTER SEQUENCE IF EXISTS investment_type_id_seq RESTART WITH 1;
+        ALTER SEQUENCE IF EXISTS tag_id_seq RESTART WITH 1;
+        ALTER SEQUENCE IF EXISTS category_id_seq RESTART WITH 1;
         """
         db.session.execute(text(clear_data_sql))
         db.session.commit()
