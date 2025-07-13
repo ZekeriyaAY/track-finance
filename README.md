@@ -95,6 +95,7 @@ flask run
 1. Navigate to **Settings** → **Management**
 2. Create default categories, tags, and investment types
 3. Start adding transactions and investments
+
 ## 📈 Quick Usage
 
 1. **Add Categories**: Create income/expense categories
@@ -114,17 +115,3 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## 🔧 Troubleshooting
 
 For detailed troubleshooting, operations guide, and system-specific issues, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
-
-### Quick Fixes
-
-**Ubuntu/Python 3.12 `distutils` Error:**
-```bash
-sudo apt install python3-distutils
-# or upgrade to Docker Compose v2
-sudo apt install docker-compose-plugin
-```
-
-**Common Issues:**
-- **Port conflicts**: Change ports in `.env` (WEB_PORT, GRAFANA_PORT, PGADMIN_PORT)
-- **Permission errors**: `sudo usermod -aG docker $USER` then logout/login
-- **Database issues**: `make migrate` or `make down && make setup` for reset

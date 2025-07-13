@@ -82,37 +82,7 @@ FLASK_DEBUG=1
 
 ## 🛠️ Troubleshooting & Issues
 
-### System Compatibility Issues
-
-#### Ubuntu/Python 3.12 `distutils` Error
-
-**Problem:** `ModuleNotFoundError: No module named 'distutils'`
-
-This occurs with older docker-compose versions on Python 3.12+ systems.
-
-**Solutions (in order of preference):**
-
-```bash
-# Option 1: Install missing package (quickest)
-sudo apt update
-sudo apt install python3-distutils
-
-# Option 2: Upgrade to Docker Compose v2 (recommended)
-sudo apt remove docker-compose
-sudo apt install docker-compose-plugin
-docker compose version  # Should show v2.x.x
-
-# Option 3: Install via pip (alternative)
-sudo apt remove docker-compose  
-pip3 install docker-compose
-
-# After any fix, retry setup:
-make setup
-```
-
-### Common Operational Issues
-
-#### Application Won't Start
+### Application Won't Start
 ```bash
 # Check service status
 make status
@@ -129,7 +99,7 @@ make clean
 make setup
 ```
 
-#### Database Connection Issues
+### Database Connection Issues
 ```bash
 # Run migrations
 make migrate
@@ -143,7 +113,7 @@ docker volume rm track-finance_postgres_data
 make setup
 ```
 
-#### Port Conflicts
+### Port Conflicts
 Edit `.env` file to change default ports:
 ```bash
 WEB_PORT=5001        # Instead of 5000
@@ -151,7 +121,7 @@ GRAFANA_PORT=3001    # Instead of 3000
 PGADMIN_PORT=8081    # Instead of 8080
 ```
 
-#### Permission Errors (Linux)
+### Permission Errors (Linux)
 ```bash
 # Add user to docker group
 sudo usermod -aG docker $USER
