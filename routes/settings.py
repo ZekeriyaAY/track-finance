@@ -3,6 +3,7 @@ from flask_babel import _
 from models.__init__ import db
 from utils import create_dummy_data, create_default_categories, create_default_tags, create_default_investment_types
 import logging
+from sqlalchemy import text
 
 logger = logging.getLogger(__name__)
 
@@ -70,12 +71,22 @@ def create_default_investment_types_route():
 @settings_bp.route('/reset-database', methods=['POST'])
 def reset_database():
     try:
-        db.drop_all()
-        db.create_all()
-        flash(_('Database reset successfully.'), 'success')
-        logger.info("Database reset successfully.")
+        # Clear all data from tables (but keep table structure and views)
+        clear_data_sql = """
+        TRUNCATE TABLE investment_transaction RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE cashflow_transaction RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE investment RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE investment_type RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE tag RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE category RESTART IDENTITY CASCADE;
+        """
+        db.session.execute(text(clear_data_sql))
+        db.session.commit()
+        
+        flash(_('Database data cleared successfully.'), 'success')
+        logger.info("Database data cleared successfully.")
     except Exception as e:
         db.session.rollback()
-        logger.error(f"An error occurred while resetting the database: {str(e)}")
-        flash(_('An error occurred while resetting the database.'), 'error')
+        logger.error(f"An error occurred while clearing database data: {str(e)}")
+        flash(_('An error occurred while clearing database data.'), 'error')
     return redirect(url_for('settings.index'))
