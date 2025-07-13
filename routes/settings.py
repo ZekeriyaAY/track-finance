@@ -72,13 +72,13 @@ def create_default_investment_types_route():
 def reset_database():
     try:
         # Clear all data from tables (but keep table structure and views)
+        # Order matters: child tables first, then parent tables
         clear_data_sql = """
-        TRUNCATE TABLE investment_transaction RESTART IDENTITY CASCADE;
-        TRUNCATE TABLE cashflow_transaction RESTART IDENTITY CASCADE;
-        TRUNCATE TABLE investment RESTART IDENTITY CASCADE;
-        TRUNCATE TABLE investment_type RESTART IDENTITY CASCADE;
-        TRUNCATE TABLE tag RESTART IDENTITY CASCADE;
-        TRUNCATE TABLE category RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE IF EXISTS investment_transaction RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE IF EXISTS cashflow_transaction RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE IF EXISTS investment_type RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE IF EXISTS tag RESTART IDENTITY CASCADE;
+        TRUNCATE TABLE IF EXISTS category RESTART IDENTITY CASCADE;
         """
         db.session.execute(text(clear_data_sql))
         db.session.commit()
