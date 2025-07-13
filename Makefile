@@ -22,12 +22,12 @@ setup: ## First time setup (copies .env.example and starts services)
 		make build; \
 		make up; \
 		sleep 10; \
-		make migrate; \
+		make init-db; \
 		make setup_grafana; \
-		@echo "✅ Finance Tracker initialized successfully!"; \
-		@echo "📱 Web app: http://localhost:$(WEB_PORT)"; \
-		@echo "🔧 Database Admin: http://localhost:$(PGADMIN_PORT)"; \
-		@echo "📊 Grafana: http://localhost:$(GRAFANA_PORT)"; \
+		echo "✅ Finance Tracker initialized successfully!"; \
+		echo "📱 Web app: http://localhost:$(WEB_PORT)"; \
+		echo "🔧 Database Admin: http://localhost:$(PGADMIN_PORT)"; \
+		echo "📊 Grafana: http://localhost:$(GRAFANA_PORT)"; \
 	fi
 
 build: ## Build the Docker images
@@ -71,9 +71,16 @@ clean: ## Remove all containers, networks, and volumes
 
 # Database commands
 init-db: ## Initialize database and migrations (first time only)
-	docker compose exec web flask db init
+	@echo "🔄 Initializing database..."
+	@if [ ! -d "migrations" ]; then \
+		echo "📁 Creating migrations folder..."; \
+		docker compose exec web flask db init; \
+	fi
+	@echo "📝 Creating initial migration..."
 	docker compose exec web flask db migrate -m "Initial migration"
+	@echo "🚀 Running database upgrade..."
 	docker compose exec web flask db upgrade
+	@echo "✅ Database initialized successfully!"
 
 migrate: ## Run database migrations
 	docker compose exec web flask db upgrade
