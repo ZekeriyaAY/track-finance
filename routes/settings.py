@@ -72,10 +72,16 @@ def create_default_investment_types_route():
 def reset_database():
     try:
         # Clear all data from tables (but keep table structure and views)
-        # Using DELETE instead of TRUNCATE for better PostgreSQL compatibility
+        # Order is critical: junction tables first, then child tables, then parent tables
         clear_data_sql = """
+        -- First delete junction/association tables
+        DELETE FROM cashflow_transaction_tags;
+        
+        -- Then delete child tables (tables with foreign keys)
         DELETE FROM investment_transaction;
         DELETE FROM cashflow_transaction;
+        
+        -- Finally delete parent tables
         DELETE FROM investment_type;
         DELETE FROM tag;
         DELETE FROM category;
