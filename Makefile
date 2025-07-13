@@ -1,5 +1,5 @@
 # Finance Tracker Docker Commands
-.PHONY: help build up down logs restart clean migrate shell backup setup dev pgadmin update init-db status setup_grafana
+.PHONY: help build up down logs restart clean migrate shell backup setup dev update init-db status
 
 # Load environment variables
 include .env
@@ -23,7 +23,6 @@ setup: ## First time setup (copies .env.example and starts services)
 		make up; \
 		sleep 10; \
 		make init-db; \
-		make setup_grafana; \
 		echo "✅ Finance Tracker initialized successfully!"; \
 		echo "📱 Web app: http://localhost:$(WEB_PORT)"; \
 		echo "🔧 Database Admin: http://localhost:$(PGADMIN_PORT)"; \
@@ -42,6 +41,13 @@ up: ## Start all services (production mode)
 	@echo ""
 	@echo "⚠️  Don't forget to run migrations if needed: make migrate"
 
+down: ## Stop all services
+	docker compose down
+
+restart: ## Restart all services
+	docker compose down
+	docker compose up -d
+
 dev: ## Start with debug mode enabled
 	FLASK_ENV=development FLASK_DEBUG=1 docker compose up -d
 	@echo "🚀 Finance Tracker is starting in DEBUG MODE..."
@@ -55,15 +61,8 @@ dev: ## Start with debug mode enabled
 	@make migrate || echo "⚠️  Migration failed - database might not be ready yet. Try: make migrate"
 	@echo "✅ Debug environment ready!"
 
-down: ## Stop all services
-	docker compose down
-
 logs: ## Show logs from all services
 	docker compose logs -f
-
-restart: ## Restart all services
-	docker compose down
-	docker compose up -d
 
 clean: ## Remove all containers, networks, and volumes
 	docker compose down -v --rmi all
@@ -109,24 +108,7 @@ status: ## Show status of all services
 shell: ## Open a shell in the web container
 	docker compose exec web bash
 
-pgadmin: ## Open pgAdmin interface in browser
-	@echo "🔧 Opening pgAdmin interface..."
-	@echo "📊 pgAdmin: http://localhost:$(PGADMIN_PORT)"
-	@echo "🗄️  Login: $(PGADMIN_DEFAULT_EMAIL) / $(PGADMIN_DEFAULT_PASSWORD)"
-	@which open >/dev/null 2>&1 && open http://localhost:$(PGADMIN_PORT) || echo "🌐 Please open http://localhost:$(PGADMIN_PORT) in your browser"
-
 update: ## Update running containers with latest configuration
 	@echo "🔄 Updating containers..."
 	docker compose up -d --force-recreate
 	@echo "✅ Containers updated successfully!"
-
-# Grafana commands
-setup_grafana: ## Set up Grafana dashboard (JSON provisioning)
-	@echo "=== Setting up Grafana Dashboard for Finance Tracker ==="
-	@echo "📋 Dashboard will be automatically provisioned from JSON file"
-	@echo "🔄 Waiting for Grafana to start..."
-	@sleep 5
-	@echo "✅ Grafana dashboard setup completed!"
-	@echo "📊 Grafana: http://localhost:$(GRAFANA_PORT)"
-	@echo "🔑 Login: $(GRAFANA_ADMIN_USER) / $(GRAFANA_ADMIN_PASSWORD)"
-	@echo "📈 Dashboard: Finance Tracker Dashboard"

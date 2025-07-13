@@ -1,10 +1,9 @@
 {
-  "dashboard": {
-    "id": null,
-    "title": "Finance Tracker Dashboard",
-    "tags": ["finance", "tracker"],
-    "style": "dark",
-    "timezone": "browser",
+  "id": null,
+  "title": "Finance Tracker Dashboard",
+  "tags": ["finance", "tracker"],
+  "style": "dark",
+  "timezone": "browser",
     "panels": [
       {
         "datasource": {
@@ -268,11 +267,10 @@
         "type": "stat"
       }
     ],
-    "time": {
-      "from": "now-30d",
-      "to": "now"
-    },
-    "timepicker": {},
-    "version": 1
-  }
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "version": 1
 }
