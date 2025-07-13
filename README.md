@@ -48,16 +48,16 @@ make dev    # Start with debug mode enabled
 
 ## 📊 Grafana Analytics
 
-Integrated Grafana provides professional analytics with pre-built database views:
+Integrated Grafana provides professional analytics with pre-built dashboard:
 
-1. **grafana_monthly_summary**: Monthly income/expense overview
-2. **grafana_category_trends**: Category-based spending analysis  
-3. **grafana_investment_performance**: Investment portfolio tracking
-4. **grafana_cashflow_analysis**: Detailed cash flow insights
+🎯 **Finance Tracker Dashboard** includes:
+- **Pie Chart**: Monthly expenses by category
+- **Time Series**: Daily income vs expense trends  
+- **Portfolio Stats**: Investment performance overview
 
 ```bash
 make up               # Starts Grafana with other services
-make setup_grafana    # Creates database views for dashboards
+make setup_grafana    # Dashboard auto-provisioned on startup
 ```
 
 **Grafana Access**: http://localhost:3000 (admin / `GRAFANA_ADMIN_PASSWORD`)

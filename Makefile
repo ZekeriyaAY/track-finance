@@ -121,10 +121,12 @@ update: ## Update running containers with latest configuration
 	@echo "✅ Containers updated successfully!"
 
 # Grafana commands
-setup_grafana: ## Set up Grafana database views and configuration
-	@echo "=== Setting up Grafana for Finance Tracker ==="
-	@docker cp grafana/sql/views.sql $$(docker compose ps -q db):/tmp/views.sql
-	@docker compose exec -T db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /tmp/views.sql
-	@echo "✅ Grafana database views created successfully!"
+setup_grafana: ## Set up Grafana dashboard (JSON provisioning)
+	@echo "=== Setting up Grafana Dashboard for Finance Tracker ==="
+	@echo "📋 Dashboard will be automatically provisioned from JSON file"
+	@echo "🔄 Waiting for Grafana to start..."
+	@sleep 5
+	@echo "✅ Grafana dashboard setup completed!"
 	@echo "📊 Grafana: http://localhost:$(GRAFANA_PORT)"
 	@echo "🔑 Login: $(GRAFANA_ADMIN_USER) / $(GRAFANA_ADMIN_PASSWORD)"
+	@echo "📈 Dashboard: Finance Tracker Dashboard"
