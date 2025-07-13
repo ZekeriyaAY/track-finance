@@ -19,16 +19,9 @@ make up
 
 ### 🔧 Development/Debug Mode
 
-To enable debug mode with detailed error messages:
-
 ```bash
-# Method 1: Temporary debug mode
-make debug
-
-# Method 2: Permanent debug mode
-# Edit .env file and change:
-# FLASK_ENV=development
-# FLASK_DEBUG=1
+make dev    # Start with debug mode enabled
+# Or manually: edit .env and set FLASK_ENV=development, FLASK_DEBUG=1
 ```
 
 **Access Points:**
@@ -63,8 +56,8 @@ Integrated Grafana provides professional analytics with pre-built database views
 4. **grafana_cashflow_analysis**: Detailed cash flow insights
 
 ```bash
-make up                      # Starts Grafana with other services
-make setup_grafana_views     # Creates database views for dashboards
+make up               # Starts Grafana with other services
+make setup_grafana    # Creates database views for dashboards
 ```
 
 **Grafana Access**: http://localhost:3000 (admin / `GRAFANA_ADMIN_PASSWORD`)
@@ -78,14 +71,14 @@ make setup_grafana_views     # Creates database views for dashboards
 - **Admin**: `PGADMIN_DEFAULT_EMAIL`, `GRAFANA_ADMIN_PASSWORD`
 
 ### Available Commands
+For complete command reference and troubleshooting, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
 ```bash
 make help           # Show all available commands
-make setup          # First time setup (copies .env.example)
-make up             # Start services (production mode)
-make debug          # Start with debug mode enabled
+make setup          # First time setup
+make up             # Start services
 make down           # Stop services
 make logs           # Show logs
-make backup         # Backup database
 ```
 
 ### Local Development (Without Docker)
@@ -117,3 +110,21 @@ flask run
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🔧 Troubleshooting
+
+For detailed troubleshooting, operations guide, and system-specific issues, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
+
+### Quick Fixes
+
+**Ubuntu/Python 3.12 `distutils` Error:**
+```bash
+sudo apt install python3-distutils
+# or upgrade to Docker Compose v2
+sudo apt install docker-compose-plugin
+```
+
+**Common Issues:**
+- **Port conflicts**: Change ports in `.env` (WEB_PORT, GRAFANA_PORT, PGADMIN_PORT)
+- **Permission errors**: `sudo usermod -aG docker $USER` then logout/login
+- **Database issues**: `make migrate` or `make down && make setup` for reset
