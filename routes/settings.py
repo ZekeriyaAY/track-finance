@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g
 from flask_babel import _
 from models.__init__ import db
-from utils import create_dummy_data, create_default_categories, create_default_tags, create_default_investment_types
+from utils.data_utils import create_dummy_data, create_default_categories, create_default_tags, create_default_investment_types
 import logging
 from sqlalchemy import text
 
@@ -71,35 +71,46 @@ def create_default_investment_types_route():
 @settings_bp.route('/reset-database', methods=['POST'])
 def reset_database():
     try:
-        # Clear all data from tables (but keep table structure and views)
+        # Clear all data from tables (but keep table structure)
         # Order is critical: junction tables first, then child tables, then parent tables
-        clear_data_sql = """
-        -- First delete junction/association tables
-        DELETE FROM cashflow_transaction_tags;
         
-        -- Then delete child tables (tables with foreign keys)
-        DELETE FROM investment_transaction;
-        DELETE FROM cashflow_transaction;
+        # SQLite requires each statement to be executed separately
+        statements = [
+            "DELETE FROM cashflow_transaction_tags",
+            "DELETE FROM investment_transaction", 
+            "DELETE FROM cashflow_transaction",
+            "DELETE FROM investment_type",
+            "DELETE FROM tag",
+            "DELETE FROM category"
+        ]
         
-        -- Finally delete parent tables
-        DELETE FROM investment_type;
-        DELETE FROM tag;
-        DELETE FROM category;
+        for sql in statements:
+            db.session.execute(text(sql))
         
-        -- Reset sequences (equivalent to RESTART IDENTITY)
-        ALTER SEQUENCE IF EXISTS investment_transaction_id_seq RESTART WITH 1;
-        ALTER SEQUENCE IF EXISTS cashflow_transaction_id_seq RESTART WITH 1;
-        ALTER SEQUENCE IF EXISTS investment_type_id_seq RESTART WITH 1;
-        ALTER SEQUENCE IF EXISTS tag_id_seq RESTART WITH 1;
-        ALTER SEQUENCE IF EXISTS category_id_seq RESTART WITH 1;
-        """
-        db.session.execute(text(clear_data_sql))
+        # SQLite uses AUTOINCREMENT instead of SEQUENCE
+        # Reset auto-increment counters by updating sqlite_sequence if it exists
+        try:
+            # Check if sqlite_sequence table exists
+            check_sequence_table = "SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence'"
+            result = db.session.execute(text(check_sequence_table)).fetchone()
+            
+            if result:
+                # Simple approach: just delete all entries and they'll be recreated with seq=1
+                db.session.execute(text("DELETE FROM sqlite_sequence WHERE name IN ('investment_transaction', 'cashflow_transaction', 'investment_type', 'tag', 'category')"))
+                
+        except Exception as e:
+            # If sqlite_sequence operations fail, just log and continue
+            logger.warning(f"Could not reset auto-increment counters: {str(e)}")
+            
         db.session.commit()
         
         flash(_('Database data cleared successfully.'), 'success')
         logger.info("Database data cleared successfully.")
+        
     except Exception as e:
         db.session.rollback()
-        logger.error(f"An error occurred while clearing database data: {str(e)}")
-        flash(_('An error occurred while clearing database data.'), 'error')
+        error_msg = f"An error occurred while clearing database data: {str(e)}"
+        flash(_('Error clearing database data.'), 'error')
+        logger.error(error_msg)
+    
     return redirect(url_for('settings.index'))
