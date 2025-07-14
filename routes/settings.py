@@ -25,7 +25,6 @@ def create_dummy_data_route():
     try:
         create_dummy_data()
         flash(_('Dummy data created successfully.'), 'success')
-        logger.info("Dummy data created successfully.")
     except Exception as e:
         db.session.rollback()
         logger.error(f"An error occurred while creating dummy data: {str(e)}")
@@ -37,7 +36,6 @@ def create_default_categories_route():
     try:
         create_default_categories()
         flash(_('Default categories created successfully.'), 'success')
-        logger.info("Default categories created successfully.")
     except Exception as e:
         db.session.rollback()
         logger.error(f"An error occurred while creating default categories: {str(e)}")
@@ -49,7 +47,6 @@ def create_default_tags_route():
     try:
         create_default_tags()
         flash(_('Default tags created successfully.'), 'success')
-        logger.info("Default tags created successfully.")
     except Exception as e:
         db.session.rollback()
         logger.error(f"An error occurred while creating default tags: {str(e)}")
@@ -61,7 +58,6 @@ def create_default_investment_types_route():
     try:
         create_default_investment_types()
         flash(_('Default investment types created successfully.'), 'success')
-        logger.info("Default investment types created successfully.")
     except Exception as e:
         db.session.rollback()
         logger.error(f"An error occurred while creating default investment types: {str(e)}")
@@ -105,7 +101,6 @@ def reset_database():
         db.session.commit()
         
         flash(_('Database data cleared successfully.'), 'success')
-        logger.info("Database data cleared successfully.")
         
     except Exception as e:
         db.session.rollback()

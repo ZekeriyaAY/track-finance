@@ -24,7 +24,7 @@
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Dosya Seçimi -->
+        <!-- File Selection -->
         <div class="space-y-2">
           <label for="excel_file" class="block text-sm font-medium text-gray-300">{{ _('Excel File') }}</label>
           <input type="file" id="excel_file" name="excel_file" 
@@ -33,7 +33,7 @@
           <p class="text-xs text-gray-500">{{ _('Supported formats: .xlsx, .xls, .csv') }}</p>
         </div>
         
-        <!-- Banka Seçimi -->
+        <!-- Bank Selection -->
         <div class="space-y-2">
           <label for="bank_code" class="block text-sm font-medium text-gray-300">{{ _('Bank') }}</label>
           <select id="bank_code" name="bank_code" required
@@ -64,7 +64,7 @@
     </form>
   </div>
 
-  <!-- Yardım Bölümü -->
+  <!-- Help Section -->
   <div class="bg-card rounded-xl shadow p-6">
     <h3 class="text-lg font-semibold mb-4">
       <i class="fas fa-question-circle text-primary mr-2"></i>{{ _('How to Use?') }}

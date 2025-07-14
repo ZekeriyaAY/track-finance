@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Banka Excel formatları için konfigürasyon dosyası
-Her bankanın Excel export formatını tanımlar
+Bank Excel format configuration file
+Defines Excel export format for each bank
 """
 
 BANK_CONFIGS = {
@@ -12,12 +12,13 @@ BANK_CONFIGS = {
             'description': ['İşlemler', 'İşlem Açıklaması', 'Açıklama'],
             'amount': ['Tutar', 'Miktar']
         },
-        'date_format': '%d/%m/%Y',  # Excel'de 10/06/2025 formatında görünüyor
+        'date_format': '%d/%m/%Y',  # Excel format appears as 10/06/2025
         'skip_rows': 0,
         'encoding': 'utf-8'
     }
 }
 
 def get_bank_config(bank_code):
-    """Banka koduna göre konfigürasyonu döndürür"""
+    """Returns configuration for given bank code"""
     return BANK_CONFIGS.get(bank_code)
+ 

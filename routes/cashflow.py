@@ -102,81 +102,66 @@ def delete_cashflow(id):
 
 @cashflow_bp.route('/import', methods=['GET', 'POST'])
 def import_excel():
-    """Excel dosyası ile transaction import etme"""
+    """Import transactions from Excel file"""
     
     if request.method == 'GET':
         return render_template('cashflow/import.html')
     
     try:
-        logger.info(f"Import request received. Form data: {dict(request.form)}")
-        
-        # import_excel butonuna basıldıysa direkt import et
-        if 'import_excel' in request.form:
-            logger.info("Direct import request")
-        
-        # Dosya kontrolü
+        # File check
         if 'excel_file' not in request.files:
-            logger.warning("No excel_file in request.files")
-            flash(_('Lütfen bir Excel dosyası seçin.'), 'error')
+            flash(_('Please select an Excel file.'), 'error')
             return render_template('cashflow/import.html')
         
         file = request.files['excel_file']
-        logger.info(f"File received: {file.filename}")
         
         if file.filename == '':
-            logger.warning("Empty filename")
-            flash(_('Lütfen bir Excel dosyası seçin.'), 'error')
+            flash(_('Please select an Excel file.'), 'error')
             return render_template('cashflow/import.html')
         
         if not allowed_file(file.filename):
-            logger.warning(f"File type not allowed: {file.filename}")
-            flash(_('Sadece Excel dosyaları (.xlsx, .xls, .csv) desteklenmektedir.'), 'error')
+            flash(_('Only Excel files (.xlsx, .xls, .csv) are supported.'), 'error')
             return render_template('cashflow/import.html')
         
-        # Banka seçimi kontrolü
+        # Bank selection check
         bank_code = request.form.get('bank_code')
         if not bank_code:
-            flash(_('Lütfen bir banka seçin.'), 'error')
+            flash(_('Please select a bank.'), 'error')
             return render_template('cashflow/import.html')
         
-        logger.info(f"Selected bank: {bank_code}")
-        
-        # Geçici dosya oluştur
+        # Create temporary file
         filename = secure_filename(file.filename)
         temp_path = os.path.join(UPLOAD_FOLDER, filename)
         file.save(temp_path)
-        logger.info(f"File saved to: {temp_path}")
         
         try:
-            # Excel'i direkt işle
-            logger.info("Processing Excel data...")
+            # Process Excel directly
             result = process_excel_data(temp_path, bank_code)
-            logger.info(f"Processing result: {result}")
             
-            # Transaction'ları veritabanına kaydet
+            # Save transactions to database
             saved_count = 0
             
-            # Default category oluştur/bul (Import)
+            # Create/find default category (Import)
             import_category = Category.query.filter_by(name='Import').first()
             if not import_category:
                 import_category = Category(name='Import')
                 db.session.add(import_category)
-                db.session.flush()  # ID'yi almak için
+                db.session.flush()  # Get ID
             
-            # Seçilen banka için tag oluştur/bul
+            # Create/find tag for selected bank
             bank_config = get_bank_config(bank_code)
             bank_tag = Tag.query.filter_by(name=bank_config['name']).first()
             if not bank_tag:
                 bank_tag = Tag(name=bank_config['name'])
                 db.session.add(bank_tag)
-                db.session.flush()  # ID'yi almak için
+                db.session.flush()  # Get ID
             
             for transaction_data in result['transactions']:
                 try:
                     transaction = CashflowTransaction(
                         date=transaction_data['date'],
-                        amount=abs(transaction_data['amount']),  # Amount her zaman pozitif
-                        type=transaction_data['type'],  # Excel processor'dan gelecek
+                        amount=abs(transaction_data['amount']),  # Amount is always positive
+                        type=transaction_data['type'],  # From Excel processor
                         category_id=import_category.id,
                         description=transaction_data['description'],
                         tags = [bank_tag]
@@ -184,42 +169,39 @@ def import_excel():
                     
                     db.session.add(transaction)
                     saved_count += 1
-                    logger.debug(f"Added transaction: {transaction_data['description']} - {transaction_data['amount']}")
                     
                 except Exception as e:
-                    logger.error(f"Transaction kaydetme hatası: {str(e)}")
+                    logger.error(f"Error saving transaction: {str(e)}")
                     continue
             
             db.session.commit()
-            logger.info(f"Committed {saved_count} transactions to database")
             
-            # Başarı mesajı
-            success_msg = _(f'{saved_count} transaction başarıyla import edildi.')
+            # Success message
+            success_msg = _(f'{saved_count} transactions imported successfully.')
             if result.get('failed', 0) > 0:
-                success_msg += _(f' {result["failed"]} transaction başarısız.')
+                success_msg += _(f' {result["failed"]} transactions failed.')
             flash(success_msg, 'success')
             
-            # Hata varsa göster
+            # Show errors if any
             if result.get('errors'):
                 error_details = []
-                for error in result['errors'][:5]:  # İlk 5 hatayı göster
-                    error_details.append(f"Satır {error['row']}: {error['error']}")
-                flash(_('Hatalar: ') + '; '.join(error_details), 'warning')
+                for error in result['errors'][:5]:  # Show first 5 errors
+                    error_details.append(f"Row {error['row']}: {error['error']}")
+                flash(_('Errors: ') + '; '.join(error_details), 'warning')
             
         finally:
-            # Geçici dosyayı sil
+            # Remove temporary file
             if os.path.exists(temp_path):
                 os.remove(temp_path)
-                logger.info(f"Removed temp file: {temp_path}")
         
         return redirect(url_for('cashflow.index'))
     
     except ExcelImportError as e:
         logger.error(f"ExcelImportError: {str(e)}")
-        flash(_(f'Excel import hatası: {str(e)}'), 'error')
+        flash(_(f'Excel import error: {str(e)}'), 'error')
     except Exception as e:
-        logger.error(f'Import hatası: {str(e)}', exc_info=True)
-        flash(_('Beklenmeyen bir hata oluştu.'), 'error')
+        logger.error(f'Import error: {str(e)}', exc_info=True)
+        flash(_('An unexpected error occurred.'), 'error')
     
     return render_template('cashflow/import.html')
 

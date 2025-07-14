@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Excel ve CSV dosyalarını işlemek için yardımcı fonksiyonlar
+Helper functions for processing Excel and CSV files
 """
 
 import pandas as pd
@@ -13,108 +13,108 @@ from utils.bank_configs import get_bank_config
 logger = logging.getLogger(__name__)
 
 class ExcelImportError(Exception):
-    """Excel import işlemi sırasında oluşan hatalar"""
+    """Errors that occur during Excel import process"""
     pass
 
 def parse_turkish_amount(amount_str):
     """
-    Türkçe format tutarları parse eder
-    Örnek: "1.234,56" -> 1234.56
-    Yapı Kredi için: "+386,50 TL" -> (386.50, "income")
-                     "386,50 TL" -> (386.50, "expense")
+    Parse Turkish format amounts
+    Example: "1.234,56" -> 1234.56
+    For Yapı Kredi: "+386,50 TL" -> (386.50, "income")
+                    "386,50 TL" -> (386.50, "expense")
     """
     if pd.isna(amount_str) or amount_str == '':
         return 0.0, 'expense'
     
-    # String'e çevir
+    # Convert to string
     amount_str = str(amount_str).strip()
     
-    # Boş string kontrolü
+    # Empty string check
     if not amount_str:
         return 0.0, 'expense'
     
-    # + işareti income, - işareti veya hiçbir işaret expense
+    # + sign means income, - sign or no sign means expense
     is_income = amount_str.startswith('+')
     is_expense = amount_str.startswith('-')
     
-    # + veya - işaretini kaldır
+    # Remove + or - sign
     if is_income or is_expense:
         amount_str = amount_str[1:]
     
-    # Parantez içindeki tutarlar negatif (bazı bankalar böyle gösterir)
+    # Amounts in parentheses are negative (some banks show this way)
     is_negative = amount_str.startswith('(') and amount_str.endswith(')')
     if is_negative:
         amount_str = amount_str[1:-1]
         is_expense = True
         is_income = False
     
-    # Sadece sayı karakterleri, nokta, virgül bırak (TL, ₺ gibi para birimi sembollerini temizle)
+    # Keep only numeric characters, dots, commas (remove currency symbols like TL, ₺)
     amount_str = re.sub(r'[^\d.,-]', '', amount_str)
     
-    # Türkçe format: binlik ayırıcısı nokta, ondalık ayırıcısı virgül
+    # Turkish format: thousand separator is dot, decimal separator is comma
     if ',' in amount_str:
-        # Virgülden önceki kısmda noktalar binlik ayırıcısı
+        # Dots before comma are thousand separators
         parts = amount_str.split(',')
         if len(parts) == 2:
             integer_part = parts[0].replace('.', '')
             decimal_part = parts[1]
             amount_str = f"{integer_part}.{decimal_part}"
         else:
-            # Virgül sayısı > 1, hatalı format
+            # More than 1 comma, invalid format
             amount_str = amount_str.replace(',', '').replace('.', '')
     else:
-        # Virgül yok, noktalar binlik ayırıcısı olabilir
+        # No comma, dots might be thousand separators
         if amount_str.count('.') > 1:
-            # Birden fazla nokta varsa, sonuncusu ondalık ayırıcısı
+            # Multiple dots, last one is decimal separator
             last_dot_index = amount_str.rfind('.')
             integer_part = amount_str[:last_dot_index].replace('.', '')
             decimal_part = amount_str[last_dot_index+1:]
             amount_str = f"{integer_part}.{decimal_part}"
         elif amount_str.count('.') == 1:
-            # Tek nokta var, bu ondalık ayırıcısı mı binlik ayırıcısı mı?
+            # Single dot, is it decimal or thousand separator?
             dot_index = amount_str.find('.')
             after_dot = amount_str[dot_index+1:]
             if len(after_dot) <= 2:
-                # 2 hane veya daha az, ondalık ayırıcısı olabilir
+                # 2 digits or less, could be decimal separator
                 pass
             else:
-                # 2 haneden fazla, binlik ayırıcısı
+                # More than 2 digits, thousand separator
                 amount_str = amount_str.replace('.', '')
     
     try:
         result = float(amount_str)
-        # Type'ı belirle
+        # Determine type
         if is_income:
             transaction_type = 'income'
         else:
             transaction_type = 'expense'
         
-        return abs(result), transaction_type  # Amount her zaman pozitif
+        return abs(result), transaction_type  # Amount is always positive
     except ValueError:
         logger.warning(f"Could not parse amount: {amount_str}")
         return 0.0, 'expense'
 
 def parse_date(date_str, date_format='%d.%m.%Y'):
     """
-    Tarih string'ini parse eder
+    Parse date string
     """
     if pd.isna(date_str):
         return None
     
     date_str = str(date_str).strip()
     
-    # Excel'den gelen sayısal tarih formatını kontrol et
+    # Check Excel numeric date format
     try:
         # Excel serial date number
         if date_str.isdigit() and len(date_str) > 4:
             excel_date = int(date_str)
-            # Excel'de 1900-01-01 = 1 (ama aslında 1899-12-30)
+            # Excel 1900-01-01 = 1 (but actually 1899-12-30)
             excel_epoch = datetime(1899, 12, 30)
             return excel_epoch + pd.Timedelta(days=excel_date)
     except:
         pass
     
-    # String tarih formatlarını dene
+    # Try string date formats
     date_formats = [
         date_format,
         '%d.%m.%Y',
@@ -135,22 +135,22 @@ def parse_date(date_str, date_format='%d.%m.%Y'):
 
 def read_excel_file(file_path, bank_config=None):
     """
-    Excel dosyasını okur ve DataFrame olarak döndürür
+    Read Excel file and return as DataFrame
     """
     try:
-        # Excel dosyaları için encoding gerekmiyor, direkt okuyabiliriz
+        # Excel files don't need encoding, can read directly
         df = pd.read_excel(file_path)
         return df
     
     except Exception as e:
-        raise ExcelImportError(f"Excel dosyası okunamadı: {str(e)}")
+        raise ExcelImportError(f"Could not read Excel file: {str(e)}")
 
 def read_csv_file(file_path):
     """
-    CSV dosyasını okur ve DataFrame olarak döndürür
+    Read CSV file and return as DataFrame
     """
     try:
-        # CSV dosyaları için farklı encoding'leri dene
+        # Try different encodings for CSV files
         encodings = ['utf-8', 'latin-1', 'cp1254', 'iso-8859-9']
         
         df = None
@@ -167,11 +167,11 @@ def read_csv_file(file_path):
         return df
     
     except Exception as e:
-        raise ExcelImportError(f"CSV dosyası okunamadı: {str(e)}")
+        raise ExcelImportError(f"Could not read CSV file: {str(e)}")
 
 def map_columns(df, bank_config):
     """
-    DataFrame kolonlarını banka konfigürasyonuna göre eşleştirir
+    Map DataFrame columns according to bank configuration
     """
     column_mapping = {}
     
@@ -188,68 +188,59 @@ def map_columns(df, bank_config):
 
 def process_excel_data(file_path, bank_code, user_column_mapping=None):
     """
-    Excel/CSV dosyasını işler ve transaction listesi döndürür
+    Process Excel/CSV file and return transaction list
     """
     bank_config = get_bank_config(bank_code)
     if not bank_config:
-        raise ExcelImportError(f"Bilinmeyen banka kodu: {bank_code}")
+        raise ExcelImportError(f"Unknown bank code: {bank_code}")
     
     try:
-        # Dosya uzantısına göre doğru okuma fonksiyonunu seç
+        # Select correct reading function based on file extension
         file_extension = file_path.lower().split('.')[-1]
         if file_extension == 'csv':
             df = read_csv_file(file_path)
         elif file_extension in ['xlsx', 'xls']:
             df = read_excel_file(file_path, bank_config)
         else:
-            raise ExcelImportError(f"Desteklenmeyen dosya formatı: {file_extension}")
+            raise ExcelImportError(f"Unsupported file format: {file_extension}")
         
         # Skip rows if configured
         if bank_config.get('skip_rows', 0) > 0:
-            logger.info(f"Skipping {bank_config['skip_rows']} rows. Original shape: {df.shape}")
             df = df.iloc[bank_config['skip_rows']:].reset_index(drop=True)
-            logger.info(f"After skipping rows: {df.shape}")
         
-        logger.info(f"DataFrame columns: {list(df.columns)}")
-        logger.info(f"DataFrame shape: {df.shape}")
-        logger.info(f"First few rows:\n{df.head()}")
-        
-        # Kolon eşleştirmesi
+        # Column mapping
         if user_column_mapping:
             column_mapping = user_column_mapping
         else:
             column_mapping = map_columns(df, bank_config)
         
-        # Gerekli kolonların varlığını kontrol et
+        # Check for required columns
         required_fields = ['date', 'description', 'amount']
         missing_fields = [field for field in required_fields if field not in column_mapping]
         
         if missing_fields:
-            raise ExcelImportError(f"Gerekli kolonlar bulunamadı: {', '.join(missing_fields)}")
+            raise ExcelImportError(f"Required columns not found: {', '.join(missing_fields)}")
         
         transactions = []
         errors = []
         
         for index, row in df.iterrows():
             try:
-                # Tarih
+                # Date
                 date_col = column_mapping['date']
                 date_value = parse_date(row[date_col], bank_config['date_format'])
                 
-                # Açıklama
+                # Description
                 desc_col = column_mapping['description']
                 description = str(row[desc_col]).strip()
                 
-                # Tutar ve type'ı parse et
+                # Parse amount and type
                 amount_col = column_mapping['amount']
                 amount, transaction_type = parse_turkish_amount(row[amount_col])
                 
-                # Amount 0 olan satırları da atla
+                # Skip rows with zero amount
                 if amount == 0:
-                    logger.debug(f"Skipping zero amount row {index + 1}: amount={amount}")
                     continue
-                
-                logger.debug(f"Processing row {index + 1}: date={date_value}, desc='{description[:50]}...', amount={amount}, type={transaction_type}")
                 
                 transactions.append({
                     'date': date_value,
@@ -276,4 +267,4 @@ def process_excel_data(file_path, bank_code, user_column_mapping=None):
         }
     
     except Exception as e:
-        raise ExcelImportError(f"Excel işleme hatası: {str(e)}")
+        raise ExcelImportError(f"Excel processing error: {str(e)}")

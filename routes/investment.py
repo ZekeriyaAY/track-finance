@@ -76,7 +76,6 @@ def delete_investment(id):
         db.session.delete(transaction)
         db.session.commit()
         flash(_('Investment transaction deleted successfully.'), 'success')
-        logger.info(f"Investment transaction deleted: {transaction.description}")
     except Exception as e:
         db.session.rollback()
         logger.error(f"Error deleting investment transaction: {str(e)}")
