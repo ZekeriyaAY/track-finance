@@ -1,4 +1,5 @@
 import os
+import logging
 from flask import Flask, redirect, url_for, request, session, g
 from flask_migrate import Migrate
 from models.__init__ import db
@@ -12,6 +13,11 @@ def create_app(config_name=None):
     
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    
+    # Configure logging
+    if config_name == 'development':
+        logging.basicConfig(level=logging.INFO)
+        app.logger.setLevel(logging.INFO)
     
     db.init_app(app)
     migrate = Migrate(app, db)
@@ -67,5 +73,5 @@ app = create_app()
 if __name__ == '__main__':
     # Get debug mode from environment
     debug_mode = os.environ.get('FLASK_DEBUG', '0') == '1'
-    # Production configuration for Docker
-    app.run(host='0.0.0.0', port=5000, debug=debug_mode)
+    # Development server
+    app.run(host='127.0.0.1', debug=debug_mode)
