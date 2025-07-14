@@ -1,6 +1,6 @@
 # 💰 Finance Tracker
 
-A modern Flask-based web application for tracking personal income, expenses, and investments with professional Grafana analytics.
+A modern Flask-based web application for tracking personal income, expenses, and investments with Excel import support and multi-language interface.
 
 ## 🚀 Quick Start
 
@@ -8,83 +8,105 @@ A modern Flask-based web application for tracking personal income, expenses, and
 git clone <your-repo-url>
 cd track-finance
 
-# First time setup
-make setup
+# Setup virtual environment and dependencies
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+# .venv\Scripts\activate  # Windows
+pip install -r requirements.txt
 
-# Or manually:
+# Setup environment (optional)
 cp .env.example .env
-# Edit .env with your settings
-make up
+# Edit .env if needed
+
+# Initialize database
+flask db upgrade
+
+# Run the application
+flask run --host=0.0.0.0
 ```
 
-### 🔧 Development/Debug Mode
-
-```bash
-export FLASK_ENV=development
-export FLASK_DEBUG=1
-flask run
-```
-
-**Access Points:**
+**Access Point:**
 - **Web App**: http://localhost:5000
 
 ## ✨ Features
 
 - **Cash Flow Tracking**: Income and expenses with categories and tags
 - **Investment Portfolio**: Track stocks, crypto, currencies with transaction history
-- **Grafana Integration**: Professional dashboards and analytics
-- **Multi-language**: English and Turkish support
+- **Excel Import**: Bank statement import support (Yapı Kredi format)
+- **Multi-language**: English and Turkish support with Flask-Babel
 - **Modern UI**: Mobile-friendly interface with Tailwind CSS
-- **Excel Import**: Bank statement import support
+- **SQLite Database**: No external database setup required
 
 ## 🛠️ Tech Stack
 
 - **Backend**: Python, Flask, SQLAlchemy
 - **Frontend**: HTML, Jinja2, Tailwind CSS, Font Awesome
 - **Database**: SQLite
-- **Analytics**: Grafana (Optional)
+- **Internationalization**: Flask-Babel
+- **Excel Processing**: pandas, openpyxl
 
-##  Configuration & Commands
+## 🚀 Running the Application
 
-### Environment Variables (.env)
-- **Database**: `DATABASE_URL`
-- **Flask**: `FLASK_ENV`, `FLASK_DEBUG`, `SECRET_KEY`
-
-### Available Commands
-For complete setup and deployment guide, see [DEPLOYMENT.md](DEPLOYMENT.md).
-
+### Development Mode
 ```bash
-# Development setup
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-pip install -r requirements.txt
-flask db upgrade
+export FLASK_ENV=development
+export FLASK_DEBUG=1
 flask run
 ```
 
-### Local Development (Without Docker)
+### Production Mode
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-pip install -r requirements.txt
+export FLASK_ENV=production
+export FLASK_DEBUG=0
+flask run --host=0.0.0.0 --port=5000
+```
+
+### Using Production Server (Optional)
+```bash
+# For production, you can use Gunicorn
+pip install gunicorn
+gunicorn -w 2 -b 0.0.0.0:5000 wsgi:app
+```
+
+## 🗄️ Database Operations
+
+The application uses SQLite database which requires no additional setup.
+
+```bash
+# Run migrations
 flask db upgrade
-flask run
+
+# Create new migration
+flask db migrate -m "description"
+
+# Database shell
+flask shell
+```
+
+The database file (`track_finance.db`) will be created in your project directory.
+
+## 🌐 Translation Management
+
+```bash
+# Extract translatable strings
+pybabel extract -F babel.cfg -k _l -o messages.pot .
+
+# Update existing translations
+pybabel update -i messages.pot -d translations
+
+# Compile translations
+pybabel compile -d translations
 ```
 
 ## 📈 Usage
 
-1. **Add Categories**: Create income/expense categories
-2. **Track Cash Flow**: Record income and expenses with tags  
-3. **Manage Investments**: Add portfolio positions and transactions
+1. **Add Categories**: Create income/expense categories for organization
+2. **Track Cash Flow**: Record income and expenses with tags and descriptions
+3. **Excel Import**: Import bank transactions from Yapı Kredi Excel files
+4. **Manage Investments**: Add portfolio positions and track transactions
+5. **Multi-language**: Switch between English and Turkish interfaces
 
-## 📚 Documentation
-
-- **[DEPLOYMENT.md](DEPLOYMENT.md)**: Setup and deployment guide
 
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🔧 Troubleshooting
-
-For detailed troubleshooting, operations guide, and system-specific issues, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
