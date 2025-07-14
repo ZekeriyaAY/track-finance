@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-07-12 18:21+0300\n"
+"POT-Creation-Date: 2025-07-14 15:26+0300\n"
 "PO-Revision-Date: 2025-06-20 23:52+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: tr\n"
@@ -18,29 +18,49 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: routes/cashflow.py:42
+#: routes/cashflow.py:53
 msgid "Transaction added successfully!"
 msgstr "İşlem başarıyla eklendi!"
 
-#: routes/cashflow.py:46
+#: routes/cashflow.py:57
 msgid "An error occurred while adding the transaction."
 msgstr "İşlem eklenirken bir hata oluştu."
 
-#: routes/cashflow.py:68
+#: routes/cashflow.py:79
 msgid "Transaction updated successfully!"
 msgstr "İşlem başarıyla güncellendi!"
 
-#: routes/cashflow.py:72
+#: routes/cashflow.py:83
 msgid "An error occurred while updating the transaction."
 msgstr "İşlem güncellenirken bir hata oluştu."
 
-#: routes/cashflow.py:85
+#: routes/cashflow.py:96
 msgid "Transaction deleted successfully!"
 msgstr "İşlem başarıyla silindi!"
 
-#: routes/cashflow.py:89
+#: routes/cashflow.py:100
 msgid "An error occurred while deleting the transaction."
 msgstr "İşlem silinirken bir hata oluştu."
+
+#: routes/cashflow.py:120 routes/cashflow.py:128
+msgid "Please select an Excel file."
+msgstr "Lütfen bir Excel dosyası seçin."
+
+#: routes/cashflow.py:133
+msgid "Only Excel files (.xlsx, .xls, .csv) are supported."
+msgstr "Sadece Excel dosyaları (.xlsx, .xls, .csv) desteklenmektedir."
+
+#: routes/cashflow.py:139
+msgid "Please select a bank."
+msgstr "Lütfen bir banka seçin."
+
+#: routes/cashflow.py:207
+msgid "Errors: "
+msgstr "Hatalar: "
+
+#: routes/cashflow.py:222
+msgid "An unexpected error occurred."
+msgstr "Beklenmeyen bir hata oluştu."
 
 #: routes/category.py:23 routes/category.py:49
 msgid "This category already exists!"
@@ -138,45 +158,45 @@ msgstr "Yatırım türü başarıyla silindi!"
 msgid "An error occurred while deleting the investment type."
 msgstr "Yatırım türü silinirken bir hata oluştu."
 
-#: routes/settings.py:26
+#: routes/settings.py:27
 msgid "Dummy data created successfully."
 msgstr "Sahte veriler başarıyla oluşturuldu."
 
-#: routes/settings.py:31
+#: routes/settings.py:32
 msgid "An error occurred while creating dummy data."
 msgstr "Sahte veriler oluşturulurken bir hata oluştu."
 
-#: routes/settings.py:38
+#: routes/settings.py:39
 msgid "Default categories created successfully."
 msgstr "Varsayılan kategoriler başarıyla oluşturuldu."
 
-#: routes/settings.py:43
+#: routes/settings.py:44
 msgid "An error occurred while creating default categories."
 msgstr "Varsayılan kategoriler oluşturulurken bir hata oluştu."
 
-#: routes/settings.py:50
+#: routes/settings.py:51
 msgid "Default tags created successfully."
 msgstr "Varsayılan etiketler başarıyla oluşturuldu."
 
-#: routes/settings.py:55
+#: routes/settings.py:56
 msgid "An error occurred while creating default tags."
 msgstr "Varsayılan etiketler oluşturulurken bir hata oluştu."
 
-#: routes/settings.py:62
+#: routes/settings.py:63
 msgid "Default investment types created successfully."
 msgstr "Varsayılan yatırım türleri başarıyla oluşturuldu."
 
-#: routes/settings.py:67
+#: routes/settings.py:68
 msgid "An error occurred while creating default investment types."
 msgstr "Varsayılan yatırım türleri oluşturulurken bir hata oluştu."
 
-#: routes/settings.py:75
-msgid "Database reset successfully."
-msgstr "Veritabanı başarıyla sıfırlandı."
+#: routes/settings.py:107
+msgid "Database data cleared successfully."
+msgstr "Veritabanı verileri başarıyla temizlendi."
 
-#: routes/settings.py:80
-msgid "An error occurred while resetting the database."
-msgstr "Veritabanı sıfırlanırken bir hata oluştu."
+#: routes/settings.py:113
+msgid "Error clearing database data."
+msgstr "Veritabanı verileri temizlenirken hata oluştu."
 
 #: routes/tag.py:22 routes/tag.py:45
 msgid "This tag already exists!"
@@ -218,31 +238,31 @@ msgstr "Nakit Akışı"
 msgid "Investments"
 msgstr "Yatırımlar"
 
-#: templates/base.html:47
+#: templates/base.html:46
 msgid "Grafana Analytics"
 msgstr "Grafana Analitiği"
 
-#: templates/base.html:51
+#: templates/base.html:49
 msgid "Management"
 msgstr "Yönetim"
 
-#: templates/base.html:58 templates/category/index.html:3
+#: templates/base.html:56 templates/category/index.html:3
 #: templates/category/index.html:8
 msgid "Categories"
 msgstr "Kategoriler"
 
-#: templates/base.html:62 templates/cashflow/form.html:68
-#: templates/cashflow/index.html:24 templates/tag/index.html:3
+#: templates/base.html:60 templates/cashflow/form.html:68
+#: templates/cashflow/index.html:32 templates/tag/index.html:3
 #: templates/tag/index.html:8
 msgid "Tags"
 msgstr "Etiketler"
 
-#: templates/base.html:66 templates/investment_type/index.html:3
+#: templates/base.html:64 templates/investment_type/index.html:3
 #: templates/investment_type/index.html:8
 msgid "Investment Types"
 msgstr "Yatırım Türleri"
 
-#: templates/base.html:70 templates/settings/index.html:3
+#: templates/base.html:68 templates/settings/index.html:3
 #: templates/settings/index.html:8
 msgid "Settings"
 msgstr "Ayarlar"
@@ -252,7 +272,7 @@ msgstr "Ayarlar"
 msgid "Edit Transaction"
 msgstr "İşlemi Düzenle"
 
-#: templates/cashflow/form.html:3 templates/cashflow/index.html:12
+#: templates/cashflow/form.html:3 templates/cashflow/index.html:19
 #: templates/investment/index.html:12
 msgid "New Transaction"
 msgstr "Yeni İşlem"
@@ -262,17 +282,17 @@ msgstr "Yeni İşlem"
 msgid "Add New Transaction"
 msgstr "Yeni İşlem Ekle"
 
-#: templates/cashflow/form.html:12 templates/category/form.html:12
-#: templates/investment/form.html:12 templates/investment_type/form.html:12
-#: templates/tag/form.html:12
+#: templates/cashflow/form.html:12 templates/cashflow/import.html:12
+#: templates/category/form.html:12 templates/investment/form.html:12
+#: templates/investment_type/form.html:12 templates/tag/form.html:12
 msgid "Go Back"
 msgstr "Geri Dön"
 
-#: templates/cashflow/form.html:22 templates/cashflow/index.html:21
+#: templates/cashflow/form.html:22 templates/cashflow/index.html:29
 msgid "Date"
 msgstr "Tarih"
 
-#: templates/cashflow/form.html:29 templates/cashflow/index.html:22
+#: templates/cashflow/form.html:29 templates/cashflow/index.html:30
 #: templates/investment/form.html:58
 msgid "Amount"
 msgstr "Miktar"
@@ -289,11 +309,11 @@ msgstr "Gelir"
 msgid "Expense"
 msgstr "Gider"
 
-#: templates/cashflow/form.html:45 templates/cashflow/index.html:23
+#: templates/cashflow/form.html:45 templates/cashflow/index.html:31
 msgid "Category"
 msgstr "Kategori"
 
-#: templates/cashflow/form.html:61 templates/cashflow/index.html:25
+#: templates/cashflow/form.html:61 templates/cashflow/index.html:33
 #: templates/investment/index.html:27
 msgid "Description"
 msgstr "Açıklama"
@@ -310,39 +330,116 @@ msgstr "İptal"
 msgid "Save"
 msgstr "Kaydet"
 
+#: templates/cashflow/import.html:3 templates/cashflow/import.html:8
+#: templates/cashflow/index.html:13
+msgid "Excel Import"
+msgstr "Excel Import"
+
+#: templates/cashflow/import.html:19
+msgid "Import your bank transactions from Excel files"
+msgstr "Banka işlemlerinizi Excel dosyalarından içe aktarın"
+
+#: templates/cashflow/import.html:29
+msgid "Excel File"
+msgstr "Excel Dosyası"
+
+#: templates/cashflow/import.html:33
+msgid "Supported formats: .xlsx, .xls, .csv"
+msgstr "Desteklenen formatlar: .xlsx, .xls, .csv"
+
+#: templates/cashflow/import.html:38
+msgid "Bank"
+msgstr "Banka"
+
+#: templates/cashflow/import.html:43
+msgid "Currently only Yapı Kredi is supported"
+msgstr "Şu anda sadece Yapı Kredi desteklenmektedir"
+
+#: templates/cashflow/import.html:51
+msgid "Import Excel"
+msgstr "Excel'i İçe Aktar"
+
+#: templates/cashflow/import.html:59
+msgid "Important Notice"
+msgstr "Önemli Uyarı"
+
+#: templates/cashflow/import.html:60
+msgid ""
+"Import operation cannot be undone. Transactions will be created in "
+"\"Import\" category with bank tag."
+msgstr ""
+"İçe aktarma işlemi geri alınamaz. İşlemler \"Import\" kategorisinde banka "
+"etiketi ile oluşturulacak."
+
+#: templates/cashflow/import.html:70
+msgid "How to Use?"
+msgstr "Nasıl Kullanılır?"
+
+#: templates/cashflow/import.html:75
+msgid "Login to your Yapı Kredi Internet Banking"
+msgstr "Yapı Kredi İnternet Bankacılığına giriş yapın"
+
+#: templates/cashflow/import.html:79
+msgid "Go to Account Summary menu"
+msgstr "Hesap Özeti menüsüne gidin"
+
+#: templates/cashflow/import.html:83
+msgid "Select date range and click \"Download Excel\""
+msgstr "Tarih aralığını seçin ve \"Excel İndir\" butonuna tıklayın"
+
+#: templates/cashflow/import.html:87
+msgid "Upload the downloaded Excel file here"
+msgstr "İndirilen Excel dosyasını buraya yükleyin"
+
+#: templates/cashflow/import.html:91
+msgid "Transactions will be automatically created in \"Import\" category"
+msgstr "İşlemler otomatik olarak \"Import\" kategorisinde oluşturulacak"
+
+#: templates/cashflow/import.html:95
+msgid "You can edit categories and tags later"
+msgstr "Kategorileri ve etiketleri daha sonra düzenleyebilirsiniz"
+
+#: templates/cashflow/import.html:110
+msgid "Please select a file."
+msgstr "Lütfen bir dosya seçin."
+
+#: templates/cashflow/import.html:117
+msgid "Importing..."
+msgstr "İçe aktarılıyor..."
+
 #: templates/cashflow/index.html:3 templates/cashflow/index.html:8
 msgid "Cashflow Transactions"
 msgstr "Nakit Akışı İşlemleri"
 
-#: templates/cashflow/index.html:26 templates/category/index.html:24
+#: templates/cashflow/index.html:34 templates/category/index.html:24
 #: templates/investment/index.html:28 templates/investment_type/index.html:25
 #: templates/tag/index.html:23
 msgid "Actions"
 msgstr "İşlemler"
 
-#: templates/cashflow/index.html:66 templates/category/index.html:50
+#: templates/cashflow/index.html:74 templates/category/index.html:50
 #: templates/category/index.html:85 templates/investment/index.html:62
 #: templates/investment_type/index.html:48
 #: templates/investment_type/index.html:80 templates/tag/index.html:49
 msgid "Edit"
 msgstr "Düzenle"
 
-#: templates/cashflow/index.html:71 templates/investment/index.html:67
+#: templates/cashflow/index.html:79 templates/investment/index.html:67
 msgid "Are you sure you want to delete this transaction?"
 msgstr "Bu işlemi silmek istediğinizden emin misiniz?"
 
-#: templates/cashflow/index.html:73 templates/category/index.html:57
+#: templates/cashflow/index.html:81 templates/category/index.html:57
 #: templates/category/index.html:92 templates/investment/index.html:69
 #: templates/investment_type/index.html:55
 #: templates/investment_type/index.html:87 templates/tag/index.html:56
 msgid "Delete"
 msgstr "Sil"
 
-#: templates/cashflow/index.html:86 templates/investment/index.html:82
+#: templates/cashflow/index.html:94 templates/investment/index.html:82
 msgid "No transactions found yet"
 msgstr "Henüz işlem bulunamadı"
 
-#: templates/cashflow/index.html:87 templates/investment/index.html:83
+#: templates/cashflow/index.html:95 templates/investment/index.html:83
 msgid "You can add a new transaction using the \"New Transaction\" button."
 msgstr "\"Yeni İşlem\" butonunu kullanarak yeni bir işlem ekleyebilirsiniz."
 
@@ -394,7 +491,8 @@ msgstr "Henüz kategori bulunamadı"
 
 #: templates/category/index.html:108
 msgid "You can add a new category using the \"New Category\" button."
-msgstr "\"Yeni Kategori\" butonunu kullanarak yeni bir kategori ekleyebilirsiniz."
+msgstr ""
+"\"Yeni Kategori\" butonunu kullanarak yeni bir kategori ekleyebilirsiniz."
 
 #: templates/investment/form.html:22 templates/investment/index.html:23
 msgid "Investment Type"
@@ -502,7 +600,8 @@ msgstr "Henüz yatırım türü bulunamadı"
 
 #: templates/investment_type/index.html:103
 msgid "You can add a new investment type using the \"New Type\" button."
-msgstr "\"Yeni Tür\" butonunu kullanarak yeni bir yatırım türü ekleyebilirsiniz."
+msgstr ""
+"\"Yeni Tür\" butonunu kullanarak yeni bir yatırım türü ekleyebilirsiniz."
 
 #: templates/settings/index.html:11
 msgid "Language"
@@ -546,7 +645,8 @@ msgstr "Varsayılan Yatırım Türleri"
 
 #: templates/settings/index.html:59
 msgid "Creates default investment types to categorize investments."
-msgstr "Yatırımları kategorize etmek için varsayılan yatırım türleri oluşturur."
+msgstr ""
+"Yatırımları kategorize etmek için varsayılan yatırım türleri oluşturur."
 
 #: templates/settings/index.html:65
 msgid "Create Investment Types"
@@ -562,8 +662,7 @@ msgstr "Sahte Veri"
 
 #: templates/settings/index.html:83
 msgid ""
-"Creates default categories, tags, investment types and sample "
-"transactions."
+"Creates default categories, tags, investment types and sample transactions."
 msgstr ""
 "Varsayılan kategoriler, etiketler, yatırım türleri ve örnek işlemler "
 "oluşturur."
@@ -612,27 +711,6 @@ msgstr "Henüz etiket bulunamadı"
 msgid "You can add a new tag using the \"New Tag\" button."
 msgstr "\"Yeni Etiket\" butonunu kullanarak yeni bir etiket ekleyebilirsiniz."
 
-#~ msgid "Back to Tags"
-#~ msgstr ""
-
-#~ msgid "Save Tag"
-#~ msgstr ""
-
-#~ msgid "Name"
-#~ msgstr ""
-
-#~ msgid "Income"
-#~ msgstr ""
-
-#~ msgid "Expense"
-#~ msgstr ""
-
-#~ msgid "No tags found"
-#~ msgstr ""
-
-#~ msgid "You can add a new tag by clicking the \"New Tag\" button."
-#~ msgstr ""
-
 #~ msgid "Toplam Gelir"
 #~ msgstr "Toplam Gelir"
 
@@ -671,4 +749,3 @@ msgstr "\"Yeni Etiket\" butonunu kullanarak yeni bir etiket ekleyebilirsiniz."
 
 #~ msgid "Expense Distribution by Category"
 #~ msgstr "Kategoriye Göre Gider Dağılımı"
-
