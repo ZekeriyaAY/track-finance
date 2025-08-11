@@ -25,8 +25,45 @@ flask db upgrade
 flask run --host=0.0.0.0
 ```
 
+
 **Access Point:**
 - **Web App**: http://localhost:5000
+
+## 🚦 Production (Gunicorn ile Çalıştırma)
+
+Production ortamında uygulamayı Gunicorn ile başlatmak için:
+
+```bash
+.venv/bin/gunicorn -w 4 -b 0.0.0.0:8000 app:app
+```
+
+- `-w 4`: 4 worker ile çalıştırır (isteğe göre artırılabilir)
+- `-b 0.0.0.0:8000`: 8000 portundan tüm arayüzlere dinler
+- `app:app`: Birinci `app` dosya adı (`app.py`), ikinci `app` Flask uygulama nesnesi
+
+### Systemd Servisi ile Otomatik Başlatma
+
+Gunicorn'u systemd servisi olarak başlatmak için örnek servis dosyası:
+
+```ini
+[Unit]
+Description=Track Finance Gunicorn Service
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/track-finance
+ExecStart=/home/ubuntu/track-finance/.venv/bin/gunicorn -w 4 -b 0.0.0.0:8000 app:app
+Restart=always
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Kendi kullanıcı adınızı ve yolu düzenlemeyi unutmayın.
+
+---
 
 ## ✨ Features
 

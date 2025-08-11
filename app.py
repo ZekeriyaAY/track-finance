@@ -74,4 +74,4 @@ if __name__ == '__main__':
     # Get debug mode from environment
     debug_mode = os.environ.get('FLASK_DEBUG', '0') == '1'
     # Development server
-    app.run(host='127.0.0.1', debug=debug_mode)
+    app.run(host='127.0.0.1', debug=debug_mode, port=5000)
