@@ -60,6 +60,19 @@ flask db upgrade
 flask shell
 ```
 
+### Troubleshooting
+
+**SQLite "database is locked" error** (common with Grafana integration):
+
+```bash
+# Enable WAL mode for concurrent access
+sqlite3 finance.db "PRAGMA journal_mode=WAL;"
+sqlite3 finance.db "PRAGMA busy_timeout=30000;"
+
+# Check database status
+sqlite3 finance.db ".databases"
+```
+
 ## Translation Management
 
 When you add new `_('text')` strings to templates or code:
