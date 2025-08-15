@@ -18,7 +18,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: routes/cashflow.py:53
+#: routes/cashfmsgid "Creates default categories, tags, investment types and sample transactions."
+msgstr "Varsayılan kategoriler, etiketler, yatırım türleri ve örnek işlemler oluşturur."py:53
 msgid "Transaction added successfully!"
 msgstr "İşlem başarıyla eklendi!"
 
@@ -367,9 +368,7 @@ msgstr "Önemli Uyarı"
 msgid ""
 "Import operation cannot be undone. Transactions will be created in "
 "\"Import\" category with bank tag."
-msgstr ""
-"İçe aktarma işlemi geri alınamaz. İşlemler \"Import\" kategorisinde banka "
-"etiketi ile oluşturulacak."
+msgstr "İçe aktarma işlemi geri alınamaz. İşlemler \"Import\" kategorisinde banka etiketi ile oluşturulacak."
 
 #: templates/cashflow/import.html:70
 msgid "How to Use?"
@@ -491,8 +490,7 @@ msgstr "Henüz kategori bulunamadı"
 
 #: templates/category/index.html:108
 msgid "You can add a new category using the \"New Category\" button."
-msgstr ""
-"\"Yeni Kategori\" butonunu kullanarak yeni bir kategori ekleyebilirsiniz."
+msgstr "\"Yeni Kategori\" butonunu kullanarak yeni bir kategori ekleyebilirsiniz."
 
 #: templates/investment/form.html:22 templates/investment/index.html:23
 msgid "Investment Type"
@@ -600,8 +598,7 @@ msgstr "Henüz yatırım türü bulunamadı"
 
 #: templates/investment_type/index.html:103
 msgid "You can add a new investment type using the \"New Type\" button."
-msgstr ""
-"\"Yeni Tür\" butonunu kullanarak yeni bir yatırım türü ekleyebilirsiniz."
+msgstr "\"Yeni Tür\" butonunu kullanarak yeni bir yatırım türü ekleyebilirsiniz."
 
 #: templates/settings/index.html:11
 msgid "Language"
@@ -645,8 +642,7 @@ msgstr "Varsayılan Yatırım Türleri"
 
 #: templates/settings/index.html:59
 msgid "Creates default investment types to categorize investments."
-msgstr ""
-"Yatırımları kategorize etmek için varsayılan yatırım türleri oluşturur."
+msgstr "Yatırımları kategorize etmek için varsayılan yatırım türleri oluşturur."
 
 #: templates/settings/index.html:65
 msgid "Create Investment Types"
@@ -749,3 +745,27 @@ msgstr "\"Yeni Etiket\" butonunu kullanarak yeni bir etiket ekleyebilirsiniz."
 
 #~ msgid "Expense Distribution by Category"
 #~ msgstr "Kategoriye Göre Gider Dağılımı"
+
+msgid "Grafana Settings"
+msgstr "Grafana Ayarları"
+
+msgid "Configure your Grafana dashboard URL for analytics."
+msgstr "Analitik için Grafana pano URL'nizi yapılandırın."
+
+msgid "Grafana URL"
+msgstr "Grafana URL'si"
+
+msgid "Update"
+msgstr "Güncelle"
+
+msgid "Enter the URL where your Grafana instance is running (e.g., http://localhost:3000)"
+msgstr "Grafana örneğinizin çalıştığı URL'yi girin (örneğin, http://localhost:3000)"
+
+msgid "Grafana URL cannot be empty."
+msgstr "Grafana URL'si boş olamaz."
+
+msgid "Grafana URL updated successfully."
+msgstr "Grafana URL'si başarıyla güncellendi."
+
+msgid "An error occurred while updating Grafana URL."
+msgstr "Grafana URL'si güncellenirken bir hata oluştu."

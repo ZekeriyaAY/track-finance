@@ -18,7 +18,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: routes/cashflow.py:53
+#: routemsgid "Creates default categories, tags, investment types and sample transactions."
+msgstr "Creates default categories, tags, investment types and sample transactions."ashflow.py:53
 msgid "Transaction added successfully!"
 msgstr "Transaction added successfully!"
 
@@ -367,9 +368,7 @@ msgstr "Important Notice"
 msgid ""
 "Import operation cannot be undone. Transactions will be created in "
 "\"Import\" category with bank tag."
-msgstr ""
-"Import operation cannot be undone. Transactions will be created in "
-"\"Import\" category with bank tag."
+msgstr "Import operation cannot be undone. Transactions will be created in \"Import\" category with bank tag."
 
 #: templates/cashflow/import.html:70
 msgid "How to Use?"
@@ -673,8 +672,7 @@ msgstr "Reset Database"
 
 #: templates/settings/index.html:98
 msgid "Deletes all data and resets the database. This action cannot be undone!"
-msgstr ""
-"Deletes all data and resets the database. This action cannot be undone!"
+msgstr "Deletes all data and resets the database. This action cannot be undone!"
 
 #: templates/settings/index.html:100
 msgid "All data will be deleted! Are you sure about this action?"
@@ -728,3 +726,27 @@ msgstr "You can add a new tag using the \"New Tag\" button."
 
 #~ msgid "Expense Distribution by Category"
 #~ msgstr "Expense Distribution by Category"
+
+msgid "Grafana Settings"
+msgstr "Grafana Settings"
+
+msgid "Configure your Grafana dashboard URL for analytics."
+msgstr "Configure your Grafana dashboard URL for analytics."
+
+msgid "Grafana URL"
+msgstr "Grafana URL"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Enter the URL where your Grafana instance is running (e.g., http://localhost:3000)"
+msgstr "Enter the URL where your Grafana instance is running (e.g., http://localhost:3000)"
+
+msgid "Grafana URL cannot be empty."
+msgstr "Grafana URL cannot be empty."
+
+msgid "Grafana URL updated successfully."
+msgstr "Grafana URL updated successfully."
+
+msgid "An error occurred while updating Grafana URL."
+msgstr "An error occurred while updating Grafana URL."

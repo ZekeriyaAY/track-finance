@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g
 from flask_babel import _
 from models.__init__ import db
+from models.settings import Settings
 from utils.data_utils import create_dummy_data, create_default_categories, create_default_tags, create_default_investment_types
 import logging
 from sqlalchemy import text
@@ -16,9 +17,34 @@ def change_language():
         session['lang'] = lang
     return redirect(url_for('settings.index'))
 
+@settings_bp.route('/update-grafana-url', methods=['POST'])
+def update_grafana_url():
+    grafana_url = request.form.get('grafana_url', '').strip()
+    
+    if not grafana_url:
+        flash(_('Grafana URL cannot be empty.'), 'error')
+        return redirect(url_for('settings.index'))
+    
+    # URL formatını kontrol et
+    if not grafana_url.startswith(('http://', 'https://')):
+        grafana_url = 'http://' + grafana_url
+    
+    try:
+        # Veritabanında Grafana URL'sini güncelle
+        Settings.set_setting('grafana_url', grafana_url)
+        flash(_('Grafana URL updated successfully.'), 'success')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error updating Grafana URL: {str(e)}")
+        flash(_('An error occurred while updating Grafana URL.'), 'error')
+    
+    return redirect(url_for('settings.index'))
+
 @settings_bp.route('/')
 def index():
-    return render_template('settings/index.html')
+    # Veritabanından Grafana URL'sini al, yoksa varsayılan değeri kullan
+    grafana_url = Settings.get_setting('grafana_url', 'http://localhost:3000')
+    return render_template('settings/index.html', grafana_url=grafana_url)
 
 @settings_bp.route('/create-dummy-data', methods=['POST'])
 def create_dummy_data_route():

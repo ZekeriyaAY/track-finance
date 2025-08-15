@@ -41,6 +41,12 @@ def create_app(config_name=None):
     def inject_locale():
         return dict(get_locale=get_locale, lang_code=g.get('lang_code', 'en'))
 
+    @app.context_processor
+    def inject_grafana_url():
+        from models.settings import Settings
+        grafana_url = Settings.get_setting('grafana_url', 'http://localhost:3000')
+        return dict(grafana_url=grafana_url)
+
     # Import blueprints
     from routes.cashflow import cashflow_bp
     from routes.category import category_bp
