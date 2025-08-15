@@ -1,49 +1,89 @@
-# 💰 Finance Tracker
+# 💰 Track Finance
 
-A modern Flask-based web application for tracking personal income, expenses, and investments with Excel import support and multi-language interface.
+Personal finance tracking web application with cash flow and investment management.
 
-## 🚀 Quick Start
+## Features
+
+- Cash flow tracking (income/expenses)
+- Investment portfolio management
+- Excel bank statement import
+- Multi-language support (EN/TR)
+- Grafana analytics integration
+
+## Quick Start
 
 ```bash
-git clone <your-repo-url>
+# Clone and setup
+git clone <repo-url>
 cd track-finance
-
-# Setup virtual environment and dependencies
 python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-# .venv\Scripts\activate  # Windows
+source .venv/bin/activate
 pip install -r requirements.txt
-
-# Setup environment (optional)
-cp .env.example .env
-# Edit .env if needed
 
 # Initialize database
 flask db upgrade
 
-# Run the application
-flask run --host=0.0.0.0
+# Run application
+flask run --debug
 ```
 
+**Access**: http://localhost:5000
 
-**Access Point:**
-- **Web App**: http://localhost:5000
+## Database Management
 
-## 🚦 Production (Gunicorn ile Çalıştırma)
+### Model Changes & Migrations
 
-Production ortamında uygulamayı Gunicorn ile başlatmak için:
+When you modify database models, run these commands:
 
 ```bash
-.venv/bin/gunicorn -w 4 -b 0.0.0.0:8000 app:app
+# Generate migration after model changes
+flask db migrate -m "Description of changes"
+
+# Apply migrations to database
+flask db upgrade
+
+# Check migration status
+flask db current
+
+# Rollback to previous migration (if needed)
+flask db downgrade
 ```
 
-- `-w 4`: 4 worker ile çalıştırır (isteğe göre artırılabilir)
-- `-b 0.0.0.0:8000`: 8000 portundan tüm arayüzlere dinler
-- `app:app`: Birinci `app` dosya adı (`app.py`), ikinci `app` Flask uygulama nesnesi
+### Database Operations
 
-### Systemd Servisi ile Otomatik Başlatma
+```bash
+# Reset database (⚠️ This will delete all data!)
+flask db downgrade base
+flask db upgrade
 
-Gunicorn'u systemd servisi olarak başlatmak için örnek servis dosyası:
+# Access database shell
+flask shell
+```
+
+## Translation Management
+
+When you add new `_('text')` strings to templates or code:
+
+```bash
+# Extract new translatable strings
+pybabel extract -F babel.cfg -k _l -o messages.pot .
+
+# Update existing translation files
+pybabel update -i messages.pot -d translations
+
+# Edit translation files manually
+# translations/tr/LC_MESSAGES/messages.po
+# translations/en/LC_MESSAGES/messages.po
+
+# Compile translations after editing
+pybabel compile -d translations
+```
+
+## Production
+
+### Systemd Service (Recommended)
+
+Create `/etc/systemd/system/track-finance.service`:
 
 ```ini
 [Unit]
@@ -61,89 +101,24 @@ Environment=PYTHONUNBUFFERED=1
 WantedBy=multi-user.target
 ```
 
-Kendi kullanıcı adınızı ve yolu düzenlemeyi unutmayın.
-
----
-
-## ✨ Features
-
-- **Cash Flow Tracking**: Income and expenses with categories and tags
-- **Investment Portfolio**: Track stocks, crypto, currencies with transaction history
-- **Excel Import**: Bank statement import support (Yapı Kredi format)
-- **Multi-language**: English and Turkish support with Flask-Babel
-- **Modern UI**: Mobile-friendly interface with Tailwind CSS
-- **SQLite Database**: No external database setup required
-
-## 🛠️ Tech Stack
-
-- **Backend**: Python, Flask, SQLAlchemy
-- **Frontend**: HTML, Jinja2, Tailwind CSS, Font Awesome
-- **Database**: SQLite
-- **Internationalization**: Flask-Babel
-- **Excel Processing**: pandas, openpyxl
-
-## 🚀 Running the Application
-
-### Development Mode
 ```bash
-export FLASK_ENV=development
-export FLASK_DEBUG=1
-flask run
+# Enable and start service
+sudo systemctl enable track-finance
+sudo systemctl start track-finance
+sudo systemctl status track-finance
 ```
 
-### Production Mode
-```bash
-export FLASK_ENV=production
-export FLASK_DEBUG=0
-flask run --host=0.0.0.0 --port=5000
-```
+### Manual Gunicorn
 
-### Using Production Server (Optional)
-```bash
-# For production, you can use Gunicorn
-pip install gunicorn
-gunicorn -w 2 -b 0.0.0.0:5000 wsgi:app
-```
-
-## 🗄️ Database Operations
-
-The application uses SQLite database which requires no additional setup.
+If you prefer to run Gunicorn manually:
 
 ```bash
-# Run migrations
-flask db upgrade
-
-# Create new migration
-flask db migrate -m "description"
-
-# Database shell
-flask shell
+# Using Gunicorn directly
+gunicorn -w 4 -b 0.0.0.0:8000 app:app
 ```
 
-The database file (`track_finance.db`) will be created in your project directory.
+## License
 
-## 🌐 Translation Management
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```bash
-# Extract translatable strings
-pybabel extract -F babel.cfg -k _l -o messages.pot .
-
-# Update existing translations
-pybabel update -i messages.pot -d translations
-
-# Compile translations
-pybabel compile -d translations
-```
-
-## 📈 Usage
-
-1. **Add Categories**: Create income/expense categories for organization
-2. **Track Cash Flow**: Record income and expenses with tags and descriptions
-3. **Excel Import**: Import bank transactions from Yapı Kredi Excel files
-4. **Manage Investments**: Add portfolio positions and track transactions
-5. **Multi-language**: Switch between English and Turkish interfaces
-
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
+© 2025 [Zekeriya AY](https://github.com/ZekeriyaAY)
