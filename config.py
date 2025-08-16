@@ -5,15 +5,11 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///finance.db?mode=rwc'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://track_finance_user:track_finance_pass@localhost/track_finance'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_pre_ping': True,
-        'pool_recycle': 300,
-        'connect_args': {
-            'check_same_thread': False,
-            'timeout': 30
-        }
+        'pool_recycle': 300
     }
 
 class DevelopmentConfig(Config):
