@@ -1,6 +1,8 @@
 # This file is for local development and overrides the main docker-compose.yml
 services:
   app:
+    # Override the image directive from the main compose file
+    image: track-finance:local-dev
     # In local development, build the image from the Dockerfile
     # instead of pulling it from the registry.
     build: .
