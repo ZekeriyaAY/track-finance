@@ -1,6 +1,6 @@
 # Track Finance
 
-Track Finance is a web application designed to help you track your personal finances, cash flow, and investments. The project is built with Flask and PostgreSQL and is easily deployable with Docker.
+Track Finance is a web application designed to help you track your personal finances, cash flow, and investments. The project is built with Flask and PostgreSQL and is deployed using a modern CI/CD workflow with Docker and GitHub Actions.
 
 ## Features
 
@@ -13,40 +13,31 @@ Track Finance is a web application designed to help you track your personal fina
 ## Prerequisites
 
 - [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/) (Typically included with Docker Desktop)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Quick Start (with Docker Compose)
+---
 
-This project uses Docker Compose to launch all necessary services (Application, Database, DB Management UI) with a single command.
+## Development Environment Setup
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone https://github.com/ZekeriyaAY/track-finance.git
-    cd track-finance
-    ```
+For local development, this project uses `docker-compose.override.yml` to enable features like live-reloading. Docker Compose automatically detects and uses this file.
 
-2.  **Set Up Environment Variables:**
-    Create your own environment configuration file by copying the example file.
+1.  **Set Up Environment Variables:**
+    Create your local environment file from the template.
     ```bash
     cp .env.example .env
     ```
-    Next, open the `.env` file in a text editor and update at least the `POSTGRES_PASSWORD` and `SECRET_KEY` variables with secure values.
+    Open the `.env` file and update the variables, especially `POSTGRES_PASSWORD` and `SECRET_KEY`.
 
-3.  **Launch the Application:**
-    The following command will build the required Docker images and start all services in the background.
+2.  **Launch the Development Server:**
+    This command will build the `app` image locally and start all services.
     ```bash
-    docker compose up --build -d
+    docker compose up --build
     ```
-    - `--build`: Rebuilds the image if you have made changes to the code.
-    - `-d`: Runs the services in detached mode (in the background).
+    Thanks to the `docker-compose.override.yml` file, any changes you make to the Python code will automatically restart the server.
 
-    You can view the logs using the `docker compose logs -f` command.
-
-4.  **Access the Services:**
+3.  **Access the Services:**
     - **Track Finance App:** [http://localhost:5001](http://localhost:5001)
     - **pgAdmin (Database Management):** [http://localhost:5050](http://localhost:5050)
-
-## Services
 
 ### pgAdmin Setup
 
@@ -56,15 +47,40 @@ When you first access the pgAdmin interface at `http://localhost:5050`, you do n
 -   You will see a "Track Finance DB" connection under "Servers" in the left-hand menu.
 -   When you click on the connection, it will prompt you for the database password. Enter the `POSTGRES_PASSWORD` value from your `.env` file to access the database.
 
+---
+
+## Production Deployment (CI/CD Workflow)
+
+This project is configured for Continuous Integration and Continuous Deployment (CI/CD) using GitHub Actions.
+
+### How It Works
+
+1.  **Push to `master`:** Every time you push a change to the `master` branch, a GitHub Action is automatically triggered.
+2.  **Build & Push Image:** The action builds a new Docker image for the application and pushes it to the GitHub Container Registry (GHCR).
+3.  **Deploy on Server:** You can then pull this new image on your server and restart the application with zero downtime.
+
+### Server Deployment Steps
+
+1.  **Initial Setup:**
+    - Clone the repository to your server.
+    - Create a `.env` file with your production secrets.
+    - Log in to GHCR on your server: `echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin`
+
+2.  **Deploying an Update:**
+    After pushing your changes to `master` and waiting for the GitHub Action to complete:
+    ```bash
+    # Pull the latest application image from GHCR
+    docker compose pull app
+
+    # Restart the services with the new image
+    docker compose up -d
+    ```
+    This process does not require you to pull the source code to the server or build the image there, making deployments fast and reliable.
+
 ## Stopping the Application
 
 To stop all running services, execute the following command:
 ```bash
 docker compose down
 ```
-This command stops and removes the containers and network created by docker compose up, but it will not delete the volumes where your data is stored.
-
-## Production Notes
-
-- In a production environment, it is more secure to manage environment variables directly through your deployment platform (e.g., Portainer, Kubernetes, or systemd) rather than using an `.env` file.
-- It is highly recommended to disable external access to the database by commenting out or removing the ports section of the db service in docker-compose.yml.
+This command stops and removes the containers but preserves your database data stored in Docker volumes.
