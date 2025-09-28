@@ -31,19 +31,47 @@ services:
     command: >
       sh -c "flask db upgrade && gunicorn -c gunicorn-conf.py app:app"
 
+  pgadmin-init:
+    image: alpine:latest
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    command:
+      - sh
+      - -c
+      - |
+        mkdir -p /var/lib/pgadmin
+        cat > /var/lib/pgadmin/servers.json << 'EOF'
+        {
+          "Servers": {
+            "1": {
+              "Name": "Track Finance DB",
+              "Group": "Servers", 
+              "Port": 5432,
+              "Username": "track_finance_user",
+              "Host": "db",
+              "SSLMode": "prefer",
+              "MaintenanceDB": "track_finance"
+            }
+          }
+        }
+        EOF
+        echo "pgAdmin servers.json created successfully"
+
   pgadmin:
     image: dpage/pgadmin4
     restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_SETUP_SERVERS: "/pgadmin4/servers.json"
+      PGADMIN_SERVER_JSON_FILE: "/var/lib/pgadmin/servers.json"
+      PGADMIN_LOAD_SERVERS: "true"
     ports:
       - "5050:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-      - ./servers.json:/pgadmin4/servers.json
     depends_on:
+      pgadmin-init:
+        condition: service_completed_successfully
       db:
         condition: service_healthy
 
@@ -53,7 +81,7 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
-      GF_INSTALL_PLUGINS: grafana-piechart-panel
+      GF_PLUGINS_PREINSTALL: grafana-piechart-panel
     ports:
       - "3000:3000"
     volumes:
