@@ -10,6 +10,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     # ports:
     #   - "5432:5432" # Local access with pgAdmin
+    networks:
+      - network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U track_finance_user -d track_finance"]
       interval: 10s
@@ -19,22 +21,26 @@ services:
   app:
     image: ghcr.io/zekeriyaay/track-finance:latest
     restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
       DATABASE_URL: "postgresql://track_finance_user:${POSTGRES_PASSWORD:-change_me}@db:5432/track_finance"
       SECRET_KEY: ${SECRET_KEY:-very-secret-key}
       FLASK_APP: "app.py"
     ports:
       - "5001:5000"
+    networks:
+      - network
     command: >
       sh -c "flask db upgrade && gunicorn -c gunicorn-conf.py app:app"
+    depends_on:
+      db:
+        condition: service_healthy
 
   pgadmin-init:
     image: alpine:latest
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - network
     command:
       - sh
       - -c
@@ -65,10 +71,12 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
       PGADMIN_SERVER_JSON_FILE: "/var/lib/pgadmin/servers.json"
       PGADMIN_LOAD_SERVERS: "true"
-    ports:
-      - "5050:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - network
     depends_on:
       pgadmin-init:
         condition: service_completed_successfully
@@ -82,10 +90,12 @@ services:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
       GF_PLUGINS_PREINSTALL: grafana-piechart-panel
-    ports:
-      - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - network
     depends_on:
       db:
         condition: service_healthy
@@ -94,3 +104,6 @@ volumes:
   postgres_data:
   pgadmin_data:
   grafana_data:
+
+networks:
+  network:
