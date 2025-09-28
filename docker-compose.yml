@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: trackfinance-db
     image: postgres:15-alpine
     restart: unless-stopped
     environment:
@@ -19,6 +20,7 @@ services:
       retries: 5
 
   app:
+    container_name: trackfinance-app
     image: ghcr.io/zekeriyaay/track-finance:latest
     restart: unless-stopped
     environment:
@@ -36,6 +38,7 @@ services:
         condition: service_healthy
 
   pgadmin-init:
+    container_name: trackfinance-pgadmin-init
     image: alpine:latest
     volumes:
       - pgadmin_data:/var/lib/pgadmin
@@ -64,6 +67,7 @@ services:
         echo "pgAdmin servers.json created successfully"
 
   pgadmin:
+    container_name: trackfinance-pgadmin
     image: dpage/pgadmin4
     restart: unless-stopped
     environment:
@@ -84,6 +88,7 @@ services:
         condition: service_healthy
 
   grafana:
+    container_name: trackfinance-grafana
     image: grafana/grafana:latest
     restart: unless-stopped
     environment:
