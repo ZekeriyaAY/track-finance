@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from flask_babel import _
 from datetime import datetime
 from models.__init__ import db
 from models.cashflow import CashflowTransaction
@@ -50,11 +49,11 @@ def add_cashflow():
                 transaction.tags = tags
             db.session.add(transaction)
             db.session.commit()
-            flash(_('Transaction added successfully!'), 'success')
+            flash('Transaction added successfully!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error adding transaction: {str(e)}')
-            flash(_('An error occurred while adding the transaction.'), 'error')
+            flash('An error occurred while adding the transaction.', 'error')
         return redirect(url_for('cashflow.index'))
 
     categories = Category.query.filter_by(parent_id=None).all()
@@ -76,11 +75,11 @@ def edit_cashflow(id):
             tag_ids = request.form.getlist('tags')
             transaction.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
             db.session.commit()
-            flash(_('Transaction updated successfully!'), 'success')
+            flash('Transaction updated successfully!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error updating transaction: {str(e)}')
-            flash(_('An error occurred while updating the transaction.'), 'error')
+            flash('An error occurred while updating the transaction.', 'error')
         return redirect(url_for('cashflow.index'))
 
     categories = Category.query.filter_by(parent_id=None).all()
@@ -93,11 +92,11 @@ def delete_cashflow(id):
     try:
         db.session.delete(transaction)
         db.session.commit()
-        flash(_('Transaction deleted successfully!'), 'success')
+        flash('Transaction deleted successfully!', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f'Error deleting transaction: {str(e)}')
-        flash(_('An error occurred while deleting the transaction.'), 'error')
+        flash('An error occurred while deleting the transaction.', 'error')
     return redirect(url_for('cashflow.index'))
 
 @cashflow_bp.route('/import', methods=['GET', 'POST'])
@@ -110,23 +109,23 @@ def import_excel():
     try:
         # File check
         if 'excel_file' not in request.files:
-            flash(_('Please select an Excel file.'), 'error')
+            flash('Please select an Excel file.', 'error')
             return render_template('cashflow/import.html')
         
         file = request.files['excel_file']
         
         if file.filename == '':
-            flash(_('Please select an Excel file.'), 'error')
+            flash('Please select an Excel file.', 'error')
             return render_template('cashflow/import.html')
         
         if not allowed_file(file.filename):
-            flash(_('Only Excel files (.xlsx, .xls, .csv) are supported.'), 'error')
+            flash('Only Excel files (.xlsx, .xls, .csv) are supported.', 'error')
             return render_template('cashflow/import.html')
         
         # Bank selection check
         bank_code = request.form.get('bank_code')
         if not bank_code:
-            flash(_('Please select a bank.'), 'error')
+            flash('Please select a bank.', 'error')
             return render_template('cashflow/import.html')
         
         # Create temporary file
@@ -177,9 +176,9 @@ def import_excel():
             db.session.commit()
             
             # Success message
-            success_msg = _(f'{saved_count} transactions imported successfully.')
+            success_msg = f'{saved_count} transactions imported successfully.'
             if result.get('failed', 0) > 0:
-                success_msg += _(f' {result["failed"]} transactions failed.')
+                success_msg += f' {result["failed"]} transactions failed.'
             flash(success_msg, 'success')
             
             # Show errors if any
@@ -187,7 +186,7 @@ def import_excel():
                 error_details = []
                 for error in result['errors'][:5]:  # Show first 5 errors
                     error_details.append(f"Row {error['row']}: {error['error']}")
-                flash(_('Errors: ') + '; '.join(error_details), 'warning')
+                flash('Errors: ' + '; '.join(error_details), 'warning')
             
         finally:
             # Remove temporary file
@@ -198,10 +197,10 @@ def import_excel():
     
     except ExcelImportError as e:
         logger.error(f"ExcelImportError: {str(e)}")
-        flash(_(f'Excel import error: {str(e)}'), 'error')
+        flash(f'Excel import error: {str(e)}', 'error')
     except Exception as e:
         logger.error(f'Import error: {str(e)}', exc_info=True)
-        flash(_('An unexpected error occurred.'), 'error')
+        flash('An unexpected error occurred.', 'error')
     
     return render_template('cashflow/import.html')
 

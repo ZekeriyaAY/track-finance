@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}{{ _('Excel Import') }}{% endblock %}
+{% block title %}'Excel Import'{% endblock %}
 
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold">{{ _('Excel Import') }}</h1>
+    <h1 class="text-2xl font-bold">'Excel Import'</h1>
     <form method="get" action="{{ url_for('cashflow.index') }}">
       <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
         <i class="fas fa-arrow-left"></i>
-        {{ _('Go Back') }}
+        'Go Back'
       </button>
     </form>
   </div>
 
   <div class="bg-card rounded-xl shadow p-6">
     <div class="mb-6">
-      <p class="text-gray-400 text-sm">{{ _('Import your bank transactions from Excel files') }}</p>
+      <p class="text-gray-400 text-sm">'Import your bank transactions from Excel files'</p>
     </div>
 
     <!-- Excel Import Form -->
@@ -26,21 +26,21 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- File Selection -->
         <div class="space-y-2">
-          <label for="excel_file" class="block text-sm font-medium text-gray-300">{{ _('Excel File') }}</label>
+          <label for="excel_file" class="block text-sm font-medium text-gray-300">'Excel File'</label>
           <input type="file" id="excel_file" name="excel_file" 
                  accept=".xlsx,.xls,.csv" required
                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary  file:border-0 file:text-sm file:bg-primary/10 file:text-primary hover:file:bg-primary/20 file:cursor-pointer">
-          <p class="text-xs text-gray-500">{{ _('Supported formats: .xlsx, .xls, .csv') }}</p>
+          <p class="text-xs text-gray-500">'Supported formats: .xlsx, .xls, .csv'</p>
         </div>
         
         <!-- Bank Selection -->
         <div class="space-y-2">
-          <label for="bank_code" class="block text-sm font-medium text-gray-300">{{ _('Bank') }}</label>
+          <label for="bank_code" class="block text-sm font-medium text-gray-300">'Bank'</label>
           <select id="bank_code" name="bank_code" required
                   class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
             <option value="yapıkredi" selected>Yapı Kredi</option>
           </select>
-          <p class="text-xs text-gray-500">{{ _('Currently only Yapı Kredi is supported') }}</p>
+          <p class="text-xs text-gray-500">'Currently only Yapı Kredi is supported'</p>
         </div>
       </div>
       
@@ -48,7 +48,7 @@
         <button type="submit" name="import_excel" 
                 class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
           <i class="fas fa-file-import"></i>
-          {{ _('Import Excel') }}
+          'Import Excel'
         </button>
       </div>
       
@@ -56,8 +56,8 @@
         <div class="flex items-start gap-3">
           <i class="fas fa-exclamation-triangle text-amber-500 mt-0.5"></i>
           <div>
-            <p class="text-amber-200 font-medium">{{ _('Important Notice') }}</p>
-            <p class="text-amber-300/80 text-sm mt-1">{{ _('Import operation cannot be undone. Transactions will be created in "Import" category with bank tag.') }}</p>
+            <p class="text-amber-200 font-medium">'Important Notice'</p>
+            <p class="text-amber-300/80 text-sm mt-1">'Import operation cannot be undone. Transactions will be created in "Import" category with bank tag.'</p>
           </div>
         </div>
       </div>
@@ -67,32 +67,32 @@
   <!-- Help Section -->
   <div class="bg-card rounded-xl shadow p-6">
     <h3 class="text-lg font-semibold mb-4">
-      <i class="fas fa-question-circle text-primary mr-2"></i>{{ _('How to Use?') }}
+      <i class="fas fa-question-circle text-primary mr-2"></i>'How to Use?'
     </h3>
     <div class="space-y-3">
       <div class="flex items-start gap-3">
         <span class="inline-flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full text-xs font-bold">1</span>
-        <p class="text-gray-300">{{ _('Login to your Yapı Kredi Internet Banking') }}</p>
+        <p class="text-gray-300">'Login to your Yapı Kredi Internet Banking'</p>
       </div>
       <div class="flex items-start gap-3">
         <span class="inline-flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full text-xs font-bold">2</span>
-        <p class="text-gray-300">{{ _('Go to Account Summary menu') }}</p>
+        <p class="text-gray-300">'Go to Account Summary menu'</p>
       </div>
       <div class="flex items-start gap-3">
         <span class="inline-flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full text-xs font-bold">3</span>
-        <p class="text-gray-300">{{ _('Select date range and click "Download Excel"') }}</p>
+        <p class="text-gray-300">'Select date range and click "Download Excel"'</p>
       </div>
       <div class="flex items-start gap-3">
         <span class="inline-flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full text-xs font-bold">4</span>
-        <p class="text-gray-300">{{ _('Upload the downloaded Excel file here') }}</p>
+        <p class="text-gray-300">'Upload the downloaded Excel file here'</p>
       </div>
       <div class="flex items-start gap-3">
         <span class="inline-flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full text-xs font-bold">5</span>
-        <p class="text-gray-300">{{ _('Transactions will be automatically created in "Import" category') }}</p>
+        <p class="text-gray-300">'Transactions will be automatically created in "Import" category'</p>
       </div>
       <div class="flex items-start gap-3">
         <span class="inline-flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full text-xs font-bold">6</span>
-        <p class="text-gray-300">{{ _('You can edit categories and tags later') }}</p>
+        <p class="text-gray-300">'You can edit categories and tags later'</p>
       </div>
     </div>
   </div>
@@ -107,14 +107,14 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', function(e) {
             if (!fileInput.files.length) {
                 e.preventDefault();
-                alert('{{ _("Please select a file.") }}');
+                alert('"Please select a file."');
                 return;
             }
             
             // Loading indicator
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalHTML = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>{{ _("Importing...") }}';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>"Importing..."';
             submitBtn.disabled = true;
             
             // Form gönderildikten sonra geri yükleme için timeout

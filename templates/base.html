@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ get_locale() }}">
+<html lang="{{ 'en' }}">
 <head>
     {% block head %}
     <meta charset="UTF-8">
@@ -11,7 +11,6 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <!-- DataTables CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
       tailwind.config = {
@@ -31,7 +30,7 @@
     </script>
     {% endblock %}
 </head>
-<body class="bg-darkbg text-gray-100 font-inter min-h-screen flex flex-col" data-tables-language-url="{{ url_for('static', filename='i18n/' + get_locale() + '.json') }}">
+<body class="bg-darkbg text-gray-100 font-inter min-h-screen flex flex-col">
     <nav class="bg-card shadow-md mb-8">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
@@ -41,31 +40,31 @@
                 </a>
             </div>
             <div class="flex gap-2">
-                <a href="{{ url_for('cashflow.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['cashflow.index', 'cashflow.add_cashflow', 'cashflow.edit_cashflow'] %}bg-primary/20 text-primary font-semibold{% endif %}">{{ _('Cash Flow') }}</a>
-                <a href="{{ url_for('investment.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment.index', 'investment.add_investment', 'investment.edit_investment'] %}bg-primary/20 text-primary font-semibold{% endif %}">{{ _('Investments') }}</a>
-                <a href="{{ grafana_url }}" target="_blank" class="px-4 py-2 rounded-md hover:bg-primary/10 transition">{{ _('Grafana Analytics') }}</a>
+                <a href="{{ url_for('cashflow.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['cashflow.index', 'cashflow.add_cashflow', 'cashflow.edit_cashflow'] %}bg-primary/20 text-primary font-semibold{% endif %}">'Cash Flow'</a>
+                <a href="{{ url_for('investment.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment.index', 'investment.add_investment', 'investment.edit_investment'] %}bg-primary/20 text-primary font-semibold{% endif %}">'Investments'</a>
+                <a href="{{ grafana_url }}" target="_blank" class="px-4 py-2 rounded-md hover:bg-primary/10 transition">'Grafana Analytics'</a>
                 <div class="relative group">
                   <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add_category', 'category.edit_category', 'tag.index', 'tag.add_tag', 'tag.edit_tag', 'investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type', 'settings.index'] %}bg-primary/20 text-primary font-semibold{% endif %}">
-                    {{ _('Management') }}
+                    'Management'
                     <i class="fas fa-chevron-down"></i>
                   </button>
                   <div class="absolute right-0 w-48 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out">
                     <div class="py-1">
                       <a href="{{ url_for('category.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add_category', 'category.edit_category'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         <i class="fas fa-folder"></i>
-                        {{ _('Categories') }}
+                        'Categories'
                       </a>
                       <a href="{{ url_for('tag.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['tag.index', 'tag.add_tag', 'tag.edit_tag'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         <i class="fas fa-tag"></i>
-                        {{ _('Tags') }}
+                        'Tags'
                       </a>
                       <a href="{{ url_for('investment_type.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         <i class="fas fa-coins"></i>
-                        {{ _('Investment Types') }}
+                        'Investment Types'
                       </a>
                       <a href="{{ url_for('settings.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint == 'settings.index' %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         <i class="fas fa-cog"></i>
-                        {{ _('Settings') }}
+                        'Settings'
                       </a>
                     </div>
                   </div>

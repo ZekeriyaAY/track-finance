@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}{{ _('Edit Category') if category else _('Add New Category') }}{% endblock %}
+{% block title %}{{ 'Edit Category' if category else 'Add New Category' }}{% endblock %}
 
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold">{{ _('Edit Category') if category else _('Add New Category') }}</h1>
+    <h1 class="text-2xl font-bold">{{ 'Edit Category' if category else 'Add New Category' }}</h1>
     <form method="get" action="{{ url_for('category.index') }}">
       <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
         <i class="fas fa-arrow-left"></i>
-        {{ _('Go Back') }}
+        'Go Back'
       </button>
     </form>
   </div>
@@ -18,16 +18,16 @@
     <form method="POST" action="{{ url_for('category.edit_category', id=category.id) if category else url_for('category.add_category') }}" class="space-y-6">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="space-y-2">
-        <label for="name" class="block text-sm font-medium text-gray-300">{{ _('Category Name') }}</label>
+        <label for="name" class="block text-sm font-medium text-gray-300">'Category Name'</label>
         <input type="text" id="name" name="name" value="{{ category.name if category else '' }}" required
                class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
       </div>
 
       <div class="space-y-2">
-        <label for="parent_id" class="block text-sm font-medium text-gray-300">{{ _('Parent Category') }}</label>
+        <label for="parent_id" class="block text-sm font-medium text-gray-300">'Parent Category'</label>
         <select id="parent_id" name="parent_id"
                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-          <option value="">{{ _('Main Category') }}</option>
+          <option value="">'Main Category'</option>
           {% if categories %}
             {% for cat in categories %}
               {% if not category or cat.id != category.id %}
@@ -44,12 +44,12 @@
         <form method="get" action="{{ url_for('category.index') }}">
           <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition">
             <i class="fas fa-times"></i>
-            {{ _('Cancel') }}
+            'Cancel'
           </button>
         </form>
         <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
           <i class="fas fa-save"></i>
-          {{ _('Save') }}
+          'Save'
         </button>
       </div>
     </form>

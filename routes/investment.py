@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_babel import _
 from models.__init__ import db
 from models.investment import InvestmentTransaction, InvestmentType
 from datetime import datetime
@@ -35,11 +34,11 @@ def add_investment():
             )
             db.session.add(transaction)
             db.session.commit()
-            flash(_('Investment transaction added successfully!'), 'success')
+            flash('Investment transaction added successfully!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error adding investment transaction: {str(e)}')
-            flash(_('An error occurred while adding the investment transaction.'), 'error')
+            flash('An error occurred while adding the investment transaction.', 'error')
         return redirect(url_for('investment.index'))
     
     investment_types = InvestmentType.query.all()
@@ -59,11 +58,11 @@ def edit_investment(id):
             transaction.description = request.form['description']
             
             db.session.commit()
-            flash(_('Investment transaction updated successfully!'), 'success')
+            flash('Investment transaction updated successfully!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error updating investment transaction: {str(e)}')
-            flash(_('An error occurred while updating the investment transaction.'), 'error')
+            flash('An error occurred while updating the investment transaction.', 'error')
         return redirect(url_for('investment.index'))
     
     investment_types = InvestmentType.query.all()
@@ -75,9 +74,9 @@ def delete_investment(id):
     try:
         db.session.delete(transaction)
         db.session.commit()
-        flash(_('Investment transaction deleted successfully.'), 'success')
+        flash('Investment transaction deleted successfully.', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f"Error deleting investment transaction: {str(e)}")
-        flash(_('An error occurred while deleting the investment transaction.'), 'error')
+        flash('An error occurred while deleting the investment transaction.', 'error')
     return redirect(url_for('investment.index')) 

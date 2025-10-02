@@ -4,7 +4,6 @@ from flask import Flask, redirect, url_for, request, session, g
 from flask_migrate import Migrate
 from models.__init__ import db
 from flask_wtf import CSRFProtect
-from flask_babel import Babel
 from config import config
 
 def create_app(config_name=None):
@@ -23,24 +22,6 @@ def create_app(config_name=None):
     migrate = Migrate(app, db)
     csrf = CSRFProtect(app)
     
-    # Babel Configuration
-    def get_locale():
-        # First check session, then check browser language
-        lang = session.get('lang')
-        if lang in ['en', 'tr']:
-            return lang
-        return 'en'
-
-    babel = Babel(app, locale_selector=get_locale)
-
-    @app.before_request
-    def set_lang_code():
-        g.lang_code = get_locale()
-
-    @app.context_processor
-    def inject_locale():
-        return dict(get_locale=get_locale, lang_code=g.get('lang_code', 'en'))
-
     @app.context_processor
     def inject_grafana_url():
         from models.settings import Settings
