@@ -8,7 +8,7 @@ Track Finance is a web application designed to help you track your personal fina
 - Investment Portfolio Management
 - Category and Tag-Based Reporting
 - Data Import from Excel
-- Multi-language Support (TR/EN)
+- Grafana Analytics Integration
 
 ## Prerequisites
 
