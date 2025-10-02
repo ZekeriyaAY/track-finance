@@ -14,13 +14,51 @@ def create_app(config_name=None):
     app.config.from_object(config[config_name])
     
     # Configure logging
-    if config_name == 'development':
-        logging.basicConfig(level=logging.INFO)
-        app.logger.setLevel(logging.INFO)
+    logging.basicConfig(
+        level=getattr(logging, app.config.get('LOG_LEVEL', 'INFO')),
+        format=app.config.get('LOG_FORMAT')
+    )
     
+    # Initialize extensions
     db.init_app(app)
     migrate = Migrate(app, db)
     csrf = CSRFProtect(app)
+    
+    # Security headers middleware
+    @app.after_request
+    def add_security_headers(response):
+        # Prevent clickjacking
+        response.headers['X-Frame-Options'] = 'DENY'
+        # Prevent MIME type sniffing
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        # XSS protection
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        # Only send referrer for same-origin requests
+        response.headers['Referrer-Policy'] = 'same-origin'
+        
+        # HTTPS enforcement in production
+        if not app.debug:
+            response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+        
+        return response
+    
+    # Request logging for production
+    @app.before_request
+    def log_request_info():
+        if not app.debug:
+            app.logger.info(f'{request.method} {request.url} - {request.remote_addr}')
+    
+    # Error handlers
+    @app.errorhandler(404)
+    def not_found(error):
+        app.logger.warning(f'404 error: {request.url} - {request.remote_addr}')
+        return redirect(url_for('cashflow.index'))
+    
+    @app.errorhandler(500)
+    def internal_error(error):
+        db.session.rollback()
+        app.logger.error(f'500 error: {error} - {request.url} - {request.remote_addr}')
+        return redirect(url_for('cashflow.index'))
     
     @app.context_processor
     def inject_grafana_url():
@@ -50,15 +88,22 @@ def create_app(config_name=None):
     
     @app.route('/health')
     def health_check():
-        return {'status': 'healthy', 'service': 'track-finance'}, 200
+        """Health check endpoint for load balancers"""
+        try:
+            # Test database connectivity
+            db.session.execute('SELECT 1')
+            return {'status': 'healthy', 'service': 'track-finance', 'database': 'connected'}, 200
+        except Exception as e:
+            app.logger.error(f'Health check failed: {e}')
+            return {'status': 'unhealthy', 'service': 'track-finance', 'error': str(e)}, 503
     
+    app.logger.info(f'Track Finance app created with config: {config_name}')
     return app
 
 # Create app instance
 app = create_app()
 
 if __name__ == '__main__':
-    # Get debug mode from environment
-    debug_mode = os.environ.get('FLASK_DEBUG', '0') == '1'
-    # Development server
-    app.run(host='127.0.0.1', debug=debug_mode, port=5000)
+    # Development server only - production uses Gunicorn
+    # Debug mode is automatically determined by FLASK_ENV in config
+    app.run(host='127.0.0.1', port=5000)

@@ -24,9 +24,10 @@ services:
     image: ghcr.io/zekeriyaay/track-finance:latest
     restart: unless-stopped
     environment:
-      DATABASE_URL: "postgresql://track_finance_user:${POSTGRES_PASSWORD:-change_me}@db:5432/track_finance"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+      POSTGRES_HOST: db
       SECRET_KEY: ${SECRET_KEY:-very-secret-key}
-      FLASK_APP: "app.py"
+      FLASK_ENV: production
     ports:
       - "5001:5000"
     networks:
@@ -42,29 +43,11 @@ services:
     image: alpine:latest
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-    networks:
-      - network
-    command:
-      - sh
-      - -c
-      - |
-        mkdir -p /var/lib/pgadmin
-        cat > /var/lib/pgadmin/servers.json << 'EOF'
-        {
-          "Servers": {
-            "1": {
-              "Name": "Track Finance DB",
-              "Group": "Servers", 
-              "Port": 5432,
-              "Username": "track_finance_user",
-              "Host": "db",
-              "SSLMode": "prefer",
-              "MaintenanceDB": "track_finance"
-            }
-          }
-        }
-        EOF
-        echo "pgAdmin servers.json created successfully"
+    command: >
+      sh -c "
+        mkdir -p /var/lib/pgadmin &&
+        echo '{\"Servers\":{\"1\":{\"Name\":\"Track Finance DB\",\"Group\":\"Servers\",\"Port\":5432,\"Username\":\"track_finance_user\",\"Host\":\"db\",\"SSLMode\":\"prefer\",\"MaintenanceDB\":\"track_finance\"}}}' > /var/lib/pgadmin/servers.json
+      "
 
   pgadmin:
     container_name: trackfinance-pgadmin
@@ -94,7 +77,6 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
-      GF_PLUGINS_PREINSTALL: grafana-piechart-panel
     volumes:
       - grafana_data:/var/lib/grafana
     ports:

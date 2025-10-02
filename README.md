@@ -63,7 +63,7 @@ This project is configured for Continuous Integration and Continuous Deployment 
 
 1.  **Initial Setup:**
     - Clone the repository to your server.
-    - Create a `.env` file with your production secrets.
+    - Create a `.env` file with your production secrets (see Security section below).
     - Log in to GHCR on your server: `echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin`
 
 2.  **Deploying an Update:**
@@ -76,6 +76,49 @@ This project is configured for Continuous Integration and Continuous Deployment 
     docker compose up -d
     ```
     This process does not require you to pull the source code to the server or build the image there, making deployments fast and reliable.
+
+### 🔒 Production Security Setup
+
+**CRITICAL:** Never use default passwords in production!
+
+1. **Create Production Environment File:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Generate Secure Passwords:**
+   ```bash
+   # Generate SECRET_KEY
+   openssl rand -hex 32
+   
+   # Generate database password
+   openssl rand -hex 16
+   
+   # Generate admin passwords
+   openssl rand -hex 12
+   ```
+
+3. **Update .env with secure values:**
+   ```bash
+   # Replace placeholders in .env with generated values
+   SECRET_KEY=your_generated_secret_key
+   POSTGRES_PASSWORD=your_secure_db_password
+   PGADMIN_DEFAULT_PASSWORD=your_pgadmin_password
+   GRAFANA_ADMIN_PASSWORD=your_grafana_password
+   
+   # Set production mode
+   FLASK_ENV=production
+   FLASK_DEBUG=0
+   ```
+
+4. **Production Security Features:**
+   - ✅ CSRF Protection enabled
+   - ✅ Security headers (XSS, Clickjacking protection)
+   - ✅ HTTPS enforcement in production
+   - ✅ Non-root container execution
+   - ✅ Structured logging with rotation
+   - ✅ Session security
+   - ✅ Database connection pooling
 
 ## Stopping the Application
 

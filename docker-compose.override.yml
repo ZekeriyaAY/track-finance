@@ -1,16 +1,15 @@
-# This file is for local development and overrides the main docker-compose.yml
+# Development override - automatically used by docker compose
 services:
   app:
-    # Override the image directive - use local build instead of GHCR
+    # Use local build instead of GHCR image
     image: track-finance:local-dev
     build: .
     # Mount source code for live reloading
     volumes:
       - .:/app
-    # Use Flask development server instead of Gunicorn
+    # Use Flask development server
     command: >
       sh -c "flask db upgrade && flask run --host=0.0.0.0 --port=5000 --debug"
-    # Add development-specific environment variables
+    # Development environment
     environment:
       FLASK_ENV: development
-      FLASK_DEBUG: "1"
