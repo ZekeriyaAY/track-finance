@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}'Settings'{% endblock %}
+{% block title %}Settings{% endblock %}
 
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold">'Settings'</h1>
+    <h1 class="text-2xl font-bold">Settings</h1>
   </div>
 
   <!-- Grafana Settings -->
   <div class="bg-card rounded-xl shadow p-6 space-y-6">
     <div class="space-y-4">
-      <h2 class="text-xl font-semibold">'Grafana Settings'</h2>
-      <p class="text-gray-400 text-sm">'Configure your Grafana dashboard URL for analytics.'</p>
+      <h2 class="text-xl font-semibold">Grafana Settings</h2>
+      <p class="text-gray-400 text-sm">Configure your Grafana dashboard URL for analytics.</p>
 
       <form action="{{ url_for('settings.update_grafana_url') }}" method="POST" class="space-y-4">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
         <div class="flex flex-col space-y-2">
-          <label for="grafana_url" class="block text-sm font-medium text-gray-300">'Grafana URL'</label>
+          <label for="grafana_url" class="block text-sm font-medium text-gray-300">Grafana URL</label>
           <div class="flex gap-3">
             <input type="url" id="grafana_url" name="grafana_url" value="{{ grafana_url }}"
               placeholder="http://localhost:3000"
@@ -27,11 +27,11 @@
             <button type="submit"
               class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
               <i class="fas fa-save"></i>
-              'Update'
+Update
             </button>
           </div>
-          <p class="text-xs text-gray-500">'Enter the URL where your Grafana instance is running (e.g.,
-            http://localhost:3000)'</p>
+          <p class="text-xs text-gray-500">Enter the URL where your Grafana instance is running (e.g.,
+            http://localhost:3000)</p>
         </div>
       </form>
     </div>
@@ -40,22 +40,22 @@
   <!-- Default Data -->
   <div class="bg-card rounded-xl shadow p-6 space-y-6">
     <div class="space-y-4">
-      <h2 class="text-xl font-semibold">'Default Data'</h2>
-      <p class="text-gray-400 text-sm">'Existing data will not be recreated, only missing data will be added.'
+      <h2 class="text-xl font-semibold">Default Data</h2>
+      <p class="text-gray-400 text-sm">Existing data will not be recreated, only missing data will be added.
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Default Categories -->
         <div class="p-4 bg-darkbg/40 rounded-lg border border-primary/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-primary">'Default Categories'</h3>
-          <p class="text-gray-400 text-sm mb-4">'Creates income and expense categories.'</p>
+          <h3 class="text-lg font-medium mb-2 text-primary">Default Categories</h3>
+          <p class="text-gray-400 text-sm mb-4">Creates income and expense categories.</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.create_default_categories_route') }}" method="POST" class="inline">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
               <button type="submit"
                 class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm font-medium">
                 <i class="fas fa-folder"></i>
-                'Create Categories'
+Create Categories
               </button>
             </form>
           </div>
@@ -63,15 +63,15 @@
 
         <!-- Default Tags -->
         <div class="p-4 bg-darkbg/40 rounded-lg border border-primary/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-primary">'Default Tags'</h3>
-          <p class="text-gray-400 text-sm mb-4">'Creates default tags to be used for tagging transactions.'</p>
+          <h3 class="text-lg font-medium mb-2 text-primary">Default Tags</h3>
+          <p class="text-gray-400 text-sm mb-4">Creates default tags to be used for tagging transactions.</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.create_default_tags_route') }}" method="POST" class="inline">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
               <button type="submit"
                 class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm font-medium">
                 <i class="fas fa-tag"></i>
-                'Create Tags'
+Create Tags
               </button>
             </form>
           </div>
@@ -79,8 +79,8 @@
 
         <!-- Default Investment Types -->
         <div class="p-4 bg-darkbg/40 rounded-lg border border-primary/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-primary">'Default Investment Types'</h3>
-          <p class="text-gray-400 text-sm mb-4">'Creates default investment types to categorize investments.'
+          <h3 class="text-lg font-medium mb-2 text-primary">Default Investment Types</h3>
+          <p class="text-gray-400 text-sm mb-4">Creates default investment types to categorize investments.
           </p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.create_default_investment_types_route') }}" method="POST" class="inline">
@@ -88,7 +88,7 @@
               <button type="submit"
                 class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm font-medium">
                 <i class="fas fa-chart-line"></i>
-                'Create Investment Types'
+Create Investment Types
               </button>
             </form>
           </div>
@@ -100,21 +100,21 @@
   <!-- Database Management -->
   <div class="bg-card rounded-xl shadow p-6 space-y-6">
     <div class="space-y-4">
-      <h2 class="text-xl font-semibold">'Database Management'</h2>
+      <h2 class="text-xl font-semibold">Database Management</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Dummy Data -->
         <div class="p-4 bg-darkbg/40 rounded-lg border border-primary/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-primary">'Dummy Data'</h3>
-          <p class="text-gray-400 text-sm mb-4">'Creates default categories, tags, investment types and sample
-            transactions.'</p>
+          <h3 class="text-lg font-medium mb-2 text-primary">Dummy Data</h3>
+          <p class="text-gray-400 text-sm mb-4">Creates default categories, tags, investment types and sample
+            transactions.</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.create_dummy_data_route') }}" method="POST" class="inline">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
               <button type="submit"
                 class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm font-medium">
                 <i class="fas fa-database"></i>
-                'Create Dummy Data'
+Create Dummy Data
               </button>
             </form>
           </div>
@@ -122,9 +122,9 @@
 
         <!-- Reset Database -->
         <div class="p-4 bg-darkbg/40 rounded-lg border border-red-500/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-red-500">'Reset Database'</h3>
-          <p class="text-gray-400 text-sm mb-4">'Deletes all data and resets the database. This action cannot be
-            undone!'</p>
+          <h3 class="text-lg font-medium mb-2 text-red-500">Reset Database</h3>
+          <p class="text-gray-400 text-sm mb-4">Deletes all data and resets the database. This action cannot be
+            undone!</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.reset_database') }}" method="POST" class="inline"
               onsubmit="return confirm('All data will be deleted! Are you sure about this action?');">
@@ -132,7 +132,7 @@
               <button type="submit"
                 class="inline-flex items-center gap-2 px-3 py-2 rounded-md !bg-red-500 !text-white hover:!bg-red-600 transition text-sm font-medium">
                 <i class="fas fa-trash"></i>
-                'Reset Database'
+Reset Database
               </button>
             </form>
           </div>

@@ -9,7 +9,7 @@
     <form method="get" action="{{ url_for('investment_type.index') }}">
       <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
         <i class="fas fa-arrow-left"></i>
-        'Go Back'
+Go Back
       </button>
     </form>
   </div>
@@ -19,14 +19,14 @@
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-2">
-          <label for="name" class="block text-sm font-medium text-gray-300">'Type Name'</label>
+          <label for="name" class="block text-sm font-medium text-gray-300">Type Name</label>
           <input type="text" id="name" name="name" value="{{ type.name if type else '' }}" required 
                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                  oninput="updateIconPreview()">
         </div>
 
         <div class="space-y-2">
-          <label for="code" class="block text-sm font-medium text-gray-300">'Code'</label>
+          <label for="code" class="block text-sm font-medium text-gray-300">Code</label>
           <input type="text" id="code" name="code" value="{{ type.code if type else '' }}" required 
                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
         </div>
@@ -34,15 +34,15 @@
         <div class="space-y-2 md:col-span-2">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="space-y-2">
-              <label for="icon" class="block text-sm font-medium text-gray-300">'Icon'</label>
+              <label for="icon" class="block text-sm font-medium text-gray-300">Icon</label>
               <input type="text" id="icon" name="icon" value="{{ type.icon if type else 'fas fa-chart-pie' }}" 
                      class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                      oninput="updateIconPreview()">
-              <p class="text-sm text-gray-400">'Font Awesome icon class'</p>
+              <p class="text-sm text-gray-400">Font Awesome icon class</p>
             </div>
 
             <div class="space-y-2">
-              <label for="color" class="block text-sm font-medium text-gray-300">'Color'</label>
+              <label for="color" class="block text-sm font-medium text-gray-300">Color</label>
               <div class="h-[34px]">
                 <input type="color" id="color" name="color" value="{{ type.color if type else '#3B82F6' }}" 
                        class="w-full h-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
@@ -51,7 +51,7 @@
             </div>
 
             <div class="space-y-2">
-              <label class="block text-sm font-medium text-gray-300">'Preview'</label>
+              <label class="block text-sm font-medium text-gray-300">Preview</label>
               <div class="p-2 bg-darkbg border border-gray-700 rounded-md h-[34px] flex items-center">
                 <div class="flex items-center gap-2">
                   <i id="iconPreview" class="{{ type.icon if type else 'fas fa-chart-pie' }}" style="color: {{ type.color if type else '#3B82F6' }}"></i>
@@ -63,10 +63,10 @@
         </div>
 
         <div class="space-y-2 md:col-span-2">
-          <label for="parent_id" class="block text-sm font-medium text-gray-300">'Parent Type'</label>
+          <label for="parent_id" class="block text-sm font-medium text-gray-300">Parent Type</label>
           <select id="parent_id" name="parent_id" 
                   class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-            <option value="">'Main Type'</option>
+            <option value="">Main Type</option>
             {% for parent in types %}
               {% if not parent.parent_id and (not type or parent.id != type.id) %}
               <option value="{{ parent.id }}" {% if type and type.parent_id == parent.id %}selected{% endif %}>{{ parent.name }}</option>
@@ -80,12 +80,12 @@
         <form method="get" action="{{ url_for('investment_type.index') }}">
           <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition">
             <i class="fas fa-times"></i>
-            'Cancel'
+Cancel
           </button>
         </form>
         <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
           <i class="fas fa-save"></i>
-          'Save'
+Save
         </button>
       </div>
     </form>
