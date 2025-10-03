@@ -1,5 +1,6 @@
 import os
 import logging
+from logging.handlers import RotatingFileHandler
 from flask import Flask, redirect, url_for, request, session, g
 from flask_migrate import Migrate
 from models.__init__ import db
@@ -14,10 +15,38 @@ def create_app(config_name=None):
     app.config.from_object(config[config_name])
     
     # Configure logging
-    logging.basicConfig(
-        level=getattr(logging, app.config.get('LOG_LEVEL', 'INFO')),
-        format=app.config.get('LOG_FORMAT')
+    log_level = getattr(logging, app.config.get('LOG_LEVEL', 'INFO'))
+    log_format = app.config.get('LOG_FORMAT')
+    
+    # Create logs directory if it doesn't exist
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
+    
+    # File handler with rotation (10MB per file, keep 5 backups)
+    file_handler = RotatingFileHandler(
+        'logs/track-finance.log',
+        maxBytes=10 * 1024 * 1024,  # 10MB
+        backupCount=5
     )
+    file_handler.setLevel(log_level)
+    file_handler.setFormatter(logging.Formatter(log_format))
+    
+    # Console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(log_level)
+    console_handler.setFormatter(logging.Formatter(log_format))
+    
+    # Configure root logger
+    root_logger = logging.getLogger()
+    root_logger.setLevel(log_level)
+    root_logger.addHandler(file_handler)
+    root_logger.addHandler(console_handler)
+    
+    # Set Flask app logger
+    app.logger.setLevel(log_level)
+    if not app.logger.handlers:
+        app.logger.addHandler(file_handler)
+        app.logger.addHandler(console_handler)
     
     # Initialize extensions
     db.init_app(app)
