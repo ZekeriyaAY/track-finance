@@ -89,9 +89,10 @@ def create_app(config_name=None):
     @app.route('/health')
     def health_check():
         """Health check endpoint for load balancers"""
+        from sqlalchemy import text
         try:
             # Test database connectivity
-            db.session.execute('SELECT 1')
+            db.session.execute(text('SELECT 1'))
             return {'status': 'healthy', 'service': 'track-finance', 'database': 'connected'}, 200
         except Exception as e:
             app.logger.error(f'Health check failed: {e}')
