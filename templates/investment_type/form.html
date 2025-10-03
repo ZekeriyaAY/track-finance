@@ -77,15 +77,13 @@ Go Back
       </div>
 
       <div class="flex justify-end gap-3 mt-6">
-        <form method="get" action="{{ url_for('investment_type.index') }}">
-          <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition">
-            <i class="fas fa-times"></i>
-Cancel
-          </button>
-        </form>
+        <a href="{{ url_for('investment_type.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition">
+          <i class="fas fa-times"></i>
+          Cancel
+        </a>
         <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
           <i class="fas fa-save"></i>
-Save
+          Save
         </button>
       </div>
     </form>
