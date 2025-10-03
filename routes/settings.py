@@ -88,7 +88,6 @@ def reset_database():
         # Clear all data from tables (but keep table structure)
         # Order is critical: junction tables first, then child tables, then parent tables
         
-        # SQLite requires each statement to be executed separately
         statements = [
             "DELETE FROM cashflow_transaction_tags",
             "DELETE FROM investment_transaction", 
@@ -101,20 +100,23 @@ def reset_database():
         for sql in statements:
             db.session.execute(text(sql))
         
-        # SQLite uses AUTOINCREMENT instead of SEQUENCE
-        # Reset auto-increment counters by updating sqlite_sequence if it exists
+        # Reset auto-increment counters (PostgreSQL uses SEQUENCE)
         try:
-            # Check if sqlite_sequence table exists
-            check_sequence_table = "SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence'"
-            result = db.session.execute(text(check_sequence_table)).fetchone()
+            # PostgreSQL: Reset sequences for auto-increment columns
+            sequences = [
+                "ALTER SEQUENCE investment_transaction_id_seq RESTART WITH 1",
+                "ALTER SEQUENCE cashflow_transaction_id_seq RESTART WITH 1",
+                "ALTER SEQUENCE investment_type_id_seq RESTART WITH 1",
+                "ALTER SEQUENCE tag_id_seq RESTART WITH 1",
+                "ALTER SEQUENCE category_id_seq RESTART WITH 1"
+            ]
             
-            if result:
-                # Simple approach: just delete all entries and they'll be recreated with seq=1
-                db.session.execute(text("DELETE FROM sqlite_sequence WHERE name IN ('investment_transaction', 'cashflow_transaction', 'investment_type', 'tag', 'category')"))
+            for seq_sql in sequences:
+                db.session.execute(text(seq_sql))
                 
         except Exception as e:
-            # If sqlite_sequence operations fail, just log and continue
-            logger.warning(f"Could not reset auto-increment counters: {str(e)}")
+            # If sequence reset fails, just log and continue
+            logger.warning(f"Could not reset auto-increment sequences: {str(e)}")
             
         db.session.commit()
         
