@@ -1,4 +1,4 @@
-# Development override - automatically used by docker compose
+# Development configuration - use with: docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 services:
   app:
     # Use local build instead of GHCR image
