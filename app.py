@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from models.__init__ import db
 from flask_wtf import CSRFProtect
 from config import config
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 def create_app(config_name=None):
     if config_name is None:
@@ -13,6 +14,16 @@ def create_app(config_name=None):
     
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    
+    # Trust proxy headers if behind reverse proxy (nginx, traefik, etc.)
+    if os.environ.get('BEHIND_PROXY', 'False').lower() == 'true':
+        app.wsgi_app = ProxyFix(
+            app.wsgi_app,
+            x_for=1,
+            x_proto=1,
+            x_host=1,
+            x_prefix=1
+        )
     
     # Configure logging
     log_level = getattr(logging, app.config.get('LOG_LEVEL', 'INFO'))

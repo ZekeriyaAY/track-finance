@@ -8,9 +8,13 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'very-secret-key')
     
     # Session security
-    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true'
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
+    
+    # CSRF Protection
+    WTF_CSRF_TIME_LIMIT = None  # CSRF token doesn't expire (until session expires)
+    WTF_CSRF_SSL_STRICT = os.environ.get('WTF_CSRF_SSL_STRICT', 'False').lower() == 'true'
     
     # Database - PostgreSQL configuration  
     DB_PASSWORD = os.environ.get('POSTGRES_PASSWORD', 'change_me')
@@ -34,8 +38,9 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
-    SESSION_COOKIE_SECURE = True
-    PREFERRED_URL_SCHEME = 'https'
+    SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'True').lower() == 'true'
+    WTF_CSRF_SSL_STRICT = os.environ.get('WTF_CSRF_SSL_STRICT', 'True').lower() == 'true'
+    PREFERRED_URL_SCHEME = os.environ.get('PREFERRED_URL_SCHEME', 'https')
     
     def __init__(self):
         super().__init__()

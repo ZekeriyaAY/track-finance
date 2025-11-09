@@ -34,6 +34,18 @@ The project can be easily run using Docker and Docker Compose.
     GRAFANA_ADMIN_PASSWORD=admin
     ```
 
+    **CSRF Token Error Fix:**
+    If you get "CSRF session token is missing" error in production, add these to your environment:
+    ```env
+    SESSION_COOKIE_SECURE=False
+    WTF_CSRF_SSL_STRICT=False
+    ```
+    Only set these to `True` if you're using HTTPS. If behind a reverse proxy (nginx/traefik), also add:
+    ```env
+    BEHIND_PROXY=True
+    PREFERRED_URL_SCHEME=https
+    ```
+
 3.  **Run:**
     ```bash
     # Production mode

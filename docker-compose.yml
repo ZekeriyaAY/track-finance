@@ -28,6 +28,13 @@ services:
       POSTGRES_HOST: db
       SECRET_KEY: ${SECRET_KEY:-very-secret-key}
       FLASK_ENV: production
+      # CSRF & Session settings for production without HTTPS
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-False}
+      WTF_CSRF_SSL_STRICT: ${WTF_CSRF_SSL_STRICT:-False}
+      # Set to 'True' if behind reverse proxy (nginx, traefik, etc.)
+      BEHIND_PROXY: ${BEHIND_PROXY:-False}
+      # Set to 'https' if your reverse proxy handles SSL
+      PREFERRED_URL_SCHEME: ${PREFERRED_URL_SCHEME:-http}
     ports:
       - "5001:5000"
     volumes:
