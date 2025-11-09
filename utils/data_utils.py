@@ -9,17 +9,19 @@ from models.investment import InvestmentType, InvestmentTransaction
 def create_default_categories():
     """Creates default income and expense categories."""
     default_categories = {
-        'Income': ['Salary', 'Freelance', 'Investment', 'Rental'],
-        'Food': ['Restaurant', 'Groceries', 'Coffee'],
-        'Transportation': ['Public Transport', 'Fuel', 'Taxi', 'Flight'],
-        'Housing': ['Rent', 'Utilities', 'Maintenance'],
-        'Shopping': ['Clothing', 'Electronics', 'Other'],
-        'Health': ['Doctor', 'Pharmacy', 'Gym'],
-        'Entertainment': ['Cinema', 'Streaming', 'Hobbies'],
-        'Bills': ['Phone', 'Internet', 'Subscriptions'],
-        'Education': ['Courses', 'Books'],
-        'Travel': ['Hotels', 'Transport'],
-        'Other': ['Gifts', 'Miscellaneous']
+        'Income': ['Salary', 'Freelance', 'Rental', 'Refund'],
+        'Food & Dining': ['Groceries', 'Restaurants', 'Coffee & Snacks'],
+        'Transportation': ['Public Transport', 'Fuel', 'Taxi & Ride Share', 'Parking', 'Vehicle Maintenance', 'Car Insurance', 'Flight'],
+        'Housing': ['Rent', 'Property Tax', 'Home Insurance', 'Utilities', 'Maintenance & Repairs'],
+        'Shopping': ['Clothing & Shoes', 'Electronics', 'Personal Care', 'Home Supplies', 'Gifts'],
+        'Health & Fitness': ['Doctor & Hospital', 'Pharmacy & Medicine', 'Health Insurance', 'Gym & Sports'],
+        'Entertainment': ['Movies & Cinema', 'Streaming Services', 'Hobbies', 'Books & Magazines', 'Games', 'Events & Concerts'],
+        'Bills & Utilities': ['Electricity', 'Water', 'Gas', 'Internet', 'Mobile Phone'],
+        'Education': ['Courses & Training', 'Books & Supplies'],
+        'Travel & Vacation': ['Accommodation', 'Transportation', 'Food & Dining', 'Activities', 'Travel Insurance'],
+        'Financial': ['Bank Fees', 'Investment', 'Savings', 'Loan Payment', 'Credit Card Payment', 'Insurance Premium'],
+        'Personal': ['Haircut & Beauty', 'Clothing Care', 'Pet Care', 'Child Care'],
+        'Other': ['Charity & Donations', 'Taxes', 'Legal Fees', 'Miscellaneous']
     }
     
     for main_category, subcategories in default_categories.items():
@@ -114,9 +116,16 @@ def create_default_investment_types():
 def create_default_tags():
     """Creates default tags."""
     default_tags = [
-        'Recurring', 'One-time', 'Emergency', 'Planned',
-        'Personal', 'Business', 'Cash', 'Card',
-        'Essential', 'Optional'
+        # Payment Method
+        'Cash', 'Credit Card', 'Debit Card', 'Bank Transfer', 'Mobile Payment',
+        # Frequency
+        'Recurring', 'One-time',
+        # Planning
+        'Planned', 'Unplanned',
+        # Purpose
+        'Personal', 'Business', 'Family', 'Investment',
+        # Tax Related
+        'Tax Deductible', 'Reimbursable'
     ]
 
     # Create tags
