@@ -160,7 +160,7 @@ def import_excel():
                     transaction = CashflowTransaction(
                         date=transaction_data['date'],
                         amount=abs(transaction_data['amount']),  # Amount is always positive
-                        type=transaction_data['type'],  # From Excel processor
+                        type=transaction_data['type'],  # income or expense
                         category_id=import_category.id,
                         description=transaction_data['description'],
                         tags = [bank_tag]

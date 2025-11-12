@@ -9,7 +9,7 @@ The project is designed to run on Docker, integrated with Grafana for data visua
 - **Cash Flow Management:** Record and list your income and expenses.
 - **Categorization and Tagging:** Create categories and tags to better analyze your spending.
 - **Investment Tracking:** Manage your investments and their types.
-- **Import from Excel:** Automatically record transactions by uploading your bank statements (in Excel format).
+- **Excel Import:** Import transactions from bank statements (Excel/CSV format).
 - **Visualization:** Monitor your financial data with visual dashboards through Grafana integration.
 
 ##  Setup and Run

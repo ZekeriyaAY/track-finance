@@ -5,16 +5,17 @@ Defines Excel export format for each bank
 """
 
 BANK_CONFIGS = {
-    'yapıkredi': {
+    'yapikredi': {
         'name': 'Yapı Kredi',
         'columns': {
             'date': ['İşlem Tarihi', 'Tarih'],
             'description': ['İşlemler', 'İşlem Açıklaması', 'Açıklama'],
             'amount': ['Tutar', 'Miktar']
         },
-        'date_format': '%d/%m/%Y',  # Excel format appears as 10/06/2025
-        'skip_rows': 0,
-        'encoding': 'utf-8'
+        'date_format': '%d/%m/%Y',
+        'header_row_identifier': 'İşlem Tarihi',  # Used to find header row
+        'encoding': 'utf-8',
+        'skip_initial_rows': 2  # Skip first 2 data rows after header (previous period debt)
     }
 }
 

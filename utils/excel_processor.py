@@ -133,41 +133,66 @@ def parse_date(date_str, date_format='%d.%m.%Y'):
     
     raise ValueError(f"Could not parse date: {date_str}")
 
-def read_excel_file(file_path, bank_config=None):
+def read_file_with_header_detection(file_path, bank_config=None):
     """
-    Read Excel file and return as DataFrame
+    Read Excel or CSV file and return as DataFrame
+    Dynamically finds the header row if bank_config has header_row_identifier
     """
     try:
-        # Excel files don't need encoding, can read directly
-        df = pd.read_excel(file_path)
+        file_extension = file_path.lower().split('.')[-1]
+        
+        # Read file without header first
+        if file_extension == 'csv':
+            # Try different encodings for CSV files
+            encodings = ['utf-8', 'latin-1', 'cp1254', 'iso-8859-9']
+            df = None
+            for encoding in encodings:
+                try:
+                    df = pd.read_csv(file_path, encoding=encoding, header=None)
+                    break
+                except UnicodeDecodeError:
+                    continue
+            
+            if df is None:
+                df = pd.read_csv(file_path, header=None)
+        elif file_extension in ['xlsx', 'xls']:
+            df = pd.read_excel(file_path, header=None)
+        else:
+            raise ExcelImportError(f"Unsupported file format: {file_extension}")
+        
+        # If bank config has header identifier, find the header row
+        if bank_config and bank_config.get('header_row_identifier'):
+            header_identifier = bank_config['header_row_identifier']
+            header_row = None
+            
+            for idx, row in df.iterrows():
+                if header_identifier in str(row.values):
+                    header_row = idx
+                    break
+            
+            if header_row is not None:
+                # Set the header row and return data after header
+                df.columns = df.iloc[header_row]
+                df = df.iloc[header_row + 1:].reset_index(drop=True)
+                logger.info(f"Found header row at index {header_row}")
+            else:
+                # Fallback: try to read normally with first row as header
+                if file_extension == 'csv':
+                    df = pd.read_csv(file_path)
+                else:
+                    df = pd.read_excel(file_path)
+                logger.warning(f"Header row identifier '{header_identifier}' not found, using first row as header")
+        else:
+            # No header identifier, read normally with first row as header
+            if file_extension == 'csv':
+                df = pd.read_csv(file_path)
+            else:
+                df = pd.read_excel(file_path)
+        
         return df
     
     except Exception as e:
-        raise ExcelImportError(f"Could not read Excel file: {str(e)}")
-
-def read_csv_file(file_path):
-    """
-    Read CSV file and return as DataFrame
-    """
-    try:
-        # Try different encodings for CSV files
-        encodings = ['utf-8', 'latin-1', 'cp1254', 'iso-8859-9']
-        
-        df = None
-        for encoding in encodings:
-            try:
-                df = pd.read_csv(file_path, encoding=encoding)
-                break
-            except UnicodeDecodeError:
-                continue
-        
-        if df is None:
-            df = pd.read_csv(file_path)
-        
-        return df
-    
-    except Exception as e:
-        raise ExcelImportError(f"Could not read CSV file: {str(e)}")
+        raise ExcelImportError(f"Could not read file: {str(e)}")
 
 def map_columns(df, bank_config):
     """
@@ -195,18 +220,14 @@ def process_excel_data(file_path, bank_code, user_column_mapping=None):
         raise ExcelImportError(f"Unknown bank code: {bank_code}")
     
     try:
-        # Select correct reading function based on file extension
-        file_extension = file_path.lower().split('.')[-1]
-        if file_extension == 'csv':
-            df = read_csv_file(file_path)
-        elif file_extension in ['xlsx', 'xls']:
-            df = read_excel_file(file_path, bank_config)
-        else:
-            raise ExcelImportError(f"Unsupported file format: {file_extension}")
+        # Read file with automatic header detection
+        df = read_file_with_header_detection(file_path, bank_config)
         
-        # Skip rows if configured
-        if bank_config.get('skip_rows', 0) > 0:
-            df = df.iloc[bank_config['skip_rows']:].reset_index(drop=True)
+        # Skip initial data rows if configured (e.g., previous period debt rows)
+        skip_initial_rows = bank_config.get('skip_initial_rows', 0)
+        if skip_initial_rows > 0:
+            df = df.iloc[skip_initial_rows:].reset_index(drop=True)
+            logger.info(f"Skipped first {skip_initial_rows} data rows")
         
         # Column mapping
         if user_column_mapping:
