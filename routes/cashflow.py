@@ -158,7 +158,7 @@ def import_excel():
             for transaction_data in result['transactions']:
                 try:
                     transaction = CashflowTransaction(
-                        date=transaction_data['date'],
+                        date=transaction_data['date'],  # Already converted to date in excel_processor
                         amount=abs(transaction_data['amount']),  # Amount is always positive
                         type=transaction_data['type'],  # income or expense
                         category_id=import_category.id,

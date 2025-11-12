@@ -96,10 +96,18 @@ def parse_turkish_amount(amount_str):
 
 def parse_date(date_str, date_format='%d.%m.%Y'):
     """
-    Parse date string
+    Parse date string or datetime object
     """
     if pd.isna(date_str):
         return None
+    
+    # If it's already a datetime object (from Excel), return it directly
+    if isinstance(date_str, datetime):
+        return date_str
+    
+    # If it's a pandas Timestamp, convert to datetime
+    if isinstance(date_str, pd.Timestamp):
+        return date_str.to_pydatetime()
     
     date_str = str(date_str).strip()
     
@@ -223,10 +231,41 @@ def process_excel_data(file_path, bank_code, user_column_mapping=None):
         # Read file with automatic header detection
         df = read_file_with_header_detection(file_path, bank_config)
         
+        # For Kuveytturk, load workbook to check bold formatting
+        bold_rows = set()
+        if bank_config.get('use_bold_for_income') and file_path.lower().endswith(('.xlsx', '.xls')):
+            try:
+                import openpyxl
+                wb = openpyxl.load_workbook(file_path)
+                ws = wb.active
+                
+                # Find header row to calculate offset
+                header_row_idx = None
+                for idx, row in enumerate(ws.rows, start=1):
+                    if bank_config.get('header_row_identifier') in str([cell.value for cell in row]):
+                        header_row_idx = idx
+                        break
+                
+                if header_row_idx:
+                    # Check each data row for bold formatting
+                    for idx, row in enumerate(ws.rows, start=1):
+                        if idx > header_row_idx:  # After header
+                            first_cell = list(row)[0]
+                            if first_cell.font and first_cell.font.bold:
+                                # Map Excel row to DataFrame index
+                                df_index = idx - header_row_idx - 1
+                                bold_rows.add(df_index)
+                    
+                    logger.info(f"Found {len(bold_rows)} bold rows (income transactions)")
+            except Exception as e:
+                logger.warning(f"Could not check bold formatting: {str(e)}")
+        
         # Skip initial data rows if configured (e.g., previous period debt rows)
         skip_initial_rows = bank_config.get('skip_initial_rows', 0)
         if skip_initial_rows > 0:
             df = df.iloc[skip_initial_rows:].reset_index(drop=True)
+            # Adjust bold_rows indices after skipping
+            bold_rows = {idx - skip_initial_rows for idx in bold_rows if idx >= skip_initial_rows}
             logger.info(f"Skipped first {skip_initial_rows} data rows")
         
         # Column mapping
@@ -251,6 +290,11 @@ def process_excel_data(file_path, bank_code, user_column_mapping=None):
                 date_col = column_mapping['date']
                 date_value = parse_date(row[date_col], bank_config['date_format'])
                 
+                # Skip if date is None (parse_date already handles NaT/None conversion)
+                # This also skips card info rows with no date
+                if date_value is None:
+                    continue
+                
                 # Description
                 desc_col = column_mapping['description']
                 description = str(row[desc_col]).strip()
@@ -259,12 +303,20 @@ def process_excel_data(file_path, bank_code, user_column_mapping=None):
                 amount_col = column_mapping['amount']
                 amount, transaction_type = parse_turkish_amount(row[amount_col])
                 
+                # Override transaction type based on bold formatting for Kuveytturk
+                if bank_config.get('use_bold_for_income') and index in bold_rows:
+                    transaction_type = 'income'
+                    logger.debug(f"Row {index + 1} is bold, marked as income: {description}")
+                
                 # Skip rows with zero amount
                 if amount == 0:
                     continue
                 
+                # Convert datetime to date for database compatibility
+                transaction_date = date_value.date() if isinstance(date_value, datetime) else date_value
+                
                 transactions.append({
-                    'date': date_value,
+                    'date': transaction_date,
                     'description': description,
                     'amount': amount,
                     'type': transaction_type,
