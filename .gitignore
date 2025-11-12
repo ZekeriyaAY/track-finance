@@ -5,6 +5,7 @@ __pycache__/
 .Python
 venv/
 .venv
+.pytest_cache/
 
 # Flask
 instance/
