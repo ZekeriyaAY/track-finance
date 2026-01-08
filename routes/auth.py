@@ -34,7 +34,7 @@ def login():
             return redirect(url_for('cashflow.index'))
         else:
             logger.warning(f'Failed login attempt for username: {username} from {request.remote_addr}')
-            flash('Invalid username or password', 'danger')
+            flash('Invalid username or password.', 'danger')
     
     return render_template('auth/login.html')
 
@@ -67,16 +67,16 @@ def change_password():
     
     # Validate current password
     if not current_user.check_password(current_password):
-        flash('Current password is incorrect', 'danger')
+        flash('Current password is incorrect.', 'danger')
         return redirect(url_for('auth.account'))
     
     # Validate new password
     if len(new_password) < 6:
-        flash('New password must be at least 6 characters', 'danger')
+        flash('New password must be at least 6 characters.', 'danger')
         return redirect(url_for('auth.account'))
     
     if new_password != confirm_password:
-        flash('New passwords do not match', 'danger')
+        flash('New passwords do not match.', 'danger')
         return redirect(url_for('auth.account'))
     
     # Update password
@@ -84,7 +84,7 @@ def change_password():
     db.session.commit()
     
     logger.info(f'User {current_user.username} changed password')
-    flash('Password changed successfully', 'success')
+    flash('Password changed successfully!', 'success')
     return redirect(url_for('auth.account'))
 
 
@@ -97,16 +97,16 @@ def change_username():
     
     # Validate password
     if not current_user.check_password(password):
-        flash('Password is incorrect', 'danger')
+        flash('Password is incorrect.', 'danger')
         return redirect(url_for('auth.account'))
     
     # Validate new username
     if len(new_username) < 3:
-        flash('Username must be at least 3 characters', 'danger')
+        flash('Username must be at least 3 characters.', 'danger')
         return redirect(url_for('auth.account'))
     
     if new_username == current_user.username:
-        flash('New username is the same as current', 'danger')
+        flash('New username is the same as current.', 'danger')
         return redirect(url_for('auth.account'))
     
     # Update username
@@ -115,5 +115,5 @@ def change_username():
     db.session.commit()
     
     logger.info(f'User {old_username} changed username to {new_username}')
-    flash('Username changed successfully', 'success')
+    flash('Username changed successfully!', 'success')
     return redirect(url_for('auth.account'))
