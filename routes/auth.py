@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from models.user import User
+from models.__init__ import db
 import logging
 
 logger = logging.getLogger(__name__)
@@ -47,3 +48,37 @@ def logout():
     logger.info(f'User {username} logged out')
     flash('You have been logged out.', 'success')
     return redirect(url_for('auth.login'))
+
+
+@auth_bp.route('/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    """Handle password change"""
+    if request.method == 'POST':
+        current_password = request.form.get('current_password', '')
+        new_password = request.form.get('new_password', '')
+        confirm_password = request.form.get('confirm_password', '')
+        
+        # Validate current password
+        if not current_user.check_password(current_password):
+            flash('Current password is incorrect', 'danger')
+            return render_template('auth/change_password.html')
+        
+        # Validate new password
+        if len(new_password) < 6:
+            flash('New password must be at least 6 characters', 'danger')
+            return render_template('auth/change_password.html')
+        
+        if new_password != confirm_password:
+            flash('New passwords do not match', 'danger')
+            return render_template('auth/change_password.html')
+        
+        # Update password
+        current_user.set_password(new_password)
+        db.session.commit()
+        
+        logger.info(f'User {current_user.username} changed password')
+        flash('Password changed successfully', 'success')
+        return redirect(url_for('cashflow.index'))
+    
+    return render_template('auth/change_password.html')
