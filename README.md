@@ -1,6 +1,6 @@
-# Track Finance - Personal Finance Management Application
+# Where's My Money, B*tch? - Personal Finance Management Application
 
-Track Finance is a simple and effective web application developed for personal finance management. It allows you to track your income and expenses (cash flow), categorize and tag them, and manage your investments. With the data import feature from Excel files, you can easily add your bank transactions to the system.
+Where's My Money, B*tch? is a simple and effective web application developed for personal finance management. It allows you to track your income and expenses (cash flow), categorize and tag them, and manage your investments. With the data import feature from Excel files, you can easily add your bank transactions to the system.
 
 The project is designed to run on Docker, integrated with Grafana for data visualization and PgAdmin for database management.
 
