@@ -7,7 +7,7 @@
   <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">Excel Import</h1>
     <form method="get" action="{{ url_for('cashflow.index') }}">
-      <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+      <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
         <i class="fas fa-arrow-left"></i>
 Go Back
       </button>
@@ -48,7 +48,7 @@ Go Back
       
       <div class="flex justify-end">
         <button type="submit" name="import_excel" 
-                class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition">
+                class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
           <i class="fas fa-file-import"></i>
 Import Excel
         </button>
