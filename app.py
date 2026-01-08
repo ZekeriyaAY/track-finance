@@ -3,6 +3,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, redirect, url_for, request, session, g
 from flask_migrate import Migrate
+from flask_login import LoginManager, current_user
 from models.__init__ import db
 from flask_wtf import CSRFProtect
 from config import config
@@ -64,6 +65,18 @@ def create_app(config_name=None):
     migrate = Migrate(app, db)
     csrf = CSRFProtect(app)
     
+    # Initialize Flask-Login
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+    login_manager.login_message = 'Please log in to access this page.'
+    login_manager.login_message_category = 'info'
+    
+    @login_manager.user_loader
+    def load_user(user_id):
+        from models.user import User
+        return User.query.get(int(user_id))
+    
     # Security headers middleware
     @app.after_request
     def add_security_headers(response):
@@ -87,6 +100,15 @@ def create_app(config_name=None):
     def log_request_info():
         if not app.debug:
             app.logger.info(f'{request.method} {request.url} - {request.remote_addr}')
+    
+    # Require authentication for all routes except auth and health
+    @app.before_request
+    def require_login():
+        # Allow access to auth routes, static files, and health check
+        allowed_endpoints = ['auth.login', 'auth.logout', 'static', 'health_check']
+        if request.endpoint and request.endpoint not in allowed_endpoints:
+            if not current_user.is_authenticated:
+                return redirect(url_for('auth.login', next=request.url))
     
     # Error handlers
     @app.errorhandler(404)
@@ -113,14 +135,37 @@ def create_app(config_name=None):
     from routes.investment import investment_bp
     from routes.investment_type import investment_type_bp
     from routes.settings import settings_bp
+    from routes.auth import auth_bp
 
     # Register blueprints
+    app.register_blueprint(auth_bp)
     app.register_blueprint(cashflow_bp)
     app.register_blueprint(category_bp)
     app.register_blueprint(tag_bp)
     app.register_blueprint(investment_bp)
     app.register_blueprint(investment_type_bp)
     app.register_blueprint(settings_bp)
+    
+    # Create default admin user on first run (after migrations)
+    @app.before_request
+    def ensure_admin_user():
+        """Create default admin user if none exists (runs once)"""
+        if getattr(app, '_admin_user_checked', False):
+            return
+        app._admin_user_checked = True
+        
+        try:
+            from models.user import User
+            if User.query.count() == 0:
+                admin_user = User.create_default_user(
+                    username=app.config.get('ADMIN_USERNAME', 'admin'),
+                    password=app.config.get('ADMIN_PASSWORD', 'changeme123')
+                )
+                if admin_user:
+                    app.logger.info(f'Created default admin user: {admin_user.username}')
+        except Exception as e:
+            # Table might not exist yet (before migrations)
+            app.logger.debug(f'Could not check/create admin user: {e}')
     
     @app.route('/')
     def index():

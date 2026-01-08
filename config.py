@@ -7,10 +7,15 @@ class Config:
     # Security
     SECRET_KEY = os.environ.get('SECRET_KEY', 'very-secret-key')
     
+    # Authentication - Single user credentials
+    ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
+    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'changeme123')
+    
     # Session security
     SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true'
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
+    PERMANENT_SESSION_LIFETIME = 86400 * 7  # 7 days for "remember me"
     
     # CSRF Protection
     WTF_CSRF_TIME_LIMIT = None  # CSRF token doesn't expire (until session expires)
