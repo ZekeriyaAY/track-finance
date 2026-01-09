@@ -14,6 +14,63 @@ New Transaction
     </form>
   </div>
 
+  <!-- Filters -->
+  <div class="bg-card rounded-xl shadow p-4">
+    <form method="get" action="{{ url_for('investment.index') }}" class="flex flex-wrap items-end gap-4">
+      <!-- Investment Type Filter -->
+      <div class="flex-1 min-w-[180px]">
+        <label for="investment_type_id" class="block text-xs font-medium text-gray-400 mb-1">Investment Type</label>
+        <select id="investment_type_id" name="investment_type_id" 
+                class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+          <option value="">All Types</option>
+          {% for type in investment_types %}
+            <option value="{{ type.id }}" {% if selected_type == type.id %}selected{% endif %}>{{ type.name }}</option>
+            {% for subtype in type.subtypes %}
+              <option value="{{ subtype.id }}" {% if selected_type == subtype.id %}selected{% endif %}>&nbsp;&nbsp;└ {{ subtype.name }}</option>
+            {% endfor %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Transaction Type Filter -->
+      <div class="flex-1 min-w-[120px]">
+        <label for="transaction_type" class="block text-xs font-medium text-gray-400 mb-1">Transaction</label>
+        <select id="transaction_type" name="transaction_type" 
+                class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+          <option value="">All</option>
+          <option value="buy" {% if selected_transaction_type == 'buy' %}selected{% endif %}>Buy</option>
+          <option value="sell" {% if selected_transaction_type == 'sell' %}selected{% endif %}>Sell</option>
+        </select>
+      </div>
+
+      <!-- Date From -->
+      <div class="flex-1 min-w-[140px]">
+        <label for="date_from" class="block text-xs font-medium text-gray-400 mb-1">From</label>
+        <input type="date" id="date_from" name="date_from" value="{{ selected_date_from or '' }}"
+               class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+      </div>
+
+      <!-- Date To -->
+      <div class="flex-1 min-w-[140px]">
+        <label for="date_to" class="block text-xs font-medium text-gray-400 mb-1">To</label>
+        <input type="date" id="date_to" name="date_to" value="{{ selected_date_to or '' }}"
+               class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="flex gap-2">
+        <button type="submit" class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+          <i class="fas fa-filter"></i>
+          Filter
+        </button>
+        <a href="{{ url_for('investment.index') }}" class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+          <i class="fas fa-times"></i>
+          Clear
+        </a>
+      </div>
+    </form>
+  </div>
+
   <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
     {% if transactions %}
       <table class="min-w-full text-sm align-middle">
@@ -74,13 +131,40 @@ Delete
           {% endfor %}
         </tbody>
       </table>
+      
+      <!-- Summary -->
+      <div class="bg-darkbg/40 px-4 py-3 flex justify-between items-center text-sm border-t border-gray-800">
+        <span class="text-gray-400">
+          Showing <span class="text-white font-medium">{{ transactions|length }}</span> transaction(s)
+        </span>
+        <div class="flex gap-6">
+          {% set total_buy = transactions | selectattr('transaction_type', 'equalto', 'buy') | map(attribute='total_amount') | sum %}
+          {% set total_sell = transactions | selectattr('transaction_type', 'equalto', 'sell') | map(attribute='total_amount') | sum %}
+          <span class="text-green-400">
+            <i class="fas fa-arrow-up mr-1"></i>
+            Buy: {{ "%.2f"|format(total_buy) }} ₺
+          </span>
+          <span class="text-red-400">
+            <i class="fas fa-arrow-down mr-1"></i>
+            Sell: {{ "%.2f"|format(total_sell) }} ₺
+          </span>
+          <span class="text-primary font-medium">
+            Net: {{ "%.2f"|format(total_buy - total_sell) }} ₺
+          </span>
+        </div>
+      </div>
     {% else %}
       <div class="p-8 text-center">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
           <i class="fas fa-chart-line text-2xl"></i>
         </div>
+        {% if selected_type or selected_transaction_type or selected_date_from or selected_date_to %}
+        <h3 class="text-lg font-medium text-gray-200 mb-1">No transactions match your filters</h3>
+        <p class="text-gray-400">Try adjusting your filter criteria or <a href="{{ url_for('investment.index') }}" class="text-primary hover:underline">clear all filters</a>.</p>
+        {% else %}
         <h3 class="text-lg font-medium text-gray-200 mb-1">No transactions found yet</h3>
         <p class="text-gray-400">You can add a new transaction using the "New Transaction" button.</p>
+        {% endif %}
       </div>
     {% endif %}
   </div>

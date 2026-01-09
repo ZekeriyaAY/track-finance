@@ -10,8 +10,54 @@ investment_bp = Blueprint('investment', __name__, url_prefix='/investments')
 
 @investment_bp.route('/')
 def index():
-    transactions = InvestmentTransaction.query.order_by(InvestmentTransaction.transaction_date.desc()).all()
-    return render_template('investment/index.html', transactions=transactions)
+    # Get filter parameters
+    investment_type_id = request.args.get('investment_type_id', type=int)
+    transaction_type = request.args.get('transaction_type')
+    date_from = request.args.get('date_from')
+    date_to = request.args.get('date_to')
+    
+    # Build query with filters
+    query = InvestmentTransaction.query
+    
+    if investment_type_id:
+        # Include subtypes as well
+        inv_type = InvestmentType.query.get(investment_type_id)
+        if inv_type:
+            type_ids = [investment_type_id]
+            # Add subtype IDs if this is a parent type
+            subtypes = InvestmentType.query.filter_by(parent_id=investment_type_id).all()
+            type_ids.extend([sub.id for sub in subtypes])
+            query = query.filter(InvestmentTransaction.investment_type_id.in_(type_ids))
+    
+    if transaction_type in ['buy', 'sell']:
+        query = query.filter(InvestmentTransaction.transaction_type == transaction_type)
+    
+    if date_from:
+        try:
+            date_from_parsed = datetime.strptime(date_from, '%Y-%m-%d')
+            query = query.filter(InvestmentTransaction.transaction_date >= date_from_parsed)
+        except ValueError:
+            pass
+    
+    if date_to:
+        try:
+            date_to_parsed = datetime.strptime(date_to, '%Y-%m-%d')
+            query = query.filter(InvestmentTransaction.transaction_date <= date_to_parsed)
+        except ValueError:
+            pass
+    
+    transactions = query.order_by(InvestmentTransaction.transaction_date.desc()).all()
+    
+    # Get all investment types for filter dropdown
+    investment_types = InvestmentType.query.filter_by(parent_id=None).all()
+    
+    return render_template('investment/index.html',
+                           transactions=transactions,
+                           investment_types=investment_types,
+                           selected_type=investment_type_id,
+                           selected_transaction_type=transaction_type,
+                           selected_date_from=date_from,
+                           selected_date_to=date_to)
 
 @investment_bp.route('/add', methods=['GET', 'POST'])
 def add_investment():
