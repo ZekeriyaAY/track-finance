@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from datetime import datetime
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
+from sqlalchemy import func, extract
 from models.__init__ import db
 from models.cashflow import CashflowTransaction
 from models.category import Category
@@ -20,6 +22,126 @@ ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'csv'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@cashflow_bp.route('/dashboard')
+def dashboard():
+    # Date filter — default last 12 months
+    date_from = request.args.get('date_from')
+    date_to = request.args.get('date_to')
+
+    today = date.today()
+    if date_from:
+        try:
+            d_from = datetime.strptime(date_from, '%Y-%m-%d').date()
+        except ValueError:
+            d_from = today - relativedelta(months=12)
+    else:
+        d_from = today - relativedelta(months=12)
+
+    if date_to:
+        try:
+            d_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+        except ValueError:
+            d_to = today
+    else:
+        d_to = today
+
+    base_q = CashflowTransaction.query.filter(
+        CashflowTransaction.date >= d_from,
+        CashflowTransaction.date <= d_to,
+    )
+
+    # KPI
+    total_income = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+        CashflowTransaction.date >= d_from, CashflowTransaction.date <= d_to,
+        CashflowTransaction.type == 'income'
+    ).scalar()
+    total_expense = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+        CashflowTransaction.date >= d_from, CashflowTransaction.date <= d_to,
+        CashflowTransaction.type == 'expense'
+    ).scalar()
+    transaction_count = base_q.count()
+    net_savings = total_income - total_expense
+
+    # Monthly income vs expense
+    monthly_data = db.session.query(
+        extract('year', CashflowTransaction.date).label('year'),
+        extract('month', CashflowTransaction.date).label('month'),
+        CashflowTransaction.type,
+        func.sum(CashflowTransaction.amount).label('total')
+    ).filter(
+        CashflowTransaction.date >= d_from, CashflowTransaction.date <= d_to
+    ).group_by('year', 'month', CashflowTransaction.type).order_by('year', 'month').all()
+
+    monthly_map = {}
+    for row in monthly_data:
+        key = f"{int(row.year)}-{int(row.month):02d}"
+        if key not in monthly_map:
+            monthly_map[key] = {'income': 0, 'expense': 0}
+        monthly_map[key][row.type] = float(row.total)
+
+    sorted_months = sorted(monthly_map.keys())
+    monthly_labels = sorted_months
+    monthly_income = [monthly_map[m]['income'] for m in sorted_months]
+    monthly_expense = [monthly_map[m]['expense'] for m in sorted_months]
+    monthly_net = [monthly_map[m]['income'] - monthly_map[m]['expense'] for m in sorted_months]
+
+    # Category expense breakdown
+    category_data = db.session.query(
+        Category.name,
+        func.sum(CashflowTransaction.amount).label('total')
+    ).join(Category, CashflowTransaction.category_id == Category.id).filter(
+        CashflowTransaction.date >= d_from, CashflowTransaction.date <= d_to,
+        CashflowTransaction.type == 'expense'
+    ).group_by(Category.name).order_by(func.sum(CashflowTransaction.amount).desc()).all()
+
+    category_labels = [r.name for r in category_data]
+    category_values = [float(r.total) for r in category_data]
+
+    # Top 10 expense categories (for horizontal bar)
+    top10_labels = category_labels[:10]
+    top10_values = category_values[:10]
+
+    # Daily trend
+    daily_data = db.session.query(
+        CashflowTransaction.date,
+        CashflowTransaction.type,
+        func.sum(CashflowTransaction.amount).label('total')
+    ).filter(
+        CashflowTransaction.date >= d_from, CashflowTransaction.date <= d_to
+    ).group_by(CashflowTransaction.date, CashflowTransaction.type).order_by(CashflowTransaction.date).all()
+
+    daily_map = {}
+    for row in daily_data:
+        key = row.date.isoformat()
+        if key not in daily_map:
+            daily_map[key] = {'income': 0, 'expense': 0}
+        daily_map[key][row.type] = float(row.total)
+
+    sorted_days = sorted(daily_map.keys())
+    daily_labels = sorted_days
+    daily_income = [daily_map[d]['income'] for d in sorted_days]
+    daily_expense = [daily_map[d]['expense'] for d in sorted_days]
+
+    return render_template('cashflow/dashboard.html',
+        total_income=total_income,
+        total_expense=total_expense,
+        net_savings=net_savings,
+        transaction_count=transaction_count,
+        monthly_labels=monthly_labels,
+        monthly_income=monthly_income,
+        monthly_expense=monthly_expense,
+        monthly_net=monthly_net,
+        category_labels=category_labels,
+        category_values=category_values,
+        top10_labels=top10_labels,
+        top10_values=top10_values,
+        daily_labels=daily_labels,
+        daily_income=daily_income,
+        daily_expense=daily_expense,
+        date_from=d_from.isoformat(),
+        date_to=d_to.isoformat(),
+    )
 
 @cashflow_bp.route('/')
 def index():

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <h1 class="text-2xl font-bold">Cash Flow Dashboard</h1>
+    <form method="get" class="flex items-end gap-3">
+        <div>
+            <label class="block text-xs text-gray-400 mb-1">From</label>
+            <input type="date" name="date_from" value="{{ date_from }}" class="bg-card border border-gray-600 rounded-md px-3 py-1.5 text-sm text-gray-100">
+        </div>
+        <div>
+            <label class="block text-xs text-gray-400 mb-1">To</label>
+            <input type="date" name="date_to" value="{{ date_to }}" class="bg-card border border-gray-600 rounded-md px-3 py-1.5 text-sm text-gray-100">
+        </div>
+        <button type="submit" class="px-4 py-1.5 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary/80 transition">Filter</button>
+        <a href="{{ url_for('cashflow.dashboard') }}" class="px-4 py-1.5 bg-gray-600 text-white rounded-md text-sm font-medium hover:bg-gray-500 transition">Reset</a>
+    </form>
+</div>
+
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="bg-card rounded-lg p-5 border border-gray-700">
+        <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total Income</div>
+        <div class="text-2xl font-bold text-green-400">{{ "{:,.2f}".format(total_income) }}</div>
+    </div>
+    <div class="bg-card rounded-lg p-5 border border-gray-700">
+        <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total Expense</div>
+        <div class="text-2xl font-bold text-red-400">{{ "{:,.2f}".format(total_expense) }}</div>
+    </div>
+    <div class="bg-card rounded-lg p-5 border border-gray-700">
+        <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Net Savings</div>
+        <div class="text-2xl font-bold {% if net_savings >= 0 %}text-green-400{% else %}text-red-400{% endif %}">{{ "{:,.2f}".format(net_savings) }}</div>
+    </div>
+    <div class="bg-card rounded-lg p-5 border border-gray-700">
+        <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Transactions</div>
+        <div class="text-2xl font-bold text-blue-400">{{ transaction_count }}</div>
+    </div>
+</div>
+
+<!-- Charts Row 1 -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="bg-card rounded-lg p-5 border border-gray-700">
+        <h2 class="text-sm font-semibold text-gray-300 mb-3">Monthly Income vs Expense</h2>
+        <canvas id="monthlyChart"></canvas>
+    </div>
+    <div class="bg-card rounded-lg p-5 border border-gray-700">
+        <h2 class="text-sm font-semibold text-gray-300 mb-3">Expense by Category</h2>
+        <canvas id="categoryChart"></canvas>
+    </div>
+</div>
+
+<!-- Charts Row 2 -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="bg-card rounded-lg p-5 border border-gray-700">
+        <h2 class="text-sm font-semibold text-gray-300 mb-3">Daily Trend</h2>
+        <canvas id="dailyChart"></canvas>
+    </div>
+    <div class="bg-card rounded-lg p-5 border border-gray-700">
+        <h2 class="text-sm font-semibold text-gray-300 mb-3">Monthly Net Savings</h2>
+        <canvas id="netChart"></canvas>
+    </div>
+</div>
+
+<!-- Full width chart -->
+<div class="bg-card rounded-lg p-5 border border-gray-700 mb-8">
+    <h2 class="text-sm font-semibold text-gray-300 mb-3">Top 10 Expense Categories</h2>
+    <canvas id="top10Chart" height="120"></canvas>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+const COLORS = {
+    income: 'rgba(74, 222, 128, 0.8)',
+    expense: 'rgba(248, 113, 113, 0.8)',
+    net: 'rgba(96, 165, 250, 0.8)',
+    netNeg: 'rgba(248, 113, 113, 0.8)',
+    doughnut: [
+        '#6366f1','#f59e0b','#10b981','#ef4444','#8b5cf6',
+        '#ec4899','#14b8a6','#f97316','#06b6d4','#84cc16',
+        '#e11d48','#7c3aed','#0ea5e9','#d946ef','#facc15'
+    ]
+};
+Chart.defaults.color = '#9ca3af';
+Chart.defaults.borderColor = 'rgba(75,85,99,0.3)';
+
+const monthlyLabels = {{ monthly_labels | tojson }};
+const monthlyIncome = {{ monthly_income | tojson }};
+const monthlyExpense = {{ monthly_expense | tojson }};
+const monthlyNet = {{ monthly_net | tojson }};
+const categoryLabels = {{ category_labels | tojson }};
+const categoryValues = {{ category_values | tojson }};
+const top10Labels = {{ top10_labels | tojson }};
+const top10Values = {{ top10_values | tojson }};
+const dailyLabels = {{ daily_labels | tojson }};
+const dailyIncome = {{ daily_income | tojson }};
+const dailyExpense = {{ daily_expense | tojson }};
+
+// Monthly Income vs Expense
+new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: {
+        labels: monthlyLabels,
+        datasets: [
+            { label: 'Income', data: monthlyIncome, backgroundColor: COLORS.income },
+            { label: 'Expense', data: monthlyExpense, backgroundColor: COLORS.expense }
+        ]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+});
+
+// Category Doughnut
+new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+        labels: categoryLabels,
+        datasets: [{ data: categoryValues, backgroundColor: COLORS.doughnut }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'right' } } }
+});
+
+// Daily Trend
+new Chart(document.getElementById('dailyChart'), {
+    type: 'line',
+    data: {
+        labels: dailyLabels,
+        datasets: [
+            { label: 'Income', data: dailyIncome, borderColor: COLORS.income, backgroundColor: 'transparent', tension: 0.3, pointRadius: 1 },
+            { label: 'Expense', data: dailyExpense, borderColor: COLORS.expense, backgroundColor: 'transparent', tension: 0.3, pointRadius: 1 }
+        ]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+});
+
+// Monthly Net Savings
+new Chart(document.getElementById('netChart'), {
+    type: 'line',
+    data: {
+        labels: monthlyLabels,
+        datasets: [{
+            label: 'Net Savings',
+            data: monthlyNet,
+            borderColor: COLORS.net,
+            backgroundColor: 'rgba(96,165,250,0.15)',
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+});
+
+// Top 10 Horizontal Bar
+new Chart(document.getElementById('top10Chart'), {
+    type: 'bar',
+    data: {
+        labels: top10Labels,
+        datasets: [{ label: 'Expense', data: top10Values, backgroundColor: COLORS.doughnut.slice(0, 10) }]
+    },
+    options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } } }
+});
+</script>
+{% endblock %}

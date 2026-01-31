@@ -11,3 +11,4 @@ xlrd>=2.0.1
 chardet==5.2.0
 gunicorn
 psycopg2-binary
+python-dateutil==2.9.0
