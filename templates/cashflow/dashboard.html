@@ -3,19 +3,55 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="mb-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+<div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold">Cash Flow Dashboard</h1>
-    <form method="get" class="flex items-end gap-3">
-        <div>
-            <label class="block text-xs text-gray-400 mb-1">From</label>
-            <input type="date" name="date_from" value="{{ date_from }}" class="bg-card border border-gray-600 rounded-md px-3 py-1.5 text-sm text-gray-100">
+</div>
+
+<!-- Filter Card -->
+<div class="bg-card rounded-xl shadow p-4 border border-gray-700 mb-6">
+    <form method="get" class="flex flex-wrap items-center gap-4">
+        <!-- Date Preset Buttons -->
+        <div class="flex flex-wrap gap-2">
+            <button type="button" data-preset="current-month" onclick="setDatePreset('current-month')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+                <i class="fas fa-calendar-day text-xs"></i> This Month
+            </button>
+            <button type="button" data-preset="last-month" onclick="setDatePreset('last-month')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+                <i class="fas fa-calendar-alt text-xs"></i> Last Month
+            </button>
+            <button type="button" data-preset="last-30-days" onclick="setDatePreset('last-30-days')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+                30 Days
+            </button>
+            <button type="button" data-preset="last-3-months" onclick="setDatePreset('last-3-months')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+                3 Months
+            </button>
+            <button type="button" data-preset="last-6-months" onclick="setDatePreset('last-6-months')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+                6 Months
+            </button>
+            <button type="button" data-preset="last-year" onclick="setDatePreset('last-year')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+                <i class="fas fa-calendar text-xs"></i> 1 Year
+            </button>
         </div>
-        <div>
-            <label class="block text-xs text-gray-400 mb-1">To</label>
-            <input type="date" name="date_to" value="{{ date_to }}" class="bg-card border border-gray-600 rounded-md px-3 py-1.5 text-sm text-gray-100">
+
+        <!-- Separator -->
+        <div class="hidden md:block w-px h-8 bg-gray-700"></div>
+
+        <!-- Date Inputs -->
+        <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-500">From</span>
+            <input type="date" id="date_from" name="date_from" value="{{ date_from }}" class="px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary/50">
+            <span class="text-xs text-gray-500">to</span>
+            <input type="date" id="date_to" name="date_to" value="{{ date_to }}" class="px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary/50">
         </div>
-        <button type="submit" class="px-4 py-1.5 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary/80 transition">Filter</button>
-        <a href="{{ url_for('cashflow.dashboard') }}" class="px-4 py-1.5 bg-gray-600 text-white rounded-md text-sm font-medium hover:bg-gray-500 transition">Reset</a>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-2">
+            <button type="submit" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+            <a href="{{ url_for('cashflow.dashboard') }}" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+                <i class="fas fa-times"></i> Reset
+            </a>
+        </div>
     </form>
 </div>
 
@@ -24,14 +60,32 @@
     <div class="bg-card rounded-lg p-5 border border-gray-700">
         <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total Income</div>
         <div class="text-2xl font-bold text-green-400">{{ "{:,.2f}".format(total_income) }}</div>
+        {% if income_change is not none %}
+        <div class="mt-2 text-xs flex items-center gap-1 {% if income_change >= 0 %}text-green-400{% else %}text-red-400{% endif %}">
+            <i class="fas {% if income_change >= 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %}"></i>
+            <span>{{ "{:+.1f}%".format(income_change) }} vs prev period</span>
+        </div>
+        {% endif %}
     </div>
     <div class="bg-card rounded-lg p-5 border border-gray-700">
         <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total Expense</div>
         <div class="text-2xl font-bold text-red-400">{{ "{:,.2f}".format(total_expense) }}</div>
+        {% if expense_change is not none %}
+        <div class="mt-2 text-xs flex items-center gap-1 {% if expense_change <= 0 %}text-green-400{% else %}text-red-400{% endif %}">
+            <i class="fas {% if expense_change <= 0 %}fa-arrow-down{% else %}fa-arrow-up{% endif %}"></i>
+            <span>{{ "{:+.1f}%".format(expense_change) }} vs prev period</span>
+        </div>
+        {% endif %}
     </div>
     <div class="bg-card rounded-lg p-5 border border-gray-700">
         <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Net Savings</div>
         <div class="text-2xl font-bold {% if net_savings >= 0 %}text-green-400{% else %}text-red-400{% endif %}">{{ "{:,.2f}".format(net_savings) }}</div>
+        {% if savings_change is not none %}
+        <div class="mt-2 text-xs flex items-center gap-1 {% if savings_change >= 0 %}text-green-400{% else %}text-red-400{% endif %}">
+            <i class="fas {% if savings_change >= 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %}"></i>
+            <span>{{ "{:+.1f}%".format(savings_change) }} vs prev period</span>
+        </div>
+        {% endif %}
     </div>
     <div class="bg-card rounded-lg p-5 border border-gray-700">
         <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Transactions</div>
@@ -42,12 +96,22 @@
 <!-- Charts Row 1 -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <h2 class="text-sm font-semibold text-gray-300 mb-3">Monthly Income vs Expense</h2>
-        <canvas id="monthlyChart"></canvas>
+        <h2 class="text-sm font-semibold text-gray-300 mb-3">Monthly Income vs Expense <span class="text-gray-500 font-normal">(Last 4 Months)</span></h2>
+        <div class="h-72">
+            <canvas id="monthlyChart"></canvas>
+        </div>
     </div>
     <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <h2 class="text-sm font-semibold text-gray-300 mb-3">Expense by Category</h2>
-        <canvas id="categoryChart"></canvas>
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm font-semibold text-gray-300">Expense by Category</h2>
+            <div class="flex gap-1">
+                <button id="btn-parent-view" onclick="toggleCategoryView('parent')" class="px-3 py-1 rounded-md bg-primary/10 text-primary transition text-sm">Parent</button>
+                <button id="btn-child-view" onclick="toggleCategoryView('child')" class="px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">Child</button>
+            </div>
+        </div>
+        <div id="categoryChartContainer" class="min-h-72">
+            <canvas id="categoryChart"></canvas>
+        </div>
     </div>
 </div>
 
@@ -55,17 +119,27 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     <div class="bg-card rounded-lg p-5 border border-gray-700">
         <h2 class="text-sm font-semibold text-gray-300 mb-3">Daily Trend</h2>
-        <canvas id="dailyChart"></canvas>
+        <div class="h-72">
+            <canvas id="dailyChart"></canvas>
+        </div>
     </div>
     <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <h2 class="text-sm font-semibold text-gray-300 mb-3">Monthly Net Savings</h2>
-        <canvas id="netChart"></canvas>
+        <h2 class="text-sm font-semibold text-gray-300 mb-3">Monthly Net Savings <span class="text-gray-500 font-normal">(Last 4 Months)</span></h2>
+        <div class="h-72">
+            <canvas id="netChart"></canvas>
+        </div>
     </div>
 </div>
 
 <!-- Full width chart -->
 <div class="bg-card rounded-lg p-5 border border-gray-700 mb-8">
-    <h2 class="text-sm font-semibold text-gray-300 mb-3">Top 10 Expense Categories</h2>
+    <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-semibold text-gray-300">Top 10 Expense Categories</h2>
+        <div class="flex gap-1">
+            <button id="btn-top10-parent" onclick="toggleTop10View('parent')" class="px-3 py-1 rounded-md bg-primary/10 text-primary transition text-sm">Parent</button>
+            <button id="btn-top10-child" onclick="toggleTop10View('child')" class="px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">Child</button>
+        </div>
+    </div>
     <canvas id="top10Chart" height="120"></canvas>
 </div>
 {% endblock %}
@@ -78,6 +152,8 @@ const COLORS = {
     expense: 'rgba(248, 113, 113, 0.8)',
     net: 'rgba(96, 165, 250, 0.8)',
     netNeg: 'rgba(248, 113, 113, 0.8)',
+    incomeMA: 'rgba(74, 222, 128, 0.4)',
+    expenseMA: 'rgba(248, 113, 113, 0.4)',
     doughnut: [
         '#6366f1','#f59e0b','#10b981','#ef4444','#8b5cf6',
         '#ec4899','#14b8a6','#f97316','#06b6d4','#84cc16',
@@ -98,6 +174,103 @@ const top10Values = {{ top10_values | tojson }};
 const dailyLabels = {{ daily_labels | tojson }};
 const dailyIncome = {{ daily_income | tojson }};
 const dailyExpense = {{ daily_expense | tojson }};
+const dailyIncomeMA = {{ daily_income_ma | tojson }};
+const dailyExpenseMA = {{ daily_expense_ma | tojson }};
+const dateFrom = '{{ date_from }}';
+const dateTo = '{{ date_to }}';
+
+// Helper function to format date as YYYY-MM-DD (local timezone)
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// Date preset function
+function setDatePreset(preset) {
+    const today = new Date();
+    let dateFromVal, dateToVal = new Date(today);
+
+    switch(preset) {
+        case 'current-month':
+            dateFromVal = new Date(today.getFullYear(), today.getMonth(), 1);
+            break;
+        case 'last-month':
+            dateFromVal = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            dateToVal = new Date(today.getFullYear(), today.getMonth(), 0);
+            break;
+        case 'last-30-days':
+            dateFromVal = new Date(today);
+            dateFromVal.setDate(today.getDate() - 30);
+            break;
+        case 'last-3-months':
+            dateFromVal = new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
+            break;
+        case 'last-6-months':
+            dateFromVal = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+            break;
+        case 'last-year':
+            dateFromVal = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+            break;
+    }
+
+    document.getElementById('date_from').value = formatDate(dateFromVal);
+    document.getElementById('date_to').value = formatDate(dateToVal);
+    document.querySelector('form').submit();
+}
+
+// Highlight active preset on page load
+function highlightActivePreset() {
+    const today = new Date();
+    const currentFrom = new Date(dateFrom);
+    const currentTo = new Date(dateTo);
+
+    const presets = {
+        'current-month': {
+            from: new Date(today.getFullYear(), today.getMonth(), 1),
+            to: today
+        },
+        'last-month': {
+            from: new Date(today.getFullYear(), today.getMonth() - 1, 1),
+            to: new Date(today.getFullYear(), today.getMonth(), 0)
+        },
+        'last-30-days': {
+            from: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30),
+            to: today
+        },
+        'last-3-months': {
+            from: new Date(today.getFullYear(), today.getMonth() - 3, today.getDate()),
+            to: today
+        },
+        'last-6-months': {
+            from: new Date(today.getFullYear(), today.getMonth() - 6, today.getDate()),
+            to: today
+        },
+        'last-year': {
+            from: new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()),
+            to: today
+        }
+    };
+
+    // Check which preset matches current dates
+    for (const [preset, dates] of Object.entries(presets)) {
+        const fromMatch = formatDate(currentFrom) === formatDate(dates.from);
+        const toMatch = formatDate(currentTo) === formatDate(dates.to);
+
+        if (fromMatch && toMatch) {
+            const btn = document.querySelector(`[data-preset="${preset}"]`);
+            if (btn) {
+                btn.classList.remove('bg-gray-700/30', 'text-gray-400');
+                btn.classList.add('bg-primary/10', 'text-primary');
+            }
+            break;
+        }
+    }
+}
+
+// Run on page load
+highlightActivePreset();
 
 // Monthly Income vs Expense
 new Chart(document.getElementById('monthlyChart'), {
@@ -109,30 +282,70 @@ new Chart(document.getElementById('monthlyChart'), {
             { label: 'Expense', data: monthlyExpense, backgroundColor: COLORS.expense }
         ]
     },
-    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
 });
 
-// Category Doughnut
-new Chart(document.getElementById('categoryChart'), {
+// Dynamic height for category chart based on legend items
+function updateCategoryChartHeight(itemCount) {
+    const container = document.getElementById('categoryChartContainer');
+    // Base height 288px (h-72), add 20px per item beyond 10
+    const baseHeight = 288;
+    const extraItems = Math.max(0, itemCount - 10);
+    const newHeight = baseHeight + (extraItems * 20);
+    container.style.height = newHeight + 'px';
+}
+
+// Category Doughnut (with global reference for toggle)
+let categoryChart = new Chart(document.getElementById('categoryChart'), {
     type: 'doughnut',
     data: {
         labels: categoryLabels,
         datasets: [{ data: categoryValues, backgroundColor: COLORS.doughnut }]
     },
-    options: { responsive: true, plugins: { legend: { position: 'right' } } }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
 });
 
-// Daily Trend
+// Set initial height based on category count
+updateCategoryChartHeight(categoryLabels.length);
+
+// Category view toggle function
+async function toggleCategoryView(viewMode) {
+    const btnParent = document.getElementById('btn-parent-view');
+    const btnChild = document.getElementById('btn-child-view');
+
+    if (viewMode === 'parent') {
+        btnParent.className = 'px-3 py-1 rounded-md bg-primary/10 text-primary transition text-sm';
+        btnChild.className = 'px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm';
+    } else {
+        btnParent.className = 'px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm';
+        btnChild.className = 'px-3 py-1 rounded-md bg-primary/10 text-primary transition text-sm';
+    }
+
+    try {
+        const response = await fetch(`/cashflow/api/category-data?date_from=${dateFrom}&date_to=${dateTo}&view_mode=${viewMode}`);
+        const data = await response.json();
+        categoryChart.data.labels = data.labels;
+        categoryChart.data.datasets[0].data = data.values;
+        updateCategoryChartHeight(data.labels.length);
+        categoryChart.update();
+    } catch (error) {
+        console.error('Error fetching category data:', error);
+    }
+}
+
+// Daily Trend with Moving Averages
 new Chart(document.getElementById('dailyChart'), {
     type: 'line',
     data: {
         labels: dailyLabels,
         datasets: [
             { label: 'Income', data: dailyIncome, borderColor: COLORS.income, backgroundColor: 'transparent', tension: 0.3, pointRadius: 1 },
-            { label: 'Expense', data: dailyExpense, borderColor: COLORS.expense, backgroundColor: 'transparent', tension: 0.3, pointRadius: 1 }
+            { label: 'Expense', data: dailyExpense, borderColor: COLORS.expense, backgroundColor: 'transparent', tension: 0.3, pointRadius: 1 },
+            { label: 'Income (7-day avg)', data: dailyIncomeMA, borderColor: COLORS.incomeMA, borderDash: [5, 5], pointRadius: 0, borderWidth: 2, backgroundColor: 'transparent' },
+            { label: 'Expense (7-day avg)', data: dailyExpenseMA, borderColor: COLORS.expenseMA, borderDash: [5, 5], pointRadius: 0, borderWidth: 2, backgroundColor: 'transparent' }
         ]
     },
-    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
 });
 
 // Monthly Net Savings
@@ -149,11 +362,11 @@ new Chart(document.getElementById('netChart'), {
             tension: 0.3
         }]
     },
-    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
 });
 
-// Top 10 Horizontal Bar
-new Chart(document.getElementById('top10Chart'), {
+// Top 10 Horizontal Bar (with global reference for toggle)
+let top10Chart = new Chart(document.getElementById('top10Chart'), {
     type: 'bar',
     data: {
         labels: top10Labels,
@@ -161,5 +374,31 @@ new Chart(document.getElementById('top10Chart'), {
     },
     options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } } }
 });
+
+// Top 10 view toggle function
+async function toggleTop10View(viewMode) {
+    const btnParent = document.getElementById('btn-top10-parent');
+    const btnChild = document.getElementById('btn-top10-child');
+
+    if (viewMode === 'parent') {
+        btnParent.className = 'px-3 py-1 rounded-md bg-primary/10 text-primary transition text-sm';
+        btnChild.className = 'px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm';
+    } else {
+        btnParent.className = 'px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm';
+        btnChild.className = 'px-3 py-1 rounded-md bg-primary/10 text-primary transition text-sm';
+    }
+
+    try {
+        const response = await fetch(`/cashflow/api/category-data?date_from=${dateFrom}&date_to=${dateTo}&view_mode=${viewMode}`);
+        const data = await response.json();
+        const top10Labels = data.labels.slice(0, 10);
+        const top10Values = data.values.slice(0, 10);
+        top10Chart.data.labels = top10Labels;
+        top10Chart.data.datasets[0].data = top10Values;
+        top10Chart.update();
+    } catch (error) {
+        console.error('Error fetching top 10 category data:', error);
+    }
+}
 </script>
 {% endblock %}

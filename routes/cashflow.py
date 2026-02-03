@@ -23,6 +23,24 @@ ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'csv'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def calculate_moving_average(data_list, window=7):
+    """Calculate moving average for a list of values."""
+    result = []
+    for i in range(len(data_list)):
+        if i < window - 1:
+            result.append(sum(data_list[:i+1]) / (i+1))
+        else:
+            result.append(sum(data_list[i-window+1:i+1]) / window)
+    return result
+
+
+def calc_pct_change(current, previous):
+    """Calculate percentage change between current and previous values."""
+    if previous == 0:
+        return None
+    return ((current - previous) / abs(previous)) * 100
+
+
 @cashflow_bp.route('/dashboard')
 def dashboard():
     # Date filter — default last 12 months
@@ -63,14 +81,36 @@ def dashboard():
     transaction_count = base_q.count()
     net_savings = total_income - total_expense
 
-    # Monthly income vs expense
+    # Previous period comparison
+    period_days = (d_to - d_from).days
+    prev_d_to = d_from - relativedelta(days=1)
+    prev_d_from = prev_d_to - relativedelta(days=period_days)
+
+    prev_income = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+        CashflowTransaction.date >= prev_d_from, CashflowTransaction.date <= prev_d_to,
+        CashflowTransaction.type == 'income'
+    ).scalar()
+    prev_expense = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+        CashflowTransaction.date >= prev_d_from, CashflowTransaction.date <= prev_d_to,
+        CashflowTransaction.type == 'expense'
+    ).scalar()
+    prev_net_savings = prev_income - prev_expense
+
+    income_change = calc_pct_change(total_income, prev_income)
+    expense_change = calc_pct_change(total_expense, prev_expense)
+    savings_change = calc_pct_change(net_savings, prev_net_savings)
+
+    # Monthly income vs expense (fixed last 3 months, independent of filter)
+    monthly_from = today - relativedelta(months=3)
+    monthly_to = today
+
     monthly_data = db.session.query(
         extract('year', CashflowTransaction.date).label('year'),
         extract('month', CashflowTransaction.date).label('month'),
         CashflowTransaction.type,
         func.sum(CashflowTransaction.amount).label('total')
     ).filter(
-        CashflowTransaction.date >= d_from, CashflowTransaction.date <= d_to
+        CashflowTransaction.date >= monthly_from, CashflowTransaction.date <= monthly_to
     ).group_by('year', 'month', CashflowTransaction.type).order_by('year', 'month').all()
 
     monthly_map = {}
@@ -86,17 +126,23 @@ def dashboard():
     monthly_expense = [monthly_map[m]['expense'] for m in sorted_months]
     monthly_net = [monthly_map[m]['income'] - monthly_map[m]['expense'] for m in sorted_months]
 
-    # Category expense breakdown
-    category_data = db.session.query(
-        Category.name,
-        func.sum(CashflowTransaction.amount).label('total')
-    ).join(Category, CashflowTransaction.category_id == Category.id).filter(
-        CashflowTransaction.date >= d_from, CashflowTransaction.date <= d_to,
-        CashflowTransaction.type == 'expense'
-    ).group_by(Category.name).order_by(func.sum(CashflowTransaction.amount).desc()).all()
+    # Category expense breakdown (parent view - aggregates child categories)
+    parent_categories = Category.query.filter_by(parent_id=None).all()
+    category_result = []
+    for parent in parent_categories:
+        category_ids = [parent.id] + [c.id for c in parent.subcategories]
+        total = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+            CashflowTransaction.date >= d_from,
+            CashflowTransaction.date <= d_to,
+            CashflowTransaction.type == 'expense',
+            CashflowTransaction.category_id.in_(category_ids)
+        ).scalar()
+        if total > 0:
+            category_result.append({'name': parent.name, 'total': float(total)})
+    category_result.sort(key=lambda x: x['total'], reverse=True)
 
-    category_labels = [r.name for r in category_data]
-    category_values = [float(r.total) for r in category_data]
+    category_labels = [r['name'] for r in category_result]
+    category_values = [r['total'] for r in category_result]
 
     # Top 10 expense categories (for horizontal bar)
     top10_labels = category_labels[:10]
@@ -123,11 +169,18 @@ def dashboard():
     daily_income = [daily_map[d]['income'] for d in sorted_days]
     daily_expense = [daily_map[d]['expense'] for d in sorted_days]
 
+    # Calculate 7-day moving averages
+    daily_income_ma = calculate_moving_average(daily_income, window=7)
+    daily_expense_ma = calculate_moving_average(daily_expense, window=7)
+
     return render_template('cashflow/dashboard.html',
         total_income=total_income,
         total_expense=total_expense,
         net_savings=net_savings,
         transaction_count=transaction_count,
+        income_change=income_change,
+        expense_change=expense_change,
+        savings_change=savings_change,
         monthly_labels=monthly_labels,
         monthly_income=monthly_income,
         monthly_expense=monthly_expense,
@@ -139,6 +192,8 @@ def dashboard():
         daily_labels=daily_labels,
         daily_income=daily_income,
         daily_expense=daily_expense,
+        daily_income_ma=daily_income_ma,
+        daily_expense_ma=daily_expense_ma,
         date_from=d_from.isoformat(),
         date_to=d_to.isoformat(),
     )
@@ -378,4 +433,63 @@ def import_excel():
         flash('An unexpected error occurred.', 'error')
     
     return render_template('cashflow/import.html')
+
+
+@cashflow_bp.route('/api/category-data')
+def category_data_api():
+    """API endpoint for category data with parent/child toggle."""
+    view_mode = request.args.get('view_mode', 'parent')
+    date_from = request.args.get('date_from')
+    date_to = request.args.get('date_to')
+
+    today = date.today()
+    if date_from:
+        try:
+            d_from = datetime.strptime(date_from, '%Y-%m-%d').date()
+        except ValueError:
+            d_from = today - relativedelta(months=12)
+    else:
+        d_from = today - relativedelta(months=12)
+
+    if date_to:
+        try:
+            d_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+        except ValueError:
+            d_to = today
+    else:
+        d_to = today
+
+    if view_mode == 'parent':
+        # Parent categories with aggregated child totals
+        parent_categories = Category.query.filter_by(parent_id=None).all()
+        result = []
+        for parent in parent_categories:
+            category_ids = [parent.id] + [c.id for c in parent.subcategories]
+            total = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+                CashflowTransaction.date >= d_from,
+                CashflowTransaction.date <= d_to,
+                CashflowTransaction.type == 'expense',
+                CashflowTransaction.category_id.in_(category_ids)
+            ).scalar()
+            if total > 0:
+                result.append({'name': parent.name, 'total': float(total)})
+        result.sort(key=lambda x: x['total'], reverse=True)
+        labels = [r['name'] for r in result]
+        values = [r['total'] for r in result]
+    else:
+        # Child categories only
+        category_data = db.session.query(
+            Category.name,
+            func.sum(CashflowTransaction.amount).label('total')
+        ).join(Category, CashflowTransaction.category_id == Category.id).filter(
+            CashflowTransaction.date >= d_from,
+            CashflowTransaction.date <= d_to,
+            CashflowTransaction.type == 'expense',
+            Category.parent_id.isnot(None)
+        ).group_by(Category.name).order_by(func.sum(CashflowTransaction.amount).desc()).all()
+
+        labels = [r.name for r in category_data]
+        values = [float(r.total) for r in category_data]
+
+    return jsonify({'labels': labels, 'values': values})
 
