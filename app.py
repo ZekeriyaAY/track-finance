@@ -125,9 +125,8 @@ def create_app(config_name=None):
     @app.context_processor
     def inject_external_urls():
         from models.settings import Settings
-        grafana_url = Settings.get_setting('grafana_url', 'http://localhost:3000')
         pgadmin_url = Settings.get_setting('pgadmin_url', 'http://localhost:5050')
-        return dict(grafana_url=grafana_url, pgadmin_url=pgadmin_url)
+        return dict(pgadmin_url=pgadmin_url)
 
     # Import blueprints
     from routes.cashflow import cashflow_bp

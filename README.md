@@ -2,7 +2,7 @@
 
 Where's My Money? is a simple and effective web application developed for personal finance management. It allows you to track your income and expenses (cash flow), categorize and tag them, and manage your investments. With the data import feature from Excel files, you can easily add your bank transactions to the system.
 
-The project is designed to run on Docker, integrated with Grafana for data visualization and PgAdmin for database management.
+The project is designed to run on Docker, integrated with PgAdmin for database management.
 
 ## ✨ Key Features
 
@@ -10,7 +10,7 @@ The project is designed to run on Docker, integrated with Grafana for data visua
 - **Categorization and Tagging:** Create categories and tags to better analyze your spending.
 - **Investment Tracking:** Manage your investments and their types.
 - **Excel Import:** Import transactions from bank statements (Excel/CSV format).
-- **Visualization:** Monitor your financial data with visual dashboards through Grafana integration.
+- **Visualization:** Monitor your financial data with visual dashboards.
 
 ##  Setup and Run
 
@@ -30,8 +30,6 @@ The project can be easily run using Docker and Docker Compose.
     SECRET_KEY=very-secret-key
     PGADMIN_DEFAULT_EMAIL=admin@admin.com
     PGADMIN_DEFAULT_PASSWORD=admin
-    GRAFANA_ADMIN_USER=admin
-    GRAFANA_ADMIN_PASSWORD=admin
     ```
 
     **CSRF Token Error Fix:**
@@ -63,7 +61,6 @@ The project can be easily run using Docker and Docker Compose.
 
 - **Application:** [http://localhost:5001](http://localhost:5001)
 - **PgAdmin:** [http://localhost:5050](http://localhost:5050)
-- **Grafana:** [http://localhost:3000](http://localhost:3000)
 
 Use the credentials defined in your `.env` file or the defaults from `docker-compose.yml`.
 

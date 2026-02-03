@@ -9,29 +9,6 @@ logger = logging.getLogger(__name__)
 
 settings_bp = Blueprint('settings', __name__, url_prefix='/settings')
 
-@settings_bp.route('/update-grafana-url', methods=['POST'])
-def update_grafana_url():
-    grafana_url = request.form.get('grafana_url', '').strip()
-    
-    if not grafana_url:
-        flash('Grafana URL cannot be empty.', 'error')
-        return redirect(url_for('settings.index'))
-    
-    # URL formatını kontrol et
-    if not grafana_url.startswith(('http://', 'https://')):
-        grafana_url = 'http://' + grafana_url
-    
-    try:
-        # Veritabanında Grafana URL'sini güncelle
-        Settings.set_setting('grafana_url', grafana_url)
-        flash('Grafana URL updated successfully.', 'success')
-    except Exception as e:
-        db.session.rollback()
-        logger.error(f"Error updating Grafana URL: {str(e)}")
-        flash('An error occurred while updating Grafana URL.', 'error')
-    
-    return redirect(url_for('settings.index'))
-
 @settings_bp.route('/update-pgadmin-url', methods=['POST'])
 def update_pgadmin_url():
     pgadmin_url = request.form.get('pgadmin_url', '').strip()
@@ -58,9 +35,8 @@ def update_pgadmin_url():
 @settings_bp.route('/')
 def index():
     # Veritabanından URL'leri al, yoksa varsayılan değerleri kullan
-    grafana_url = Settings.get_setting('grafana_url', 'http://localhost:3000')
     pgadmin_url = Settings.get_setting('pgadmin_url', 'http://localhost:5050')
-    return render_template('settings/index.html', grafana_url=grafana_url, pgadmin_url=pgadmin_url)
+    return render_template('settings/index.html', pgadmin_url=pgadmin_url)
 
 @settings_bp.route('/create-dummy-data', methods=['POST'])
 def create_dummy_data_route():
