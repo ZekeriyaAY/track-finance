@@ -28,7 +28,7 @@ New Transaction
       <!-- Category Filter -->
       <div class="flex-1 min-w-[150px]">
         <label for="category_id" class="block text-xs font-medium text-gray-400 mb-1">Category</label>
-        <select id="category_id" name="category_id" 
+        <select id="category_id" name="category_id"
                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
           <option value="">All Categories</option>
           {% for category in categories %}
@@ -43,7 +43,7 @@ New Transaction
       <!-- Tag Filter -->
       <div class="flex-1 min-w-[150px]">
         <label for="tag_id" class="block text-xs font-medium text-gray-400 mb-1">Tag</label>
-        <select id="tag_id" name="tag_id" 
+        <select id="tag_id" name="tag_id"
                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
           <option value="">All Tags</option>
           {% for tag in tags %}
@@ -55,7 +55,7 @@ New Transaction
       <!-- Type Filter -->
       <div class="flex-1 min-w-[120px]">
         <label for="type" class="block text-xs font-medium text-gray-400 mb-1">Type</label>
-        <select id="type" name="type" 
+        <select id="type" name="type"
                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
           <option value="">All Types</option>
           <option value="income" {% if selected_type == 'income' %}selected{% endif %}>Income</option>
@@ -74,6 +74,13 @@ New Transaction
       <div class="flex-1 min-w-[140px]">
         <label for="date_to" class="block text-xs font-medium text-gray-400 mb-1">To</label>
         <input type="date" id="date_to" name="date_to" value="{{ selected_date_to or '' }}"
+               class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+      </div>
+
+      <!-- Description Search -->
+      <div class="flex-1 min-w-[180px]">
+        <label for="search" class="block text-xs font-medium text-gray-400 mb-1">Description</label>
+        <input type="text" id="search" name="search" value="{{ selected_search or '' }}" placeholder="Search..."
                class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
       </div>
 
@@ -96,6 +103,9 @@ New Transaction
       <table class="min-w-full text-sm align-middle">
         <thead>
           <tr class="bg-darkbg/80">
+            <th class="py-3 px-4 text-left">
+              <input type="checkbox" id="select-all" class="rounded border-gray-600 text-primary focus:ring-primary/50 cursor-pointer">
+            </th>
             <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Date</th>
             <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Amount</th>
             <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Category</th>
@@ -107,6 +117,9 @@ New Transaction
         <tbody class="divide-y divide-gray-800">
           {% for transaction in transactions %}
           <tr class="hover:bg-darkbg/40 transition">
+            <td class="py-2 px-4">
+              <input type="checkbox" class="row-checkbox rounded border-gray-600 text-primary focus:ring-primary/50 cursor-pointer" value="{{ transaction.id }}">
+            </td>
             <td class="py-2 px-4 whitespace-nowrap">{{ transaction.date.strftime('%d.%m.%Y') }}</td>
             <td class="py-2 px-4 text-right">
               <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-semibold {% if transaction.type == 'income' %}bg-green-700/20 text-green-300{% else %}bg-red-700/20 text-red-300{% endif %}" title="{{ transaction.type.capitalize() }}">
@@ -156,7 +169,7 @@ Delete
           {% endfor %}
         </tbody>
       </table>
-      
+
       <!-- Summary -->
       <div class="bg-darkbg/40 px-4 py-3 flex justify-between items-center text-sm border-t border-gray-800">
         <span class="text-gray-400">
@@ -183,7 +196,7 @@ Delete
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
           <i class="fas fa-exchange-alt text-2xl"></i>
         </div>
-        {% if selected_category or selected_tag or selected_type or selected_date_from or selected_date_to %}
+        {% if selected_category or selected_tag or selected_type or selected_date_from or selected_date_to or selected_search %}
         <h3 class="text-lg font-medium text-gray-200 mb-1">No transactions match your filters</h3>
         <p class="text-gray-400">Try adjusting your filter criteria or <a href="{{ url_for('cashflow.index') }}" class="text-primary hover:underline">clear all filters</a>.</p>
         {% else %}
@@ -194,4 +207,156 @@ Delete
     {% endif %}
   </div>
 </div>
+
+<!-- Bulk Edit Floating Bar -->
+{% if transactions %}
+<div class="fixed bottom-5 left-0 right-0 flex justify-center z-50 pointer-events-none">
+  <div id="bulk-bar" class="pointer-events-auto opacity-0 translate-y-4 scale-95 transition-all duration-200">
+    <form method="POST" action="{{ url_for('cashflow.bulk_edit') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div id="bulk-ids"></div>
+      <input type="hidden" name="filter_category_id" value="{{ selected_category or '' }}">
+      <input type="hidden" name="filter_tag_id" value="{{ selected_tag or '' }}">
+      <input type="hidden" name="filter_type" value="{{ selected_type or '' }}">
+      <input type="hidden" name="filter_date_from" value="{{ selected_date_from or '' }}">
+      <input type="hidden" name="filter_date_to" value="{{ selected_date_to or '' }}">
+      <input type="hidden" name="filter_search" value="{{ selected_search or '' }}">
+
+      <div class="bg-card rounded-xl shadow-2xl border border-gray-700/50 px-4 py-3 flex items-center gap-3">
+        <!-- Count -->
+        <span class="text-sm text-gray-300 whitespace-nowrap">
+          <span id="bulk-count" class="text-primary font-semibold">0</span> selected
+        </span>
+
+        <div class="w-px h-5 bg-gray-700"></div>
+
+        <!-- Category -->
+        <select name="category_id" class="px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+          <option value="">Category (no change)</option>
+          {% for category in categories %}
+            {% if category.subcategories %}
+              <optgroup label="{{ category.name }}">
+                {% for sub in category.subcategories %}
+                  <option value="{{ sub.id }}">{{ sub.name }}</option>
+                {% endfor %}
+              </optgroup>
+            {% else %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+
+        <!-- Tags dropdown -->
+        <div class="relative">
+          <button type="button" id="tags-toggle"
+                  class="inline-flex items-center gap-2 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-sm text-gray-300 hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50 transition">
+            <i class="fas fa-tags text-xs text-gray-500"></i>
+            <span id="tags-label">Tags (no change)</span>
+            <i class="fas fa-chevron-up text-[10px] text-gray-500 ml-1"></i>
+          </button>
+
+          <!-- Tags popover -->
+          <div id="tags-popover" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-card rounded-xl shadow-2xl border border-gray-700/50 p-3 hidden w-64">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-medium text-gray-400">Select Tags</span>
+              <div class="flex gap-2">
+                <label class="inline-flex items-center gap-1 text-xs text-gray-400 cursor-pointer">
+                  <input type="radio" name="tag_mode" value="replace" checked class="text-primary focus:ring-primary/50"> Replace
+                </label>
+                <label class="inline-flex items-center gap-1 text-xs text-gray-400 cursor-pointer">
+                  <input type="radio" name="tag_mode" value="add" class="text-primary focus:ring-primary/50"> Add
+                </label>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-1 max-h-48 overflow-y-auto">
+              {% for tag in tags %}
+              <label class="inline-flex items-center gap-2 px-2 py-1.5 rounded-md bg-darkbg hover:bg-gray-700/50 cursor-pointer text-xs transition">
+                <input type="checkbox" name="tags[]" value="{{ tag.id }}" class="bulk-tag-cb rounded border-gray-600 text-primary focus:ring-primary/50">
+                <span class="text-gray-300">{{ tag.name }}</span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="w-px h-5 bg-gray-700"></div>
+
+        <!-- Apply -->
+        <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+          <i class="fas fa-check"></i>
+          Apply
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function() {
+  var selectAll = document.getElementById('select-all');
+  var bulkBar = document.getElementById('bulk-bar');
+  var bulkIds = document.getElementById('bulk-ids');
+  var bulkCount = document.getElementById('bulk-count');
+  var checkboxes = document.querySelectorAll('.row-checkbox');
+  var tagsToggle = document.getElementById('tags-toggle');
+  var tagsPopover = document.getElementById('tags-popover');
+  var tagsLabel = document.getElementById('tags-label');
+  var tagCheckboxes = document.querySelectorAll('.bulk-tag-cb');
+
+  function updateBar() {
+    var checked = document.querySelectorAll('.row-checkbox:checked');
+    var count = checked.length;
+
+    bulkCount.textContent = count;
+
+    if (count > 0) {
+      bulkBar.classList.remove('opacity-0', 'translate-y-4', 'scale-95');
+    } else {
+      bulkBar.classList.add('opacity-0', 'translate-y-4', 'scale-95');
+      tagsPopover.classList.add('hidden');
+    }
+
+    bulkIds.innerHTML = '';
+    checked.forEach(function(cb) {
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'transaction_ids[]';
+      input.value = cb.value;
+      bulkIds.appendChild(input);
+    });
+
+    selectAll.checked = count > 0 && count === checkboxes.length;
+    selectAll.indeterminate = count > 0 && count < checkboxes.length;
+  }
+
+  function updateTagsLabel() {
+    var count = document.querySelectorAll('.bulk-tag-cb:checked').length;
+    tagsLabel.textContent = count > 0 ? count + ' tag' + (count > 1 ? 's' : '') : 'Tags (no change)';
+  }
+
+  selectAll.addEventListener('change', function() {
+    checkboxes.forEach(function(cb) { cb.checked = selectAll.checked; });
+    updateBar();
+  });
+
+  checkboxes.forEach(function(cb) {
+    cb.addEventListener('change', updateBar);
+  });
+
+  tagsToggle.addEventListener('click', function() {
+    tagsPopover.classList.toggle('hidden');
+  });
+
+  tagCheckboxes.forEach(function(cb) {
+    cb.addEventListener('change', updateTagsLabel);
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!tagsToggle.contains(e.target) && !tagsPopover.contains(e.target)) {
+      tagsPopover.classList.add('hidden');
+    }
+  });
+})();
+</script>
+{% endif %}
 {% endblock %}

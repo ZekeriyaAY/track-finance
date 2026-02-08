@@ -206,9 +206,13 @@ def index():
     type_filter = request.args.get('type')
     date_from = request.args.get('date_from')
     date_to = request.args.get('date_to')
-    
+    search = request.args.get('search', '').strip()
+
     # Build query with filters
     query = CashflowTransaction.query
+
+    if search:
+        query = query.filter(CashflowTransaction.description.ilike(f'%{search}%'))
     
     if category_id:
         # Include subcategories as well
@@ -246,7 +250,7 @@ def index():
     categories = Category.query.filter_by(parent_id=None).all()
     tags = Tag.query.all()
     
-    return render_template('cashflow/index.html', 
+    return render_template('cashflow/index.html',
                            transactions=transactions,
                            categories=categories,
                            tags=tags,
@@ -254,7 +258,8 @@ def index():
                            selected_tag=tag_id,
                            selected_type=type_filter,
                            selected_date_from=date_from,
-                           selected_date_to=date_to)
+                           selected_date_to=date_to,
+                           selected_search=search)
 
 @cashflow_bp.route('/add', methods=['GET', 'POST'])
 def add_cashflow():
@@ -433,6 +438,49 @@ def import_excel():
         flash('An unexpected error occurred.', 'error')
     
     return render_template('cashflow/import.html')
+
+
+@cashflow_bp.route('/bulk-edit', methods=['POST'])
+def bulk_edit():
+    transaction_ids = request.form.getlist('transaction_ids[]', type=int)
+    category_id = request.form.get('category_id', type=int)
+    tag_ids = request.form.getlist('tags[]', type=int)
+    tag_mode = request.form.get('tag_mode', 'replace')
+
+    if not transaction_ids:
+        flash('No transactions selected.', 'error')
+        return redirect(url_for('cashflow.index'))
+
+    try:
+        transactions = CashflowTransaction.query.filter(CashflowTransaction.id.in_(transaction_ids)).all()
+
+        for txn in transactions:
+            if category_id:
+                txn.category_id = category_id
+            if tag_ids:
+                new_tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
+                if tag_mode == 'add':
+                    existing_ids = {t.id for t in txn.tags}
+                    for tag in new_tags:
+                        if tag.id not in existing_ids:
+                            txn.tags.append(tag)
+                else:
+                    txn.tags = new_tags
+
+        db.session.commit()
+        flash(f'{len(transactions)} transaction(s) updated.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f'Bulk edit error: {str(e)}')
+        flash('An error occurred during bulk edit.', 'error')
+
+    # Preserve filter params
+    redirect_params = {}
+    for key in ('category_id', 'tag_id', 'type', 'date_from', 'date_to', 'search'):
+        val = request.form.get(f'filter_{key}')
+        if val:
+            redirect_params[key] = val
+    return redirect(url_for('cashflow.index', **redirect_params))
 
 
 @cashflow_bp.route('/api/category-data')
