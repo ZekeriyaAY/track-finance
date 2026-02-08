@@ -36,8 +36,8 @@ Go Back
           <label for="type" class="block text-sm font-medium text-gray-300">Transaction Type</label>
           <select id="type" name="type" required
                   class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            <option value="expense" {% if transaction and transaction.type == 'expense' or not transaction %}selected{% endif %}>Expense</option>
             <option value="income" {% if transaction and transaction.type == 'income' %}selected{% endif %}>Income</option>
-            <option value="expense" {% if transaction and transaction.type == 'expense' %}selected{% endif %}>Expense</option>
           </select>
         </div>
 
