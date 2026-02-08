@@ -106,12 +106,12 @@ New Transaction
             <th class="py-3 px-4 text-left">
               <input type="checkbox" id="select-all" class="rounded border-gray-600 text-primary focus:ring-primary/50 cursor-pointer">
             </th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Date</th>
-            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Amount</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Category</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tags</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Description</th>
-            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Actions</th>
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap">Date</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap">Amount</th>
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap">Category</th>
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap min-w-[250px]">Tags</th>
+            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400 w-full">Description</th>
+            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-800">
@@ -121,7 +121,7 @@ New Transaction
               <input type="checkbox" class="row-checkbox rounded border-gray-600 text-primary focus:ring-primary/50 cursor-pointer" value="{{ transaction.id }}">
             </td>
             <td class="py-2 px-4 whitespace-nowrap">{{ transaction.date.strftime('%d.%m.%Y') }}</td>
-            <td class="py-2 px-4 text-right">
+            <td class="py-2 px-4 text-right whitespace-nowrap">
               <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-semibold {% if transaction.type == 'income' %}bg-green-700/20 text-green-300{% else %}bg-red-700/20 text-red-300{% endif %}" title="{{ transaction.type.capitalize() }}">
                 {% if transaction.type == 'income' %}
                   <i class="fas fa-plus text-sm"></i>
@@ -131,7 +131,7 @@ New Transaction
                 {{ "%.2f"|format(transaction.amount) }} ₺
               </span>
             </td>
-            <td class="py-2 px-4">
+            <td class="py-2 px-4 whitespace-nowrap">
               {% if transaction.category.parent %}
                 <span class="text-gray-400">{{ transaction.category.parent.name }} /</span>
               {% endif %}
@@ -141,7 +141,7 @@ New Transaction
               {% if transaction.tags %}
                 <div class="flex flex-wrap gap-1">
                   {% for tag in transaction.tags %}
-                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary/10 text-primary text-xs font-medium">
+                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary/10 text-primary text-xs font-medium whitespace-nowrap">
                       <i class="fas fa-tag text-sm"></i>
                       {{ tag.name }}
                     </span>
@@ -149,8 +149,8 @@ New Transaction
                 </div>
               {% else %}-{% endif %}
             </td>
-            <td class="py-2 px-4">{{ transaction.description }}</td>
-            <td class="py-2 px-4 text-right">
+            <td class="py-2 px-4 max-w-0 truncate" title="{{ transaction.description }}">{{ transaction.description }}</td>
+            <td class="py-2 px-4 text-right whitespace-nowrap">
               <form action="{{ url_for('cashflow.edit_cashflow', id=transaction.id) }}" method="get" style="display:inline;">
                 <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
                   <i class="fas fa-pencil-alt"></i>
