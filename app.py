@@ -169,7 +169,7 @@ def create_app(config_name=None):
     
     @app.route('/')
     def index():
-        return redirect(url_for('cashflow.index'))
+        return redirect(url_for('cashflow.dashboard'))
     
     @app.route('/health')
     def health_check():
