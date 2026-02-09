@@ -6,12 +6,14 @@ from models.__init__ import db
 from models.cashflow import CashflowTransaction
 from models.category import Category
 from models.tag import Tag
+from models.bank_connection import BankConnection
 import logging
 import os
 import tempfile
 from werkzeug.utils import secure_filename
 from utils.bank_configs import get_bank_config
 from utils.excel_processor import process_excel_data, ExcelImportError
+from utils.bank_sync import sync_bank_connection, BankSyncError
 
 logger = logging.getLogger(__name__)
 
@@ -398,6 +400,7 @@ def import_excel():
                         type=transaction_data['type'],  # income or expense
                         category_id=import_category.id,
                         description=transaction_data['description'],
+                        source='excel_import',
                         tags = [bank_tag]
                     )
                     
@@ -438,6 +441,43 @@ def import_excel():
         flash('An unexpected error occurred.', 'error')
     
     return render_template('cashflow/import.html')
+
+
+@cashflow_bp.route('/sync', methods=['POST'])
+def sync_transactions():
+    """Sync transactions from all active bank connections."""
+    active_connections = BankConnection.query.filter_by(is_active=True).all()
+
+    if not active_connections:
+        flash('No active bank connections. Add one in Settings.', 'warning')
+        return redirect(url_for('cashflow.index'))
+
+    total_new = 0
+    total_skipped = 0
+    total_errors = 0
+
+    for conn in active_connections:
+        try:
+            result = sync_bank_connection(conn.id)
+            total_new += result.new_count
+            total_skipped += result.skipped_count
+            total_errors += result.error_count
+            if result.errors:
+                for err in result.errors[:3]:
+                    flash(f'{conn.bank_name}: {err}', 'warning')
+        except Exception as e:
+            logger.error(f'Sync error for {conn.bank_name}: {e}')
+            flash(f'Error syncing {conn.bank_name}: {e}', 'error')
+            total_errors += 1
+
+    if total_new > 0:
+        flash(f'Sync complete: {total_new} new, {total_skipped} skipped, {total_errors} errors.', 'success')
+    elif total_errors == 0:
+        flash(f'Sync complete: no new transactions ({total_skipped} already exist).', 'info')
+    else:
+        flash(f'Sync finished with errors: {total_errors} error(s).', 'error')
+
+    return redirect(url_for('cashflow.index'))
 
 
 @cashflow_bp.route('/bulk-edit', methods=['POST'])

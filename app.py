@@ -128,6 +128,9 @@ def create_app(config_name=None):
         pgadmin_url = Settings.get_setting('pgadmin_url', 'http://localhost:5050')
         return dict(pgadmin_url=pgadmin_url)
 
+    # Import models for Alembic autogenerate
+    from models.bank_connection import BankConnection  # noqa: F401
+
     # Import blueprints
     from routes.cashflow import cashflow_bp
     from routes.category import category_bp

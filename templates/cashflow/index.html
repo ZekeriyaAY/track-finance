@@ -7,16 +7,23 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-semibold">Cashflow Transactions</h1>
     <div class="flex gap-2">
+      <form action="{{ url_for('cashflow.sync_transactions') }}" method="POST" style="display:inline;" id="sync-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" id="sync-btn" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+          <i class="fas fa-sync-alt" id="sync-icon"></i>
+          Sync
+        </button>
+      </form>
       <form action="{{ url_for('cashflow.import_excel') }}" method="get" style="display:inline;">
         <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
           <i class="fas fa-file-excel"></i>
-Excel Import
+          Excel Import
         </button>
       </form>
       <form action="{{ url_for('cashflow.add_cashflow') }}" method="get" style="display:inline;">
         <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
           <i class="fas fa-plus"></i>
-New Transaction
+          New Transaction
         </button>
       </form>
     </div>
@@ -358,4 +365,19 @@ Delete
 })();
 </script>
 {% endif %}
+
+<script>
+(function() {
+  var syncForm = document.getElementById('sync-form');
+  if (syncForm) {
+    syncForm.addEventListener('submit', function() {
+      var btn = document.getElementById('sync-btn');
+      var icon = document.getElementById('sync-icon');
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+      icon.classList.add('fa-spin');
+    });
+  }
+})();
+</script>
 {% endblock %}

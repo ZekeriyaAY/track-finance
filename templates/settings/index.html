@@ -35,6 +35,103 @@
     </div>
   </div>
 
+  <!-- Bank Connections -->
+  <div class="bg-card rounded-xl shadow p-6 space-y-6">
+    <div class="space-y-4">
+      <h2 class="text-xl font-semibold">Bank Connections</h2>
+      <p class="text-gray-400 text-sm">Connect your bank accounts to automatically sync transactions.</p>
+
+      <!-- Add Bank Connection Form -->
+      <form action="{{ url_for('settings.add_bank_connection') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="flex flex-col space-y-2">
+          <label class="block text-sm font-medium text-gray-300">New Connection</label>
+          <div class="flex gap-2">
+            <select id="bank_code" name="bank_code" required
+              class="px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+              <option value="">Select bank...</option>
+              {% for code, name in available_banks %}
+              <option value="{{ code }}">{{ name }}</option>
+              {% endfor %}
+            </select>
+            <input type="text" id="client_id" name="client_id" required placeholder="Client ID"
+              class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            <input type="password" id="client_secret" name="client_secret" required placeholder="Client Secret"
+              class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            <input type="text" id="account_id" name="account_id" placeholder="Account ID (optional)"
+              class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            <button type="submit"
+              class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+              <i class="fas fa-plus"></i>
+              Add
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Existing Connections -->
+      {% if bank_connections %}
+      <div class="flex flex-col space-y-2 mt-2">
+        <label class="block text-sm font-medium text-gray-300">Active Connections</label>
+        {% for conn in bank_connections %}
+        <div class="flex items-center gap-2">
+          <div class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white flex items-center gap-3">
+            <span class="font-medium">{{ conn.bank_name }}</span>
+            {% if conn.is_active %}
+            <span class="px-1.5 py-0.5 rounded text-xs bg-green-700/20 text-green-300">Active</span>
+            {% else %}
+            <span class="px-1.5 py-0.5 rounded text-xs bg-gray-700/40 text-gray-400">Inactive</span>
+            {% endif %}
+            {% if conn.account_id %}
+            <span class="text-sm text-gray-500">{{ conn.account_id }}</span>
+            {% endif %}
+            <span class="text-sm text-gray-500 ml-auto">
+              {% if conn.last_sync_at %}
+                {{ conn.last_sync_at.strftime('%d.%m.%Y %H:%M') }}
+                {% if conn.last_sync_status == 'success' %}
+                <span class="text-green-400">— {{ conn.last_sync_message }}</span>
+                {% elif conn.last_sync_status == 'error' %}
+                <span class="text-red-400">— {{ conn.last_sync_message }}</span>
+                {% elif conn.last_sync_status == 'partial' %}
+                <span class="text-yellow-400">— {{ conn.last_sync_message }}</span>
+                {% endif %}
+              {% else %}
+                Never synced
+              {% endif %}
+            </span>
+          </div>
+          <form action="{{ url_for('settings.test_bank_connection', id=conn.id) }}" method="POST" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+              <i class="fas fa-plug"></i> Test
+            </button>
+          </form>
+          <form action="{{ url_for('settings.toggle_bank_connection', id=conn.id) }}" method="POST" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if conn.is_active %}
+            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-yellow-700/10 text-yellow-400 hover:bg-yellow-700/20 transition text-sm">
+              <i class="fas fa-toggle-on"></i> Deactivate
+            </button>
+            {% else %}
+            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-green-700/10 text-green-400 hover:bg-green-700/20 transition text-sm">
+              <i class="fas fa-toggle-off"></i> Activate
+            </button>
+            {% endif %}
+          </form>
+          <form action="{{ url_for('settings.delete_bank_connection', id=conn.id) }}" method="POST" style="display:inline;"
+            onsubmit="return confirm('Delete this bank connection?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-sm">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
   <!-- Default Data -->
   <div class="bg-card rounded-xl shadow p-6 space-y-6">
     <div class="space-y-4">
