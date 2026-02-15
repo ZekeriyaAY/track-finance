@@ -104,9 +104,12 @@
     <div class="bg-card rounded-lg p-5 border border-gray-700">
         <div class="flex items-center justify-between mb-3">
             <h2 class="text-sm font-semibold text-gray-300">Expense by Category</h2>
-            <div class="flex gap-1">
-                <button id="btn-parent-view" onclick="toggleCategoryView('parent')" class="px-3 py-1 rounded-md bg-primary/10 text-primary transition text-sm">Parent</button>
-                <button id="btn-child-view" onclick="toggleCategoryView('child')" class="px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">Child</button>
+            <div id="categoryDrilldownNav" class="hidden items-center gap-2 text-sm">
+                <button onclick="exitDrillDown()" class="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition">
+                    <i class="fas fa-arrow-left text-xs"></i> All Categories
+                </button>
+                <span class="text-gray-500">|</span>
+                <span id="drilldownParentName" class="text-primary font-medium"></span>
             </div>
         </div>
         <div id="categoryChartContainer" class="min-h-72">
@@ -178,6 +181,11 @@ const dailyIncomeMA = {{ daily_income_ma | tojson }};
 const dailyExpenseMA = {{ daily_expense_ma | tojson }};
 const dateFrom = '{{ date_from }}';
 const dateTo = '{{ date_to }}';
+
+// Drill-down state
+let currentCategoryIds = {{ category_ids | tojson }};
+let currentHasChildren = {{ category_has_children | tojson }};
+let isDrillDownMode = false;
 
 // Helper function to format date as YYYY-MM-DD (local timezone)
 function formatDate(date) {
@@ -295,6 +303,38 @@ function updateCategoryChartHeight(itemCount) {
     container.style.height = newHeight + 'px';
 }
 
+// Pointer cursor plugin for clickable slices and legend labels
+const pointerCursorPlugin = {
+    id: 'pointerCursor',
+    afterEvent(chart, args) {
+        if (args.event.type !== 'mousemove' || isDrillDownMode) {
+            chart.canvas.style.cursor = 'default';
+            return;
+        }
+        // Check chart slices
+        const elements = chart.getElementsAtEventForMode(args.event, 'nearest', { intersect: true }, false);
+        if (elements.length > 0) {
+            const idx = elements[0].index;
+            chart.canvas.style.cursor = currentHasChildren[idx] ? 'pointer' : 'default';
+            return;
+        }
+        // Check legend labels
+        const legend = chart.legend;
+        if (legend) {
+            const {x, y} = args.event;
+            for (const item of legend.legendItems || []) {
+                const hitBox = legend.legendHitBoxes[item.index];
+                if (hitBox && x >= hitBox.left && x <= hitBox.left + hitBox.width &&
+                    y >= hitBox.top && y <= hitBox.top + hitBox.height) {
+                    chart.canvas.style.cursor = currentHasChildren[item.index] ? 'pointer' : 'default';
+                    return;
+                }
+            }
+        }
+        chart.canvas.style.cursor = 'default';
+    }
+};
+
 // Category Doughnut (with global reference for toggle)
 let categoryChart = new Chart(document.getElementById('categoryChart'), {
     type: 'doughnut',
@@ -302,34 +342,95 @@ let categoryChart = new Chart(document.getElementById('categoryChart'), {
         labels: categoryLabels,
         datasets: [{ data: categoryValues, backgroundColor: COLORS.doughnut }]
     },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'right',
+                onClick: function(e, legendItem, legend) {
+                    const idx = legendItem.index;
+                    if (!isDrillDownMode && currentHasChildren[idx]) {
+                        const parentId = currentCategoryIds[idx];
+                        const parentName = legend.chart.data.labels[idx];
+                        drillDownIntoCategory(parentId, parentName);
+                    } else {
+                        Chart.defaults.plugins.legend.onClick.call(this, e, legendItem, legend);
+                    }
+                }
+            }
+        },
+        onClick: handleCategoryChartClick
+    },
+    plugins: [pointerCursorPlugin]
 });
 
 // Set initial height based on category count
 updateCategoryChartHeight(categoryLabels.length);
 
-// Category view toggle function
-async function toggleCategoryView(viewMode) {
-    const btnParent = document.getElementById('btn-parent-view');
-    const btnChild = document.getElementById('btn-child-view');
+// Chart click handler
+function handleCategoryChartClick(event, elements) {
+    if (isDrillDownMode || elements.length === 0) return;
+    const idx = elements[0].index;
+    if (!currentHasChildren[idx]) return;
+    const parentId = currentCategoryIds[idx];
+    const parentName = categoryChart.data.labels[idx];
+    drillDownIntoCategory(parentId, parentName);
+}
 
-    if (viewMode === 'parent') {
-        btnParent.className = 'px-3 py-1 rounded-md bg-primary/10 text-primary transition text-sm';
-        btnChild.className = 'px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm';
-    } else {
-        btnParent.className = 'px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm';
-        btnChild.className = 'px-3 py-1 rounded-md bg-primary/10 text-primary transition text-sm';
+// Drill into a parent category's children
+async function drillDownIntoCategory(parentId, parentName) {
+    try {
+        const response = await fetch(`/cashflow/api/category-data?date_from=${dateFrom}&date_to=${dateTo}&view_mode=children_of&parent_id=${parentId}`);
+        const data = await response.json();
+
+        if (data.labels.length === 0) return;
+
+        isDrillDownMode = true;
+
+        // Update chart
+        categoryChart.data.labels = data.labels;
+        categoryChart.data.datasets[0].data = data.values;
+        updateCategoryChartHeight(data.labels.length);
+        categoryChart.update();
+
+        // Show breadcrumb
+        const nav = document.getElementById('categoryDrilldownNav');
+        nav.classList.remove('hidden');
+        nav.classList.add('flex');
+        document.getElementById('drilldownParentName').textContent = parentName;
+
+        // Update state
+        currentCategoryIds = data.category_ids;
+        currentHasChildren = data.has_children;
+    } catch (error) {
+        console.error('Error drilling down:', error);
     }
+}
+
+// Exit drill-down and return to parent view
+async function exitDrillDown() {
+    isDrillDownMode = false;
+
+    // Hide breadcrumb
+    const nav = document.getElementById('categoryDrilldownNav');
+    nav.classList.add('hidden');
+    nav.classList.remove('flex');
 
     try {
-        const response = await fetch(`/cashflow/api/category-data?date_from=${dateFrom}&date_to=${dateTo}&view_mode=${viewMode}`);
+        const response = await fetch(`/cashflow/api/category-data?date_from=${dateFrom}&date_to=${dateTo}&view_mode=parent`);
         const data = await response.json();
         categoryChart.data.labels = data.labels;
         categoryChart.data.datasets[0].data = data.values;
         updateCategoryChartHeight(data.labels.length);
         categoryChart.update();
+
+        if (data.category_ids) {
+            currentCategoryIds = data.category_ids;
+            currentHasChildren = data.has_children;
+        }
     } catch (error) {
-        console.error('Error fetching category data:', error);
+        console.error('Error exiting drill-down:', error);
     }
 }
 

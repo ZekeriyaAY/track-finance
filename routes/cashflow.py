@@ -140,11 +140,18 @@ def dashboard():
             CashflowTransaction.category_id.in_(category_ids)
         ).scalar()
         if total > 0:
-            category_result.append({'name': parent.name, 'total': float(total)})
+            category_result.append({
+                'name': parent.name,
+                'total': float(total),
+                'id': parent.id,
+                'has_children': len(parent.subcategories) > 0
+            })
     category_result.sort(key=lambda x: x['total'], reverse=True)
 
     category_labels = [r['name'] for r in category_result]
     category_values = [r['total'] for r in category_result]
+    category_ids = [r['id'] for r in category_result]
+    category_has_children = [r['has_children'] for r in category_result]
 
     # Top 10 expense categories (for horizontal bar)
     top10_labels = category_labels[:10]
@@ -189,6 +196,8 @@ def dashboard():
         monthly_net=monthly_net,
         category_labels=category_labels,
         category_values=category_values,
+        category_ids=category_ids,
+        category_has_children=category_has_children,
         top10_labels=top10_labels,
         top10_values=top10_values,
         daily_labels=daily_labels,
@@ -552,18 +561,65 @@ def category_data_api():
         parent_categories = Category.query.filter_by(parent_id=None).all()
         result = []
         for parent in parent_categories:
-            category_ids = [parent.id] + [c.id for c in parent.subcategories]
+            cat_ids = [parent.id] + [c.id for c in parent.subcategories]
             total = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
                 CashflowTransaction.date >= d_from,
                 CashflowTransaction.date <= d_to,
                 CashflowTransaction.type == 'expense',
-                CashflowTransaction.category_id.in_(category_ids)
+                CashflowTransaction.category_id.in_(cat_ids)
             ).scalar()
             if total > 0:
-                result.append({'name': parent.name, 'total': float(total)})
+                result.append({
+                    'name': parent.name,
+                    'total': float(total),
+                    'id': parent.id,
+                    'has_children': len(parent.subcategories) > 0
+                })
         result.sort(key=lambda x: x['total'], reverse=True)
         labels = [r['name'] for r in result]
         values = [r['total'] for r in result]
+        cat_ids_list = [r['id'] for r in result]
+        has_children = [r['has_children'] for r in result]
+        return jsonify({'labels': labels, 'values': values, 'category_ids': cat_ids_list, 'has_children': has_children})
+
+    elif view_mode == 'children_of':
+        parent_id = request.args.get('parent_id', type=int)
+        if not parent_id:
+            return jsonify({'labels': [], 'values': [], 'category_ids': [], 'has_children': []})
+
+        parent = Category.query.get(parent_id)
+        if not parent:
+            return jsonify({'labels': [], 'values': [], 'category_ids': [], 'has_children': []})
+
+        result = []
+        # Subcategory totals
+        for child in parent.subcategories:
+            total = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+                CashflowTransaction.date >= d_from,
+                CashflowTransaction.date <= d_to,
+                CashflowTransaction.type == 'expense',
+                CashflowTransaction.category_id == child.id
+            ).scalar()
+            if total > 0:
+                result.append({'name': child.name, 'total': float(total), 'id': child.id, 'has_children': False})
+
+        # Direct transactions on parent
+        direct_total = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+            CashflowTransaction.date >= d_from,
+            CashflowTransaction.date <= d_to,
+            CashflowTransaction.type == 'expense',
+            CashflowTransaction.category_id == parent_id
+        ).scalar()
+        if direct_total > 0:
+            result.append({'name': f'{parent.name} (Direct)', 'total': float(direct_total), 'id': parent_id, 'has_children': False})
+
+        result.sort(key=lambda x: x['total'], reverse=True)
+        labels = [r['name'] for r in result]
+        values = [r['total'] for r in result]
+        cat_ids_list = [r['id'] for r in result]
+        has_children_list = [r['has_children'] for r in result]
+        return jsonify({'labels': labels, 'values': values, 'parent_name': parent.name, 'category_ids': cat_ids_list, 'has_children': has_children_list})
+
     else:
         # Child categories only
         category_data = db.session.query(
