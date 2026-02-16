@@ -45,7 +45,7 @@ def calc_pct_change(current, previous):
 
 @cashflow_bp.route('/dashboard')
 def dashboard():
-    # Date filter — default last 12 months
+    # Date filter — default current month
     date_from = request.args.get('date_from')
     date_to = request.args.get('date_to')
 
@@ -54,9 +54,9 @@ def dashboard():
         try:
             d_from = datetime.strptime(date_from, '%Y-%m-%d').date()
         except ValueError:
-            d_from = today - relativedelta(months=12)
+            d_from = today.replace(day=1)
     else:
-        d_from = today - relativedelta(months=12)
+        d_from = today.replace(day=1)
 
     if date_to:
         try:
@@ -534,7 +534,7 @@ def bulk_edit():
 
 @cashflow_bp.route('/api/category-data')
 def category_data_api():
-    """API endpoint for category data with parent/child toggle."""
+    """API endpoint for category data with drill-down support."""
     view_mode = request.args.get('view_mode', 'parent')
     date_from = request.args.get('date_from')
     date_to = request.args.get('date_to')
@@ -544,9 +544,9 @@ def category_data_api():
         try:
             d_from = datetime.strptime(date_from, '%Y-%m-%d').date()
         except ValueError:
-            d_from = today - relativedelta(months=12)
+            d_from = today.replace(day=1)
     else:
-        d_from = today - relativedelta(months=12)
+        d_from = today.replace(day=1)
 
     if date_to:
         try:
