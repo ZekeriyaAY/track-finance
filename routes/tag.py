@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.__init__ import db
+from models import db
 from models.tag import Tag
 import logging
 
@@ -35,10 +35,10 @@ def add_tag():
 
 @tag_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_tag(id):
-    tag = Tag.query.get_or_404(id)
+    tag = db.get_or_404(Tag, id)
     if request.method == 'POST':
         name = request.form['name']
-        
+
         existing = Tag.query.filter_by(name=name).first()
         if existing and existing.id != id:
             flash('This tag already exists!', 'error')
@@ -57,7 +57,7 @@ def edit_tag(id):
 
 @tag_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_tag(id):
-    tag = Tag.query.get_or_404(id)
+    tag = db.get_or_404(Tag, id)
     if tag.transactions:
         flash('This tag has associated transactions and cannot be deleted.', 'error')
         return redirect(url_for('tag.index'))

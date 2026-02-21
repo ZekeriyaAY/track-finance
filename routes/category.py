@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.__init__ import db
+from models import db
 from models.category import Category
 import logging
 
@@ -38,11 +38,11 @@ def add_category():
 
 @category_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_category(id):
-    category = Category.query.get_or_404(id)
+    category = db.get_or_404(Category, id)
     if request.method == 'POST':
         name = request.form['name']
         parent_id = request.form['parent_id'] if request.form['parent_id'] else None
-        
+
         existing = Category.query.filter_by(name=name, parent_id=parent_id).first()
         if existing and existing.id != id:
             flash('This category already exists!', 'error')
@@ -64,7 +64,7 @@ def edit_category(id):
 
 @category_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_category(id):
-    category = Category.query.get_or_404(id)
+    category = db.get_or_404(Category, id)
     if category.subcategories:
         flash('This category has subcategories. You must delete them first!', 'error')
         return redirect(url_for('category.index'))

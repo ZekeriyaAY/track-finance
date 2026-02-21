@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from sqlalchemy import func, extract
-from models.__init__ import db
+from models import db
 from models.cashflow import CashflowTransaction
 from models.category import Category
 from models.tag import Tag
@@ -227,7 +227,7 @@ def index():
     
     if category_id:
         # Include subcategories as well
-        category = Category.query.get(category_id)
+        category = db.session.get(Category, category_id)
         if category:
             category_ids = [category_id]
             # Add subcategory IDs if this is a parent category
@@ -275,10 +275,18 @@ def index():
 @cashflow_bp.route('/add', methods=['GET', 'POST'])
 def add_cashflow():
     if request.method == 'POST':
-        date = datetime.strptime(request.form['date'], '%Y-%m-%d')
-        amount = float(request.form['amount'])
+        try:
+            date = datetime.strptime(request.form['date'], '%Y-%m-%d')
+            amount = float(request.form['amount'])
+            category_id = int(request.form['category_id'])
+        except (ValueError, KeyError):
+            flash('Invalid input. Please check date, amount and category.', 'danger')
+            return redirect(url_for('cashflow.add_cashflow'))
+
         type = request.form['type']
-        category_id = int(request.form['category_id'])
+        if type not in ('income', 'expense'):
+            flash('Invalid transaction type.', 'danger')
+            return redirect(url_for('cashflow.add_cashflow'))
         tag_ids = request.form.getlist('tags')
         description = request.form['description']
 
@@ -309,7 +317,7 @@ def add_cashflow():
 
 @cashflow_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_cashflow(id):
-    transaction = CashflowTransaction.query.get_or_404(id)
+    transaction = db.get_or_404(CashflowTransaction, id)
     if request.method == 'POST':
         try:
             transaction.date = datetime.strptime(request.form['date'], '%Y-%m-%d')
@@ -334,7 +342,7 @@ def edit_cashflow(id):
 
 @cashflow_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_cashflow(id):
-    transaction = CashflowTransaction.query.get_or_404(id)
+    transaction = db.get_or_404(CashflowTransaction, id)
     try:
         db.session.delete(transaction)
         db.session.commit()
@@ -587,7 +595,7 @@ def category_data_api():
         if not parent_id:
             return jsonify({'labels': [], 'values': [], 'category_ids': [], 'has_children': []})
 
-        parent = Category.query.get(parent_id)
+        parent = db.session.get(Category, parent_id)
         if not parent:
             return jsonify({'labels': [], 'values': [], 'category_ids': [], 'has_children': []})
 

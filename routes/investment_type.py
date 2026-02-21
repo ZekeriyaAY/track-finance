@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.__init__ import db
+from models import db
 from models.investment import InvestmentType
 import logging
 
@@ -47,7 +47,7 @@ def add_investment_type():
 
 @investment_type_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_investment_type(id):
-    type = InvestmentType.query.get_or_404(id)
+    type = db.get_or_404(InvestmentType, id)
     if request.method == 'POST':
         name = request.form['name']
         code = request.form['code']
@@ -79,7 +79,7 @@ def edit_investment_type(id):
 
 @investment_type_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_investment_type(id):
-    type = InvestmentType.query.get_or_404(id)
+    type = db.get_or_404(InvestmentType, id)
     if type.children:
         flash('This investment type has subtypes. You must delete them first!', 'error')
         return redirect(url_for('investment_type.index'))

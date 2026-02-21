@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.__init__ import db
+from models import db
 from models.investment import InvestmentTransaction, InvestmentType
 from datetime import datetime
 import logging
@@ -21,7 +21,7 @@ def index():
     
     if investment_type_id:
         # Include subtypes as well
-        inv_type = InvestmentType.query.get(investment_type_id)
+        inv_type = db.session.get(InvestmentType, investment_type_id)
         if inv_type:
             type_ids = [investment_type_id]
             # Add subtype IDs if this is a parent type
@@ -65,10 +65,13 @@ def add_investment():
         investment_type_id = request.form['investment_type_id']
         transaction_date = datetime.strptime(request.form['transaction_date'], '%Y-%m-%d')
         transaction_type = request.form['transaction_type']
+        if transaction_type not in ('buy', 'sell'):
+            flash('Invalid transaction type.', 'danger')
+            return redirect(url_for('investment.add_investment'))
         price = float(request.form['price'])
         quantity = float(request.form['quantity'])
         description = request.form['description']
-        
+
         try:
             transaction = InvestmentTransaction(
                 investment_type_id=investment_type_id,
@@ -93,7 +96,7 @@ def add_investment():
 
 @investment_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_investment(id):
-    transaction = InvestmentTransaction.query.get_or_404(id)
+    transaction = db.get_or_404(InvestmentTransaction, id)
     if request.method == 'POST':
         try:
             transaction.investment_type_id = request.form['investment_type_id']
@@ -101,8 +104,9 @@ def edit_investment(id):
             transaction.transaction_type = request.form['transaction_type']
             transaction.price = float(request.form['price'])
             transaction.quantity = float(request.form['quantity'])
+            transaction.total_amount = transaction.price * transaction.quantity
             transaction.description = request.form['description']
-            
+
             db.session.commit()
             flash('Investment transaction updated successfully!', 'success')
         except Exception as e:
@@ -116,7 +120,7 @@ def edit_investment(id):
 
 @investment_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_investment(id):
-    transaction = InvestmentTransaction.query.get_or_404(id)
+    transaction = db.get_or_404(InvestmentTransaction, id)
     try:
         db.session.delete(transaction)
         db.session.commit()
