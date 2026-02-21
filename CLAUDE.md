@@ -163,6 +163,117 @@ BankConnection (bank_code, bank_name, encrypted client_id/secret, account_id, sy
 | `POSTGRES_HOST` | (in connection string) | PostgreSQL host |
 | `BEHIND_PROXY` | `false` | Enable ProxyFix middleware for reverse proxy |
 
+## Testing
+
+### Test Stack
+
+| Package | Purpose |
+|---|---|
+| pytest | Test runner |
+| pytest-flask | Flask test client integration |
+| pytest-cov | Code coverage reporting |
+| factory-boy | Test data factories |
+| faker | Fake data generation |
+| responses | HTTP request mocking |
+| freezegun | Time/date mocking |
+
+### Running Tests
+
+| Command | Description |
+|---|---|
+| `make test` | Run tests in Docker container |
+| `make test-cov` | Run tests with HTML coverage report |
+| `make test-local` | Run tests locally (requires deps) |
+| `make test-security` | Run security tests only |
+| `pytest tests/unit/ -v` | Unit tests only |
+| `pytest tests/integration/ -v` | Integration tests only |
+| `pytest tests/security/ -v` | Security tests only |
+| `pytest tests/api/ -v` | API tests only |
+
+### Test Directory Structure
+
+```
+tests/
+  conftest.py                    # Shared fixtures (app, db, client, auth_client, sample data)
+  unit/
+    test_models.py               # All database models
+    test_excel_processor.py      # Turkish amount/date parsing, import pipeline
+    test_encryption.py           # Fernet encrypt/decrypt
+    test_data_utils.py           # Seed data generators
+    test_bank_configs.py         # Bank config lookup
+    test_bank_sync_registry.py   # Adapter registry pattern
+  integration/
+    test_auth_routes.py          # Login, logout, password/username change
+    test_cashflow_routes.py      # CRUD, filters, search, import, bulk edit
+    test_category_routes.py      # CRUD, delete protection
+    test_tag_routes.py           # CRUD, delete protection
+    test_investment_routes.py    # CRUD, filters
+    test_investment_type_routes.py # CRUD, delete protection
+    test_settings_routes.py      # Settings, seed data, DB reset
+  security/
+    test_csrf.py                 # CSRF enforcement on all POST endpoints
+    test_auth_security.py        # Auth bypass, open redirect, session security
+    test_input_validation.py     # XSS, SQL injection, type validation
+    test_file_upload.py          # File type/size validation
+    test_headers.py              # Security headers verification
+  api/
+    test_category_data_api.py    # JSON API endpoint tests
+```
+
+### Test Fixtures (conftest.py)
+
+- `app` - Flask test app with SQLite in-memory DB
+- `db` - Fresh database per test (create_all/drop_all)
+- `client` - Unauthenticated test client
+- `admin_user` - Creates admin user
+- `auth_client` - Authenticated test client (auto-login)
+- `sample_category`, `sample_subcategory` - Category fixtures
+- `sample_tag` - Tag fixture
+- `sample_transaction` - CashflowTransaction with tag
+- `sample_investment_type` - InvestmentType fixture
+- `sample_investment` - InvestmentTransaction fixture
+- `get_csrf_token(client, url)` - Extract CSRF token from page
+
+## Development Workflow (MANDATORY)
+
+### Test-First Rule
+- **Every code change MUST have corresponding tests.** No exceptions.
+- New routes: add integration tests in `tests/integration/`
+- New utility functions: add unit tests in `tests/unit/`
+- Security-sensitive changes: add tests in `tests/security/`
+- API changes: add tests in `tests/api/`
+
+### Before Every Commit
+1. Write or update tests for the changed code
+2. Run `make test` to verify ALL tests pass
+3. A git pre-commit hook will block commits if tests fail
+4. Claude Code hooks also enforce this automatically
+
+### Test Commands
+
+| Command | Description |
+|---|---|
+| `make test` | Run all tests in Docker (terminal output) |
+| `make test-report` | Run tests + generate `tests/report.html` (open in browser) |
+| `make test-cov` | Run tests + generate coverage report in `htmlcov/index.html` |
+| `make test-security` | Run only security tests |
+
+### Test File Conventions
+- Fixtures in `tests/conftest.py` (shared: `auth_client`, `sample_category`, `sample_tag`, etc.)
+- Use `get_csrf_token(client, url)` helper for CSRF tokens in integration tests
+- Use `pytest.mark.unit`, `pytest.mark.integration`, `pytest.mark.security`, `pytest.mark.api` markers
+- Use `with app.app_context():` when querying DB after HTTP requests in integration tests
+
+### Custom Slash Commands
+- `/test` - Run test suite and analyze results
+- `/test-fix <test_name>` - Debug and fix a specific failing test
+
+### Code Quality Rules
+- Use `datetime.now(timezone.utc)` instead of `datetime.utcnow()` (deprecated)
+- Use `db.session.get(Model, id)` instead of `Model.query.get(id)` (legacy)
+- All POST forms must include CSRF token
+- Validate input types (income/expense, buy/sell) before processing
+
 ## Important Notes
 
 - **No REST API**: Server-side rendered app. One JSON endpoint exists: `/cashflow/api/category-data` for chart drill-down via AJAX.

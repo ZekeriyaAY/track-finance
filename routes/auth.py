@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from models.user import User
-from models.__init__ import db
+from models import db
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ def login():
             
             # Redirect to the page they were trying to access, or home
             next_page = request.args.get('next')
-            if next_page and next_page.startswith('/'):
+            if next_page and next_page.startswith('/') and not next_page.startswith('//'):
                 return redirect(next_page)
             return redirect(url_for('cashflow.index'))
         else:

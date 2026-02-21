@@ -1,4 +1,4 @@
-from models.__init__ import db
+from models import db
 from models.cashflow import CashflowTransaction # Import CashflowTransaction model
 
 class Tag(db.Model):

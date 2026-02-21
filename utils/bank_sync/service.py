@@ -1,8 +1,8 @@
 import logging
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from dateutil.relativedelta import relativedelta
 
-from models.__init__ import db
+from models import db
 from models.bank_connection import BankConnection
 from models.cashflow import CashflowTransaction
 from models.category import Category
@@ -94,7 +94,7 @@ def sync_bank_connection(connection_id, date_from=None, date_to=None):
         db.session.commit()
 
         # Update connection sync status
-        connection.last_sync_at = datetime.utcnow()
+        connection.last_sync_at = datetime.now(timezone.utc)
         if result.error_count > 0 and result.new_count > 0:
             connection.last_sync_status = 'partial'
             result.status = 'partial'
@@ -111,7 +111,7 @@ def sync_bank_connection(connection_id, date_from=None, date_to=None):
         db.session.commit()
 
     except BankSyncError as e:
-        connection.last_sync_at = datetime.utcnow()
+        connection.last_sync_at = datetime.now(timezone.utc)
         connection.last_sync_status = 'error'
         connection.last_sync_message = str(e)
         db.session.commit()

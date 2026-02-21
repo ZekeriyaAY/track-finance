@@ -1,0 +1,31 @@
+#!/bin/bash
+# Git pre-commit hook: Run tests before allowing commits
+# Install: git config core.hooksPath .githooks
+
+echo "Running tests before commit..."
+
+# Check if Docker containers are running
+if ! docker compose -f docker-compose.yml -f docker-compose.dev.yml ps --status running app 2>/dev/null | grep -q app; then
+  echo "WARNING: Docker containers not running. Skipping pre-commit tests."
+  echo "Start with: make dev-d"
+  exit 0
+fi
+
+# Run tests
+RESULT=$(docker compose -f docker-compose.yml -f docker-compose.dev.yml exec -T app pytest --tb=line -q 2>&1)
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -ne 0 ]; then
+  echo ""
+  echo "COMMIT BLOCKED: Tests are failing!"
+  echo ""
+  echo "$RESULT" | tail -10
+  echo ""
+  echo "Fix the failing tests, then try again."
+  echo "Run 'make test' for full output."
+  exit 1
+fi
+
+SUMMARY=$(echo "$RESULT" | tail -1)
+echo "All tests passed: $SUMMARY"
+exit 0

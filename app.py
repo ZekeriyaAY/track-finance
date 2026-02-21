@@ -4,7 +4,7 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask, redirect, url_for, request, session, g
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user
-from models.__init__ import db
+from models import db
 from flask_wtf import CSRFProtect
 from config import config
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -184,7 +184,7 @@ def create_app(config_name=None):
             return {'status': 'healthy', 'service': 'track-finance', 'database': 'connected'}, 200
         except Exception as e:
             app.logger.error(f'Health check failed: {e}')
-            return {'status': 'unhealthy', 'service': 'track-finance', 'error': str(e)}, 503
+            return {'status': 'unhealthy', 'service': 'track-finance', 'error': 'Database connection failed'}, 503
     
     app.logger.info(f'Track Finance app created with config: {config_name}')
     return app

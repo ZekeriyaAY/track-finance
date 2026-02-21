@@ -1,4 +1,4 @@
-from models.__init__ import db
+from models import db
 from datetime import datetime, date
 
 # CashflowTransaction-Tag relationship table

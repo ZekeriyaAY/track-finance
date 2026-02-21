@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import random
-from models.__init__ import db
+from models import db
 from models.category import Category
 from models.tag import Tag
 from models.cashflow import CashflowTransaction

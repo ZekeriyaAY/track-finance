@@ -1,5 +1,5 @@
-from models.__init__ import db
-from datetime import datetime
+from models import db
+from datetime import datetime, timezone
 
 class Settings(db.Model):
     __tablename__ = 'settings'
@@ -7,8 +7,8 @@ class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     key = db.Column(db.String(100), unique=True, nullable=False)
     value = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
     def __repr__(self):
         return f'<Settings {self.key}: {self.value}>'
@@ -25,7 +25,7 @@ class Settings(db.Model):
         setting = cls.query.filter_by(key=key).first()
         if setting:
             setting.value = value
-            setting.updated_at = datetime.utcnow()
+            setting.updated_at = datetime.now(timezone.utc)
         else:
             setting = cls(key=key, value=value)
             db.session.add(setting)

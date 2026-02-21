@@ -1,4 +1,4 @@
-from models.__init__ import db
+from models import db
 from sqlalchemy import func
 
 class Category(db.Model):

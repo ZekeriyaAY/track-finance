@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from sqlalchemy.pool import StaticPool
 
 load_dotenv()
 
@@ -32,6 +33,9 @@ class Config:
         'pool_recycle': 300
     }
     
+    # File upload limits
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
+
     # Logging
     LOG_LEVEL = 'INFO'
     LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -52,8 +56,23 @@ class ProductionConfig(Config):
         if self.SECRET_KEY == 'very-secret-key':
             raise ValueError("Production requires a secure SECRET_KEY! Use: openssl rand -hex 32")
 
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'poolclass': StaticPool,
+        'connect_args': {'check_same_thread': False},
+    }
+    SECRET_KEY = 'test-secret-key-for-testing'
+    WTF_CSRF_ENABLED = True
+    WTF_CSRF_TIME_LIMIT = None
+    SERVER_NAME = 'localhost'
+    SESSION_COOKIE_SECURE = False
+    LOG_LEVEL = 'WARNING'
+
 config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
+    'testing': TestingConfig,
     'default': DevelopmentConfig
 }

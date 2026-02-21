@@ -1,5 +1,5 @@
-from datetime import datetime
-from models.__init__ import db
+from datetime import datetime, timezone
+from models import db
 
 class InvestmentType(db.Model):
     __tablename__ = 'investment_type'
@@ -9,8 +9,8 @@ class InvestmentType(db.Model):
     icon = db.Column(db.String(50), nullable=False, default='fas fa-chart-pie')  # Font Awesome icon class
     color = db.Column(db.String(7), nullable=False, default='#3B82F6')  # Default blue color
     parent_id = db.Column(db.Integer, db.ForeignKey('investment_type.id'), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationships
     parent = db.relationship('InvestmentType', remote_side=[id], backref='children')
@@ -29,8 +29,8 @@ class InvestmentTransaction(db.Model):
     quantity = db.Column(db.Float, nullable=False)
     total_amount = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     def __init__(self, investment_type_id, transaction_date, transaction_type, price, quantity, description=None):
         self.investment_type_id = investment_type_id

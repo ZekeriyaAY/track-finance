@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g
-from models.__init__ import db
+from models import db
 from models.settings import Settings
 from models.bank_connection import BankConnection
 from utils.data_utils import create_dummy_data, create_default_categories, create_default_tags, create_default_investment_types
