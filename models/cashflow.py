@@ -16,7 +16,7 @@ class CashflowTransaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     type = db.Column(db.String(10), nullable=False)  # 'income' veya 'expense'
-    amount = db.Column(db.Float, nullable=False)
+    amount = db.Column(db.Numeric(12, 2), nullable=False)
     description = db.Column(db.Text)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     external_transaction_id = db.Column(db.String(255), nullable=True, index=True)

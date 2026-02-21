@@ -191,7 +191,7 @@ class TestAddInvestmentRoute:
         with app.app_context():
             inv = InvestmentTransaction.query.filter_by(description='Calc test').first()
             assert inv is not None
-            assert abs(inv.total_amount - (123.45 * 7)) < 0.01
+            assert abs(float(inv.total_amount) - (123.45 * 7)) < 0.01
 
     def test_add_investment_redirects_to_index(self, auth_client, sample_investment_type):
         """POST /investments/add redirects to investment index."""
@@ -256,7 +256,7 @@ class TestEditInvestmentRoute:
 
         with app.app_context():
             inv = InvestmentTransaction.query.get(sample_investment.id)
-            assert abs(inv.total_amount - (200.00 * 12)) < 0.01
+            assert abs(float(inv.total_amount) - (200.00 * 12)) < 0.01
 
     def test_edit_nonexistent_investment(self, auth_client):
         """GET /investments/edit/99999 for nonexistent ID redirects (404 handler)."""

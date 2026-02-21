@@ -496,7 +496,7 @@ class TestInvestmentTransactionModel:
         db.session.add(txn)
         db.session.commit()
 
-        assert abs(txn.total_amount - 99.99) < 0.001
+        assert abs(float(txn.total_amount) - 99.99) < 0.001
 
     def test_total_amount_zero_quantity(self, app, db, sample_investment_type):
         """Zero quantity yields zero total_amount."""

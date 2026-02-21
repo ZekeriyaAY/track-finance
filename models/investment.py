@@ -25,9 +25,9 @@ class InvestmentTransaction(db.Model):
     investment_type_id = db.Column(db.Integer, db.ForeignKey('investment_type.id'), nullable=False)
     transaction_date = db.Column(db.DateTime, nullable=False)
     transaction_type = db.Column(db.String(10), nullable=False)  # 'buy' veya 'sell'
-    price = db.Column(db.Float, nullable=False)
-    quantity = db.Column(db.Float, nullable=False)
-    total_amount = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Numeric(12, 2), nullable=False)
+    quantity = db.Column(db.Numeric(15, 6), nullable=False)
+    total_amount = db.Column(db.Numeric(12, 2), nullable=False)
     description = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

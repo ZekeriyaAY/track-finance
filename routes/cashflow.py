@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
 from sqlalchemy import func, extract
 from models import db
@@ -66,6 +66,10 @@ def dashboard():
     else:
         d_to = today
 
+    # Swap if date_from is after date_to
+    if d_from > d_to:
+        d_from, d_to = d_to, d_from
+
     base_q = CashflowTransaction.query.filter(
         CashflowTransaction.date >= d_from,
         CashflowTransaction.date <= d_to,
@@ -102,9 +106,10 @@ def dashboard():
     expense_change = calc_pct_change(total_expense, prev_expense)
     savings_change = calc_pct_change(net_savings, prev_net_savings)
 
-    # Monthly income vs expense (fixed last 3 months, independent of filter)
-    monthly_from = today - relativedelta(months=3)
-    monthly_to = today
+    # Monthly income vs expense (uses filter dates, with minimum 4-month window)
+    default_monthly_from = today - relativedelta(months=3)
+    monthly_from = min(d_from, default_monthly_from)
+    monthly_to = max(d_to, today)
 
     monthly_data = db.session.query(
         extract('year', CashflowTransaction.date).label('year'),
@@ -173,7 +178,16 @@ def dashboard():
             daily_map[key] = {'income': 0, 'expense': 0}
         daily_map[key][row.type] = float(row.total)
 
-    sorted_days = sorted(daily_map.keys())
+    # Fill all days between d_from and d_to (no gaps in the chart x-axis)
+    sorted_days = []
+    current_day = d_from
+    while current_day <= d_to:
+        key = current_day.isoformat()
+        if key not in daily_map:
+            daily_map[key] = {'income': 0, 'expense': 0}
+        sorted_days.append(key)
+        current_day += timedelta(days=1)
+
     daily_labels = sorted_days
     daily_income = [daily_map[d]['income'] for d in sorted_days]
     daily_expense = [daily_map[d]['expense'] for d in sorted_days]
@@ -563,6 +577,10 @@ def category_data_api():
             d_to = today
     else:
         d_to = today
+
+    # Swap if date_from is after date_to
+    if d_from > d_to:
+        d_from, d_to = d_to, d_from
 
     if view_mode == 'parent':
         # Parent categories with aggregated child totals

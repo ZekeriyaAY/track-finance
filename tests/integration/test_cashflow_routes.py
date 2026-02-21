@@ -1,6 +1,6 @@
 """Integration tests for cashflow routes (/cashflow)."""
 import pytest
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from tests.conftest import get_csrf_token
 from models.cashflow import CashflowTransaction
 from models.category import Category
@@ -46,6 +46,84 @@ class TestDashboardRoute:
         response = client.get('/cashflow/dashboard', follow_redirects=False)
         assert response.status_code == 302
         assert '/auth/login' in response.headers.get('Location', '')
+
+    def test_dashboard_date_swap(self, auth_client, app, db, sample_category, sample_tag):
+        """Dashboard swaps d_from and d_to when d_from > d_to and returns correct data."""
+        with app.app_context():
+            txn = CashflowTransaction(
+                date=date(2024, 6, 15),
+                type='expense',
+                amount=200.0,
+                description='Mid-year expense',
+                category_id=sample_category.id,
+                source='manual',
+            )
+            db.session.add(txn)
+            db.session.commit()
+
+        # Send reversed dates (from > to)
+        response = auth_client.get(
+            '/cashflow/dashboard?date_from=2024-12-31&date_to=2024-01-01'
+        )
+        assert response.status_code == 200
+        # The transaction at 2024-06-15 should be visible after swap
+        assert b'200' in response.data
+
+    def test_dashboard_daily_trend_fills_gaps(self, auth_client, app, db, sample_category):
+        """Dashboard daily trend fills all days between d_from and d_to with no gaps."""
+        with app.app_context():
+            # Create transactions on non-consecutive days (day 1 and day 5)
+            txn1 = CashflowTransaction(
+                date=date(2024, 3, 1),
+                type='expense',
+                amount=50.0,
+                description='Day 1 expense',
+                category_id=sample_category.id,
+                source='manual',
+            )
+            txn2 = CashflowTransaction(
+                date=date(2024, 3, 5),
+                type='income',
+                amount=100.0,
+                description='Day 5 income',
+                category_id=sample_category.id,
+                source='manual',
+            )
+            db.session.add_all([txn1, txn2])
+            db.session.commit()
+
+        response = auth_client.get(
+            '/cashflow/dashboard?date_from=2024-03-01&date_to=2024-03-05'
+        )
+        assert response.status_code == 200
+        html = response.data.decode()
+        # All 5 days should appear in the daily labels
+        for day in range(1, 6):
+            assert f'2024-03-0{day}' in html
+
+    def test_dashboard_monthly_respects_filter(self, auth_client, app, db, sample_category):
+        """Dashboard monthly chart respects filter date range."""
+        with app.app_context():
+            # Create a transaction 6 months ago
+            txn = CashflowTransaction(
+                date=date(2023, 6, 15),
+                type='expense',
+                amount=500.0,
+                description='Old expense',
+                category_id=sample_category.id,
+                source='manual',
+            )
+            db.session.add(txn)
+            db.session.commit()
+
+        # Filter to include the old transaction period
+        response = auth_client.get(
+            '/cashflow/dashboard?date_from=2023-01-01&date_to=2023-12-31'
+        )
+        assert response.status_code == 200
+        html = response.data.decode()
+        # The monthly chart should include 2023-06
+        assert '2023-06' in html
 
 
 class TestCashflowIndexRoute:
@@ -475,3 +553,28 @@ class TestCategoryDataApiRoute:
         data = response.get_json()
         assert 'labels' in data
         assert 'values' in data
+
+    def test_category_data_api_date_swap(self, auth_client, app, db, sample_category):
+        """GET /cashflow/api/category-data swaps d_from and d_to when reversed."""
+        with app.app_context():
+            txn = CashflowTransaction(
+                date=date(2024, 6, 15),
+                type='expense',
+                amount=300.0,
+                description='Mid-year for API test',
+                category_id=sample_category.id,
+                source='manual',
+            )
+            db.session.add(txn)
+            db.session.commit()
+
+        # Send reversed dates
+        response = auth_client.get(
+            '/cashflow/api/category-data?view_mode=parent'
+            '&date_from=2024-12-31&date_to=2024-01-01'
+        )
+        assert response.status_code == 200
+        data = response.get_json()
+        # After swap, the transaction should be found
+        assert len(data['values']) > 0
+        assert any(v >= 300.0 for v in data['values'])
