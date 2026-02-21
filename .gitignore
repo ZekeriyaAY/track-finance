@@ -23,6 +23,11 @@ instance/
 .DS_Store
 Thumbs.db
 
+# Test artifacts
+.coverage
+htmlcov/
+tests/report.html
+
 # Logs
 *.log
 logs/
