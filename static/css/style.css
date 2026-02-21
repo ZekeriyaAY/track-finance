@@ -346,12 +346,134 @@ form a.btn {
     .table-responsive {
         border-radius: 0.75rem;
     }
-    
+
     .btn-sm {
         padding: 0.25rem 0.5rem;
     }
-    
+
     .badge {
         padding: 0.35em 0.65em;
     }
+}
+
+/* ============================================
+   Mobile Responsive Styles
+   ============================================ */
+
+/* --- General mobile spacing --- */
+@media (max-width: 640px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .card {
+        border-radius: 0.75rem;
+    }
+
+    .card .card-body {
+        padding: 1rem;
+    }
+}
+
+/* --- Page header: stack title and buttons vertically --- */
+@media (max-width: 640px) {
+    .page-header {
+        margin-bottom: 1rem;
+    }
+}
+
+/* --- Summary bars (Income/Expense/Net at bottom of tables) --- */
+@media (max-width: 640px) {
+    .summary-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+/* --- Bulk edit floating bar: compact on mobile --- */
+@media (max-width: 640px) {
+    #bulk-bar .bg-card {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        max-width: calc(100vw - 2rem);
+    }
+
+    #bulk-bar .bg-card select {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        max-width: 140px;
+    }
+
+    #bulk-bar .bg-card .w-px {
+        display: none;
+    }
+}
+
+/* --- Mobile table improvements --- */
+@media (max-width: 640px) {
+    .table th,
+    .table td {
+        padding: 0.5rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .table th {
+        font-size: 0.7rem;
+        letter-spacing: 0.3px;
+    }
+
+    /* Ensure horizontal scroll hint */
+    .card .table-responsive,
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    /* Reduce minimum widths on mobile tables */
+    .table .min-w-\[250px\] {
+        min-width: 150px;
+    }
+}
+
+/* --- Mobile form improvements: stack fields vertically --- */
+@media (max-width: 640px) {
+    .form-control, .form-select {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    /* Form action buttons: full width on mobile */
+    form .flex.justify-end {
+        flex-direction: column;
+    }
+
+    form .flex.justify-end .btn,
+    form .flex.justify-end a.btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* --- Dashboard-specific mobile fixes --- */
+@media (max-width: 640px) {
+    /* Chart containers: reduce min-height on mobile */
+    .h-72 {
+        height: 14rem;
+    }
+
+    /* Doughnut chart legend: move below chart on small screens */
+    #categoryChartContainer {
+        min-height: auto !important;
+    }
+}
+
+/* --- Navbar mobile menu styles --- */
+#mobile-menu {
+    background-color: #23272b;
+}
+
+#mobile-menu a {
+    transition: background-color 0.2s ease;
 } 

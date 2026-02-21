@@ -4,9 +4,9 @@
 
 {% block content %}
 <div class="flex flex-col gap-6">
-  <div class="flex justify-between items-center mb-6">
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
     <h1 class="text-2xl font-semibold">Cashflow Transactions</h1>
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <form action="{{ url_for('cashflow.sync_transactions') }}" method="POST" style="display:inline;" id="sync-form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button type="submit" id="sync-btn" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
@@ -105,8 +105,9 @@
     </form>
   </div>
 
-  <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
+  <div class="bg-card rounded-xl shadow p-0 mb-8">
     {% if transactions %}
+      <div class="overflow-x-auto">
       <table class="min-w-full text-sm align-middle">
         <thead>
           <tr class="bg-darkbg/80">
@@ -176,13 +177,14 @@ Delete
           {% endfor %}
         </tbody>
       </table>
+      </div>
 
       <!-- Summary -->
-      <div class="bg-darkbg/40 px-4 py-3 flex justify-between items-center text-sm border-t border-gray-800">
+      <div class="bg-darkbg/40 px-4 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-sm border-t border-gray-800 rounded-b-xl">
         <span class="text-gray-400">
           Showing <span class="text-white font-medium">{{ transactions|length }}</span> transaction(s)
         </span>
-        <div class="flex gap-6">
+        <div class="flex flex-wrap gap-3 sm:gap-6">
           {% set total_income = transactions | selectattr('type', 'equalto', 'income') | map(attribute='amount') | sum %}
           {% set total_expense = transactions | selectattr('type', 'equalto', 'expense') | map(attribute='amount') | sum %}
           <span class="text-green-400">
@@ -229,7 +231,7 @@ Delete
       <input type="hidden" name="filter_date_to" value="{{ selected_date_to or '' }}">
       <input type="hidden" name="filter_search" value="{{ selected_search or '' }}">
 
-      <div class="bg-card rounded-xl shadow-2xl border border-gray-700/50 px-4 py-3 flex items-center gap-3">
+      <div class="bg-card rounded-xl shadow-2xl border border-gray-700/50 px-4 py-3 flex flex-wrap items-center gap-3">
         <!-- Count -->
         <span class="text-sm text-gray-300 whitespace-nowrap">
           <span id="bulk-count" class="text-primary font-semibold">0</span> selected

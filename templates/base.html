@@ -11,7 +11,13 @@
                     Where's My Money?
                 </a>
             </div>
-            <div class="flex gap-2">
+            <!-- Hamburger button (mobile only) -->
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md hover:bg-primary/10 transition text-gray-300" aria-label="Toggle menu" aria-expanded="false">
+                <i class="fas fa-bars text-xl" id="menu-icon-open"></i>
+                <i class="fas fa-times text-xl hidden" id="menu-icon-close"></i>
+            </button>
+            <!-- Desktop nav links (hidden on mobile) -->
+            <div class="hidden md:flex gap-2">
                 <a href="{{ url_for('cashflow.dashboard') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'cashflow.dashboard' %}bg-primary/20 text-primary font-semibold{% endif %}">Dashboard</a>
                 <a href="{{ url_for('cashflow.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['cashflow.index', 'cashflow.add_cashflow', 'cashflow.edit_cashflow'] %}bg-primary/20 text-primary font-semibold{% endif %}">Cash Flow</a>
                 <a href="{{ url_for('investment.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment.index', 'investment.add_investment', 'investment.edit_investment'] %}bg-primary/20 text-primary font-semibold{% endif %}">Investments</a>
@@ -64,6 +70,78 @@ Settings
                 </div>
             </div>
         </div>
+        <!-- Mobile menu panel (hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-700/50">
+            <div class="container mx-auto px-4 py-2 flex flex-col">
+                <!-- Main nav items -->
+                <a href="{{ url_for('cashflow.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'cashflow.dashboard' %}bg-primary/20 text-primary font-semibold{% endif %}">
+                    <i class="fas fa-chart-line w-5 text-center"></i>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('cashflow.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['cashflow.index', 'cashflow.add_cashflow', 'cashflow.edit_cashflow'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                    <i class="fas fa-money-bill-wave w-5 text-center"></i>
+                    Cash Flow
+                </a>
+                <a href="{{ url_for('investment.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment.index', 'investment.add_investment', 'investment.edit_investment'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                    <i class="fas fa-chart-pie w-5 text-center"></i>
+                    Investments
+                </a>
+                <a href="{{ pgadmin_url }}" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition">
+                    <i class="fas fa-database w-5 text-center"></i>
+                    PgAdmin
+                </a>
+                <!-- Management section -->
+                <div class="border-t border-gray-700/50 mt-2 pt-2">
+                    <span class="block px-4 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Management</span>
+                    <a href="{{ url_for('category.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add_category', 'category.edit_category'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                        <i class="fas fa-folder w-5 text-center"></i>
+                        Categories
+                    </a>
+                    <a href="{{ url_for('tag.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['tag.index', 'tag.add_tag', 'tag.edit_tag'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                        <i class="fas fa-tag w-5 text-center"></i>
+                        Tags
+                    </a>
+                    <a href="{{ url_for('investment_type.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                        <i class="fas fa-coins w-5 text-center"></i>
+                        Investment Types
+                    </a>
+                    <a href="{{ url_for('settings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'settings.index' %}bg-primary/20 text-primary font-semibold{% endif %}">
+                        <i class="fas fa-cog w-5 text-center"></i>
+                        Settings
+                    </a>
+                </div>
+                <!-- User section -->
+                <div class="border-t border-gray-700/50 mt-2 pt-2 pb-2">
+                    <span class="block px-4 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <i class="fas fa-user mr-1"></i>{{ current_user.username }}
+                    </span>
+                    <a href="{{ url_for('auth.account') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'auth.account' %}bg-primary/20 text-primary font-semibold{% endif %}">
+                        <i class="fas fa-cog w-5 text-center"></i>
+                        Account Settings
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" class="flex items-center gap-3 px-4 py-3 rounded-md text-red-500 bg-red-700/10 hover:bg-red-700/20 transition">
+                        <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu toggle script -->
+        <script>
+            (function() {
+                var btn = document.getElementById('mobile-menu-btn');
+                var menu = document.getElementById('mobile-menu');
+                var iconOpen = document.getElementById('menu-icon-open');
+                var iconClose = document.getElementById('menu-icon-close');
+                btn.addEventListener('click', function() {
+                    var isOpen = !menu.classList.contains('hidden');
+                    menu.classList.toggle('hidden');
+                    iconOpen.classList.toggle('hidden');
+                    iconClose.classList.toggle('hidden');
+                    btn.setAttribute('aria-expanded', !isOpen);
+                });
+            })();
+        </script>
     </nav>
 
     <div class="container mx-auto px-4 flex-grow">

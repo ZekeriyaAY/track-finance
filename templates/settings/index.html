@@ -4,12 +4,12 @@
 
 {% block content %}
 <div class="flex flex-col gap-6">
-  <div class="flex justify-between items-center mb-4">
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
     <h1 class="text-2xl font-bold">Settings</h1>
   </div>
 
   <!-- External Tools -->
-  <div class="bg-card rounded-xl shadow p-6 space-y-6">
+  <div class="bg-card rounded-xl shadow p-4 sm:p-6 space-y-6">
     <div class="space-y-4">
       <h2 class="text-xl font-semibold">External Tools</h2>
       <p class="text-gray-400 text-sm">Configure URLs for external tools like PgAdmin.</p>
@@ -19,13 +19,13 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="flex flex-col space-y-2">
           <label for="pgadmin_url" class="block text-sm font-medium text-gray-300">PgAdmin URL</label>
-          <div class="flex gap-2">
+          <div class="flex flex-col sm:flex-row gap-2">
             <input type="url" id="pgadmin_url" name="pgadmin_url" value="{{ pgadmin_url }}"
               placeholder="http://localhost:5050"
-              class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+              class="w-full sm:flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
               required>
             <button type="submit"
-              class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
               <i class="fas fa-save"></i>
               Update
             </button>
@@ -36,7 +36,7 @@
   </div>
 
   <!-- Bank Connections -->
-  <div class="bg-card rounded-xl shadow p-6 space-y-6">
+  <div class="bg-card rounded-xl shadow p-4 sm:p-6 space-y-6">
     <div class="space-y-4">
       <h2 class="text-xl font-semibold">Bank Connections</h2>
       <p class="text-gray-400 text-sm">Connect your bank accounts to automatically sync transactions.</p>
@@ -46,22 +46,22 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="flex flex-col space-y-2">
           <label class="block text-sm font-medium text-gray-300">New Connection</label>
-          <div class="flex gap-2">
+          <div class="flex flex-col sm:flex-row flex-wrap gap-2">
             <select id="bank_code" name="bank_code" required
-              class="px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+              class="w-full sm:w-auto px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
               <option value="">Select bank...</option>
               {% for code, name in available_banks %}
               <option value="{{ code }}">{{ name }}</option>
               {% endfor %}
             </select>
             <input type="text" id="client_id" name="client_id" required placeholder="Client ID"
-              class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+              class="w-full sm:flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
             <input type="password" id="client_secret" name="client_secret" required placeholder="Client Secret"
-              class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+              class="w-full sm:flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
             <input type="text" id="account_id" name="account_id" placeholder="Account ID (optional)"
-              class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+              class="w-full sm:flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
             <button type="submit"
-              class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
               <i class="fas fa-plus"></i>
               Add
             </button>
@@ -74,8 +74,8 @@
       <div class="flex flex-col space-y-2 mt-2">
         <label class="block text-sm font-medium text-gray-300">Active Connections</label>
         {% for conn in bank_connections %}
-        <div class="flex items-center gap-2">
-          <div class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white flex items-center gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+          <div class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white flex flex-wrap items-center gap-2 sm:gap-3">
             <span class="font-medium">{{ conn.bank_name }}</span>
             {% if conn.is_active %}
             <span class="px-1.5 py-0.5 rounded text-xs bg-green-700/20 text-green-300">Active</span>
@@ -85,7 +85,7 @@
             {% if conn.account_id %}
             <span class="text-sm text-gray-500">{{ conn.account_id }}</span>
             {% endif %}
-            <span class="text-sm text-gray-500 ml-auto">
+            <span class="text-sm text-gray-500 sm:ml-auto">
               {% if conn.last_sync_at %}
                 {{ conn.last_sync_at.strftime('%d.%m.%Y %H:%M') }}
                 {% if conn.last_sync_status == 'success' %}
@@ -100,31 +100,33 @@
               {% endif %}
             </span>
           </div>
-          <form action="{{ url_for('settings.test_bank_connection', id=conn.id) }}" method="POST" style="display:inline;">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-              <i class="fas fa-plug"></i> Test
-            </button>
-          </form>
-          <form action="{{ url_for('settings.toggle_bank_connection', id=conn.id) }}" method="POST" style="display:inline;">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            {% if conn.is_active %}
-            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-yellow-700/10 text-yellow-400 hover:bg-yellow-700/20 transition text-sm">
-              <i class="fas fa-toggle-on"></i> Deactivate
-            </button>
-            {% else %}
-            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-green-700/10 text-green-400 hover:bg-green-700/20 transition text-sm">
-              <i class="fas fa-toggle-off"></i> Activate
-            </button>
-            {% endif %}
-          </form>
-          <form action="{{ url_for('settings.delete_bank_connection', id=conn.id) }}" method="POST" style="display:inline;"
-            onsubmit="return confirm('Delete this bank connection?');">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-sm">
-              <i class="fas fa-trash"></i> Delete
-            </button>
-          </form>
+          <div class="flex flex-wrap gap-2">
+            <form action="{{ url_for('settings.test_bank_connection', id=conn.id) }}" method="POST" style="display:inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+                <i class="fas fa-plug"></i> Test
+              </button>
+            </form>
+            <form action="{{ url_for('settings.toggle_bank_connection', id=conn.id) }}" method="POST" style="display:inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              {% if conn.is_active %}
+              <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-yellow-700/10 text-yellow-400 hover:bg-yellow-700/20 transition text-sm">
+                <i class="fas fa-toggle-on"></i> Deactivate
+              </button>
+              {% else %}
+              <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-green-700/10 text-green-400 hover:bg-green-700/20 transition text-sm">
+                <i class="fas fa-toggle-off"></i> Activate
+              </button>
+              {% endif %}
+            </form>
+            <form action="{{ url_for('settings.delete_bank_connection', id=conn.id) }}" method="POST" style="display:inline;"
+              onsubmit="return confirm('Delete this bank connection?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-sm">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </form>
+          </div>
         </div>
         {% endfor %}
       </div>
@@ -133,7 +135,7 @@
   </div>
 
   <!-- Default Data -->
-  <div class="bg-card rounded-xl shadow p-6 space-y-6">
+  <div class="bg-card rounded-xl shadow p-4 sm:p-6 space-y-6">
     <div class="space-y-4">
       <h2 class="text-xl font-semibold">Default Data</h2>
       <p class="text-gray-400 text-sm">Existing data will not be recreated, only missing data will be added.
@@ -193,7 +195,7 @@ Create Investment Types
   </div>
 
   <!-- Database Management -->
-  <div class="bg-card rounded-xl shadow p-6 space-y-6">
+  <div class="bg-card rounded-xl shadow p-4 sm:p-6 space-y-6">
     <div class="space-y-4">
       <h2 class="text-xl font-semibold">Database Management</h2>
 

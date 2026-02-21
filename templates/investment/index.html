@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="flex flex-col gap-6">
-  <div class="flex justify-between items-center mb-6">
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
     <h1 class="text-2xl font-semibold">Investment Transactions</h1>
     <form action="{{ url_for('investment.add_investment') }}" method="get" style="display:inline;">
       <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
@@ -71,8 +71,9 @@ New Transaction
     </form>
   </div>
 
-  <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
+  <div class="bg-card rounded-xl shadow p-0 mb-8">
     {% if transactions %}
+      <div class="overflow-x-auto">
       <table class="min-w-full text-sm align-middle">
         <thead>
           <tr class="bg-darkbg/80">
@@ -131,13 +132,14 @@ Delete
           {% endfor %}
         </tbody>
       </table>
-      
+      </div>
+
       <!-- Summary -->
-      <div class="bg-darkbg/40 px-4 py-3 flex justify-between items-center text-sm border-t border-gray-800">
+      <div class="bg-darkbg/40 px-4 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-sm border-t border-gray-800 rounded-b-xl">
         <span class="text-gray-400">
           Showing <span class="text-white font-medium">{{ transactions|length }}</span> transaction(s)
         </span>
-        <div class="flex gap-6">
+        <div class="flex flex-wrap gap-3 sm:gap-6">
           {% set total_buy = transactions | selectattr('transaction_type', 'equalto', 'buy') | map(attribute='total_amount') | sum %}
           {% set total_sell = transactions | selectattr('transaction_type', 'equalto', 'sell') | map(attribute='total_amount') | sum %}
           <span class="text-green-400">
