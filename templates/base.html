@@ -23,7 +23,7 @@
                 <a href="{{ url_for('investment.index') }}" class="px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment.index', 'investment.add_investment', 'investment.edit_investment'] %}bg-primary/20 text-primary font-semibold{% endif %}">Investments</a>
                 <a href="{{ pgadmin_url }}" target="_blank" class="px-4 py-2 rounded-md hover:bg-primary/10 transition">PgAdmin</a>
                 <div class="relative group">
-                  <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add_category', 'category.edit_category', 'tag.index', 'tag.add_tag', 'tag.edit_tag', 'investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type', 'settings.index'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                  <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['category.index', 'category.add_category', 'category.edit_category', 'tag.index', 'tag.add_tag', 'tag.edit_tag', 'investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type', 'categorization_rule.index', 'categorization_rule.add_rule', 'categorization_rule.edit_rule', 'settings.index'] %}bg-primary/20 text-primary font-semibold{% endif %}">
 Management
                     <i class="fas fa-chevron-down"></i>
                   </button>
@@ -40,6 +40,10 @@ Tags
                       <a href="{{ url_for('investment_type.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         <i class="fas fa-coins"></i>
 Investment Types
+                      </a>
+                      <a href="{{ url_for('categorization_rule.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint in ['categorization_rule.index', 'categorization_rule.add_rule', 'categorization_rule.edit_rule'] %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+Import Rules
                       </a>
                       <a href="{{ url_for('settings.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-primary/10 transition {% if request.endpoint == 'settings.index' %}bg-primary/20 text-primary font-semibold{% endif %} flex items-center gap-2">
                         <i class="fas fa-cog"></i>
@@ -104,6 +108,10 @@ Settings
                     <a href="{{ url_for('investment_type.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type'] %}bg-primary/20 text-primary font-semibold{% endif %}">
                         <i class="fas fa-coins w-5 text-center"></i>
                         Investment Types
+                    </a>
+                    <a href="{{ url_for('categorization_rule.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint in ['categorization_rule.index', 'categorization_rule.add_rule', 'categorization_rule.edit_rule'] %}bg-primary/20 text-primary font-semibold{% endif %}">
+                        <i class="fas fa-wand-magic-sparkles w-5 text-center"></i>
+                        Import Rules
                     </a>
                     <a href="{{ url_for('settings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition {% if request.endpoint == 'settings.index' %}bg-primary/20 text-primary font-semibold{% endif %}">
                         <i class="fas fa-cog w-5 text-center"></i>

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit Rule' if rule else 'Add Rule' }}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-6">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">{{ 'Edit Rule' if rule else 'Add Rule' }}</h1>
+    <form method="get" action="{{ url_for('categorization_rule.index') }}">
+      <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+        <i class="fas fa-arrow-left"></i>
+Go Back
+      </button>
+    </form>
+  </div>
+
+  <div class="bg-card rounded-xl shadow p-6">
+    <form method="POST" action="{{ url_for('categorization_rule.edit_rule', id=rule.id) if rule else url_for('categorization_rule.add_rule') }}" class="space-y-6">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label for="name" class="block text-sm font-medium text-gray-300">Rule Name</label>
+          <input type="text" id="name" name="name" value="{{ rule.name if rule else '' }}" required
+                 placeholder="e.g. Grocery Shopping"
+                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+        </div>
+
+        <div class="space-y-2">
+          <label for="operator" class="block text-sm font-medium text-gray-300">Operator</label>
+          <select id="operator" name="operator" required
+                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            <option value="contains" {% if rule and rule.operator == 'contains' %}selected{% endif %}>Contains</option>
+            <option value="equals" {% if rule and rule.operator == 'equals' %}selected{% endif %}>Equals</option>
+            <option value="starts_with" {% if rule and rule.operator == 'starts_with' %}selected{% endif %}>Starts with</option>
+            <option value="ends_with" {% if rule and rule.operator == 'ends_with' %}selected{% endif %}>Ends with</option>
+          </select>
+        </div>
+
+        <div class="space-y-2 md:col-span-2">
+          <label for="value" class="block text-sm font-medium text-gray-300">Match Value</label>
+          <input type="text" id="value" name="value" value="{{ rule.value if rule else '' }}" required
+                 placeholder="migros, maaş, netflix"
+                 style="text-transform: lowercase;"
+                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+          <p class="text-xs text-gray-500">Case-insensitive. Values are stored in lowercase.</p>
+        </div>
+
+        <div class="space-y-2">
+          <label for="category_id" class="block text-sm font-medium text-gray-300">Category</label>
+          <select id="category_id" name="category_id" required
+                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            {% for category in categories %}
+              {% if not category.parent %}
+                <optgroup label="{{ category.name }}">
+                  {% for subcategory in category.subcategories %}
+                    <option value="{{ subcategory.id }}" {% if rule and rule.category_id == subcategory.id %}selected{% endif %}>{{ subcategory.name }}</option>
+                  {% endfor %}
+                </optgroup>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label for="type_override" class="block text-sm font-medium text-gray-300">Type Override</label>
+          <select id="type_override" name="type_override"
+                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            <option value="" {% if not rule or not rule.type_override %}selected{% endif %}>No override (keep from file)</option>
+            <option value="income" {% if rule and rule.type_override == 'income' %}selected{% endif %}>Income</option>
+            <option value="expense" {% if rule and rule.type_override == 'expense' %}selected{% endif %}>Expense</option>
+          </select>
+        </div>
+
+        <div class="space-y-2 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-300">Tags</label>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {% for tag in tags %}
+            <label class="inline-flex items-center gap-2 p-2 rounded-md bg-darkbg border border-gray-700 hover:bg-gray-700/50 cursor-pointer">
+              <input type="checkbox" name="tags" value="{{ tag.id }}"
+                     {% if rule and tag in rule.tags %}checked{% endif %}
+                     class="rounded border-gray-600 text-primary focus:ring-primary/50">
+              <span class="text-sm text-gray-300">{{ tag.name }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="space-y-2 md:col-span-2">
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="is_active" value="1"
+                   {% if not rule or rule.is_active %}checked{% endif %}
+                   class="rounded border-gray-600 text-primary focus:ring-primary/50">
+            <span class="text-sm font-medium text-gray-300">Active</span>
+          </label>
+          <p class="text-xs text-gray-500">Inactive rules are skipped during import.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <a href="{{ url_for('categorization_rule.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-sm">
+          <i class="fas fa-times"></i>
+          Cancel
+        </a>
+        <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
+          <i class="fas fa-save"></i>
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
