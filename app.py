@@ -130,6 +130,7 @@ def create_app(config_name=None):
 
     # Import models for Alembic autogenerate
     from models.bank_connection import BankConnection  # noqa: F401
+    from models.categorization_rule import CategorizationRule  # noqa: F401
 
     # Import blueprints
     from routes.cashflow import cashflow_bp
@@ -139,6 +140,7 @@ def create_app(config_name=None):
     from routes.investment_type import investment_type_bp
     from routes.settings import settings_bp
     from routes.auth import auth_bp
+    from routes.categorization_rule import categorization_rule_bp
 
     # Register blueprints
     app.register_blueprint(auth_bp)
@@ -148,6 +150,7 @@ def create_app(config_name=None):
     app.register_blueprint(investment_bp)
     app.register_blueprint(investment_type_bp)
     app.register_blueprint(settings_bp)
+    app.register_blueprint(categorization_rule_bp)
     
     # Create default admin user on first run (after migrations)
     @app.before_request
