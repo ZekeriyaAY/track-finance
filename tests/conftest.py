@@ -15,6 +15,7 @@ from models.cashflow import CashflowTransaction
 from models.investment import InvestmentType, InvestmentTransaction
 from models.settings import Settings
 from models.bank_connection import BankConnection
+from models.categorization_rule import CategorizationRule
 
 
 @pytest.fixture(scope='session')
@@ -174,3 +175,20 @@ def sample_investment(db, sample_investment_type):
     db.session.add(inv)
     db.session.commit()
     return inv
+
+
+@pytest.fixture()
+def sample_rule(db, sample_subcategory):
+    """Create a sample categorization rule."""
+    rule = CategorizationRule(
+        name='Test Rule',
+        priority=0,
+        is_active=True,
+        field='description',
+        operator='contains',
+        value='migros',
+        category_id=sample_subcategory.id,
+    )
+    db.session.add(rule)
+    db.session.commit()
+    return rule

@@ -423,16 +423,35 @@ def import_excel():
                 db.session.add(bank_tag)
                 db.session.flush()  # Get ID
             
+            # Load active categorization rules for auto-categorization
+            from models.categorization_rule import CategorizationRule
+            active_rules = CategorizationRule.query.filter_by(is_active=True).order_by(
+                CategorizationRule.priority.asc()
+            ).all()
+
             for transaction_data in result['transactions']:
                 try:
+                    # Apply categorization rules (first match wins)
+                    matched_category_id = import_category.id
+                    matched_tags = [bank_tag]
+                    matched_type = transaction_data['type']
+
+                    for rule in active_rules:
+                        if rule.matches(transaction_data.get('description', '')):
+                            matched_category_id = rule.category_id
+                            matched_tags = [bank_tag] + list(rule.tags)
+                            if rule.type_override:
+                                matched_type = rule.type_override
+                            break
+
                     transaction = CashflowTransaction(
-                        date=transaction_data['date'],  # Already converted to date in excel_processor
-                        amount=abs(transaction_data['amount']),  # Amount is always positive
-                        type=transaction_data['type'],  # income or expense
-                        category_id=import_category.id,
+                        date=transaction_data['date'],
+                        amount=abs(transaction_data['amount']),
+                        type=matched_type,
+                        category_id=matched_category_id,
                         description=transaction_data['description'],
                         source='excel_import',
-                        tags = [bank_tag]
+                        tags=matched_tags,
                     )
                     
                     db.session.add(transaction)
