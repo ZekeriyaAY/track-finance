@@ -162,7 +162,7 @@ def create_app(config_name=None):
             if User.query.count() == 0:
                 admin_user = User.create_default_user(
                     username=app.config.get('ADMIN_USERNAME', 'admin'),
-                    password=app.config.get('ADMIN_PASSWORD', 'changeme123')
+                    password=app.config.get('ADMIN_PASSWORD', 'admin')
                 )
                 if admin_user:
                     app.logger.info(f'Created default admin user: {admin_user.username}')
