@@ -1,286 +1,253 @@
-# CLAUDE.md -- Context for AI Coding Assistants
+# CLAUDE.md
 
-## Project Overview
+## Project Identity
 
-**Where's My Money?** is a self-hosted, single-user personal finance tracker built with Flask and PostgreSQL. It provides cashflow tracking (income/expense), investment transaction tracking, bank statement import (Excel/CSV), bank API sync, and a dashboard with analytics charts. All amounts are in Turkish Lira (TRY).
+**Where's My Money?** — Self-hosted, single-user personal finance tracker. Turkish Lira (TRY) only.
+Target: One person tracking their own income/expenses and investments. No multi-tenancy, no public API.
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Language | Python 3.11 |
-| Framework | Flask 3.0.2 |
-| ORM | SQLAlchemy 2.0 via Flask-SQLAlchemy |
-| Database | PostgreSQL 15 |
-| Migrations | Alembic via Flask-Migrate |
-| Auth | Flask-Login (single-user, auto-creates admin on first run) |
-| CSRF | Flask-WTF (CSRFProtect) |
-| Templates | Jinja2 (server-side rendering) |
-| CSS | Tailwind CSS via CDN (with forms, typography plugins) + custom dark theme CSS |
-| Charts | Chart.js v4 (CDN, dashboard only) |
-| Icons | Font Awesome 6.5.2 (CDN) |
-| Font | Google Fonts "Inter" |
-| Encryption | Fernet (for bank credentials, derived from SECRET_KEY) |
-| Server | Gunicorn (4 workers) in production, Flask dev server in development |
-| Container | Docker (python:3.11-slim), Docker Compose |
+- **Backend:** Python 3.11, Flask 3.0.2, SQLAlchemy 2.0, PostgreSQL 15
+- **Frontend:** Jinja2 SSR, Tailwind CSS (CDN), Chart.js v4 (CDN), Font Awesome 6.5.2 (CDN)
+- **Auth:** Flask-Login, single admin user (auto-created on first run)
+- **Container:** Docker Compose (app + db + pgadmin), Gunicorn in production
+- **Tests:** pytest in Docker, SQLite in-memory for test isolation
 
-## Architecture
-
-- **Application factory pattern**: `create_app()` in `app.py`
-- **Blueprint-based routing**: Each domain (cashflow, category, tag, investment, etc.) has its own blueprint with url_prefix
-- **Server-side rendering**: Jinja2 templates with template inheritance (base_layout -> base -> page templates)
-- **No separate frontend build**: Tailwind, Chart.js, Font Awesome all loaded via CDN. All JS is inline in templates (~535 lines total)
-- **Adapter pattern for bank sync**: Abstract `BaseBankAdapter` with registry decorator, extensible for new banks
-- **Single-user auth**: Flask-Login with Werkzeug password hashing, default admin created on first run
-
-## Directory Structure
+## Architecture Fundamentals
 
 ```
-track-finance/
-  app.py                          # Flask app factory, middleware, error handlers
-  config.py                       # Dev/Prod config classes
-  gunicorn-conf.py                # Production WSGI server config
-  requirements.txt                # Python dependencies
-  Dockerfile                      # Container build (python:3.11-slim, non-root user)
-  docker-compose.yml              # Production stack (app + db + pgadmin)
-  docker-compose.dev.yml          # Dev overlay (hot-reload, source mount)
-  Makefile                        # Docker convenience commands
-  models/
-    __init__.py                   # Shared db = SQLAlchemy() instance
-    user.py                       # User auth (single-user)
-    category.py                   # Hierarchical categories (self-referential)
-    tag.py                        # Transaction tags (M2M with cashflow)
-    cashflow.py                   # CashflowTransaction + junction table
-    investment.py                 # InvestmentType (hierarchical) + InvestmentTransaction
-    settings.py                   # Key-value settings store
-    bank_connection.py            # Bank API connections (encrypted credentials)
-  routes/
-    auth.py                       # /auth -- login, logout, account, password/username change
-    cashflow.py                   # /cashflow -- dashboard, transactions, import, sync, bulk-edit, API
-    category.py                   # /categories -- CRUD
-    tag.py                        # /tags -- CRUD
-    investment.py                 # /investments -- CRUD with filters
-    investment_type.py            # /investment-types -- CRUD
-    settings.py                   # /settings -- config, seed data, bank connections, DB reset
-  utils/
-    data_utils.py                 # Seed data generators (categories, tags, investment types, dummy data)
-    excel_processor.py            # Excel/CSV import pipeline (Turkish amount parsing)
-    bank_configs.py               # Bank-specific Excel format definitions
-    encryption.py                 # Fernet encrypt/decrypt for bank credentials
-    bank_sync/
-      base.py                     # Abstract BaseBankAdapter, dataclasses, exceptions
-      registry.py                 # Adapter registry (decorator pattern)
-      service.py                  # Sync orchestration service
-      yapikredi_adapter.py        # Yapi Kredi bank API adapter (OAuth2)
-  templates/                      # Jinja2 templates (18 files)
-    base_layout.html              # Root: head, Tailwind CDN, custom config
-    base.html                     # App layout: navbar, flash messages, content
-    base_minimal.html             # Minimal layout (login page only)
-    cashflow/                     # dashboard.html, index.html, form.html, import.html
-    investment/                   # index.html, form.html
-    category/                     # index.html, form.html
-    tag/                          # index.html, form.html
-    investment_type/              # index.html, form.html
-    auth/                         # login.html, account.html
-    settings/                     # index.html
-  static/
-    css/style.css                 # 357 lines custom dark theme CSS
-    *.png, favicon.ico            # App icons (16, 32, 192, 512)
-    site.webmanifest              # PWA manifest
-  migrations/                     # Alembic migrations
-  logs/                           # App logs (gitignored)
+app.py (factory: create_app)
+├── models/          → SQLAlchemy models, db instance in __init__.py
+├── routes/          → Flask Blueprints (one per domain)
+├── utils/           → Pure functions, bank adapters, data processors
+├── templates/       → Jinja2 (base_layout → base → page)
+├── static/css/      → Custom dark-theme CSS (Bootstrap-like class names)
+└── tests/           → unit/ integration/ security/ api/
 ```
 
-## Database Models
+**Key architectural decisions:**
+- Application factory pattern (`create_app()` in `app.py`)
+- Blueprint-per-domain with `url_prefix` (cashflow, category, tag, investment, investment_type, settings, auth, categorization_rule)
+- Server-side rendering only — no SPA, no frontend build step, no npm
+- All JS is inline in templates (no separate .js files)
+- Hierarchical models via self-referential `parent_id` (Category, InvestmentType)
+- Bank sync uses adapter pattern with registry decorator (`utils/bank_sync/`)
 
+## Code Conventions
+
+### Language & Naming
+- **Code language:** English (variables, functions, classes, comments)
+- **Functions/variables:** `snake_case`
+- **Classes:** `PascalCase`
+- **Constants:** `UPPER_SNAKE_CASE`
+- **URLs:** kebab-case (`/investment-types`, `/categorization-rules`)
+- **Template files:** `snake_case.html` in feature subdirectories
+- **Blueprint names:** `{feature}_bp` (e.g., `cashflow_bp`, `category_bp`)
+
+### Import Pattern
+```python
+# Standard library
+from datetime import datetime, timezone
+
+# Third-party
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from sqlalchemy import func
+
+# Local - CRITICAL: always `from models import db`, NEVER `from models.__init__ import db`
+from models import db
+from models.cashflow import CashflowTransaction
 ```
-User (standalone, single-user auth)
-  - id, username (unique), password_hash
 
-Category (self-referential parent/child via parent_id)
-  |-- CashflowTransaction (many, via category_id FK)
-        |-- Tag (many-to-many via cashflow_transaction_tags junction table)
-        |-- BankConnection (optional FK via bank_connection_id)
-        Fields: id, date, type ('income'/'expense'), amount (Float), description,
-                category_id, external_transaction_id, source ('manual'/'excel_import'/'bank_sync'),
-                bank_connection_id
-        Unique constraint: (external_transaction_id, bank_connection_id)
-
-InvestmentType (self-referential parent/child via parent_id)
-  |-- InvestmentTransaction (many, via investment_type_id FK)
-        Fields: id, investment_type_id, transaction_date, transaction_type ('buy'/'sell'),
-                price, quantity, total_amount (price * quantity), description
-
-Settings (key-value store: key, value)
-BankConnection (bank_code, bank_name, encrypted client_id/secret, account_id, sync status)
+### Route Pattern
+```python
+@blueprint.route('/resource/add', methods=['GET', 'POST'])
+def add_resource():
+    if request.method == 'POST':
+        try:
+            # validate, create, commit
+            db.session.add(obj)
+            db.session.commit()
+            flash('Başarıyla eklendi.', 'success')
+            return redirect(url_for('blueprint.index'))
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Error: {e}")
+            flash('Bir hata oluştu.', 'danger')
+    return render_template('feature/form.html')
 ```
 
-## Key Patterns and Conventions
+### Model Pattern
+```python
+class MyModel(db.Model):
+    __tablename__ = 'my_model'
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    # Money fields: always Numeric(12, 2), never Float
+    amount = db.Column(db.Numeric(12, 2), nullable=False)
+```
 
-- **CSRF protection**: All POST forms must include `<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">`
-- **Dark theme only**: Background `#1a1d20`, cards `#23272b`, text gray-100 to gray-400. No light theme.
-- **Hierarchical categories**: Both Category and InvestmentType use self-referential `parent_id` for parent/child relationships
-- **Currency**: Turkish Lira (TRY) throughout. Amount parsing handles Turkish locale (e.g., "1.234,56 TL")
-- **Delete protection**: Categories, tags, and investment types cannot be deleted if they have associated transactions or child items
-- **Flash messages**: Use `flash('message', 'category')` with categories: success (green), danger (red), info (blue)
-- **Form pattern**: All forms use card containers with consistent grid layout and dark-themed inputs
-- **Template inheritance**: base_layout.html -> base.html -> page template (or base_minimal.html for login)
-- **Inline JavaScript**: All JS is inline in templates. No separate .js files. Dashboard has ~415 lines of Chart.js code.
-- **Global login requirement**: `@app.before_request require_login` forces auth for all routes except login, logout, static, health_check
-- **Error handlers**: Both 404 and 500 redirect to cashflow index; 500 also rolls back DB session
-- **Security headers**: X-Frame-Options: DENY, X-Content-Type-Options: nosniff, HSTS in production
+## Database Rules
 
-## Running the Application
+- **Money:** `db.Numeric(12, 2)` — never Float for currency
+- **Timestamps:** `datetime.now(timezone.utc)` — never `datetime.utcnow()` (deprecated)
+- **Query by ID:** `db.session.get(Model, id)` — never `Model.query.get(id)` (legacy)
+- **Hierarchical data:** Self-referential FK (`parent_id → same table`)
+- **Many-to-many:** Association tables with composite primary keys
+- **Unique constraints:** Used for deduplication (e.g., `external_transaction_id + bank_connection_id`)
+- **Delete protection:** Check for child records/transactions before allowing deletion
+- **Migrations:** Alembic via Flask-Migrate. Generate with `flask db migrate -m "description"`
 
-### Docker Commands (via Makefile)
+### Schema Overview
+```
+User (id, username, password_hash)
+Category (id, name, parent_id FK→self) → has many CashflowTransaction
+Tag (id, name) ←→ CashflowTransaction (M2M via cashflow_transaction_tags)
+CashflowTransaction (id, date, type[income/expense], amount, description, category_id, source, external_transaction_id, bank_connection_id)
+InvestmentType (id, name, code, icon, color, parent_id FK→self) → has many InvestmentTransaction
+InvestmentTransaction (id, investment_type_id, transaction_date, transaction_type[buy/sell], price, quantity, total_amount, description)
+CategorizationRule (id, name, priority, is_active, field, operator, value, category_id, type_override) ←→ Tag (M2M)
+BankConnection (id, bank_code, bank_name, encrypted credentials, sync status)
+Settings (id, key, value)
+```
 
-| Command | Description |
-|---|---|
-| `make dev` | Development with hot-reload (mounts source, Flask debug mode) |
-| `make dev-d` | Development in background |
-| `make prod` | Production mode (Gunicorn) |
-| `make prod-pull` | Pull latest image + start production |
-| `make down` | Stop all services |
-| `make logs` | View all logs |
-| `make logs-app` | View app logs only |
-| `make clean` | Stop + remove everything including volumes (destructive) |
+## Design System
 
-### Docker Compose Files
+### Colors (dark theme only, no light mode)
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `primary` | `#0d6efd` | Buttons, links, active states |
+| `darkbg` | `#1a1d20` | Page background |
+| `card` | `#23272b` | Card/container background |
+| Text primary | `rgba(255,255,255,0.9)` | Headings, important text |
+| Text secondary | `rgba(255,255,255,0.7)` | Body text |
+| Text muted | `rgba(255,255,255,0.4)` | Labels, placeholders |
+| Border | `rgba(255,255,255,0.1)` | Dividers, card borders |
 
-- `docker-compose.yml` -- Production: app (ghcr.io image) + PostgreSQL 15 + pgAdmin
-- `docker-compose.dev.yml` -- Dev overlay: local build, source mount, Flask dev server
-- Dev usage: `docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build`
+### UI Components
+- **Font:** Inter (Google Fonts) — weights 400, 500, 600, 700
+- **Cards:** `bg-card` background, `rounded-lg`, subtle border, shadow
+- **Buttons:** `.btn` class (custom CSS), inline-flex, transitions
+- **Forms:** Dark inputs with `rgba(255,255,255,0.03)` background
+- **Tables:** Custom `.table` class with hover states
+- **Flash messages:** success (green), danger (red), warning (yellow), info (blue)
+- **Icons:** Font Awesome 6.5.2 classes (`fa-solid fa-*`)
+- **Spacing:** Tailwind utilities (px-4, py-2, gap-2, etc.)
 
-## Environment Variables
+### Template Rules
+- Extend `base.html` (or `base_minimal.html` for login only)
+- CSRF token required in ALL POST forms: `<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">`
+- Mobile-responsive: use Tailwind responsive prefixes (`md:`, `lg:`)
+- No external JS files — all JavaScript inline in `<script>` tags within templates
 
-| Variable | Default | Description |
-|---|---|---|
-| `FLASK_ENV` | `development` | Config mode (development/production) |
-| `SECRET_KEY` | `very-secret-key` | Flask secret (production raises error if default) |
-| `ADMIN_USERNAME` | `admin` | Default admin username |
-| `ADMIN_PASSWORD` | `changeme123` | Default admin password |
-| `POSTGRES_PASSWORD` | (required) | PostgreSQL password |
-| `POSTGRES_HOST` | (in connection string) | PostgreSQL host |
-| `BEHIND_PROXY` | `false` | Enable ProxyFix middleware for reverse proxy |
+## Testing (MANDATORY)
 
-## Testing
+### Rules
+- **Every code change MUST have tests.** No exceptions.
+- Tests run in Docker: `make test` (never `pip install` locally, no local venv)
+- Pre-commit hook blocks commits if tests fail
+- Claude Code hooks auto-run tests after Python file edits
 
-### Test Stack
+### Commands
+| Command | Use |
+|---------|-----|
+| `make test` | Run all tests (terminal output) |
+| `make test-report` | Run + generate `tests/report.html` |
+| `make test-cov` | Run + generate coverage in `htmlcov/` |
+| `make test-security` | Security tests only |
 
-| Package | Purpose |
-|---|---|
-| pytest | Test runner |
-| pytest-flask | Flask test client integration |
-| pytest-cov | Code coverage reporting |
-| factory-boy | Test data factories |
-| faker | Fake data generation |
-| responses | HTTP request mocking |
-| freezegun | Time/date mocking |
-
-### Running Tests
-
-| Command | Description |
-|---|---|
-| `make test` | Run tests in Docker container |
-| `make test-cov` | Run tests with HTML coverage report |
-| `make test-local` | Run tests locally (requires deps) |
-| `make test-security` | Run security tests only |
-| `pytest tests/unit/ -v` | Unit tests only |
-| `pytest tests/integration/ -v` | Integration tests only |
-| `pytest tests/security/ -v` | Security tests only |
-| `pytest tests/api/ -v` | API tests only |
-
-### Test Directory Structure
-
+### Test Structure
 ```
 tests/
-  conftest.py                    # Shared fixtures (app, db, client, auth_client, sample data)
-  unit/
-    test_models.py               # All database models
-    test_excel_processor.py      # Turkish amount/date parsing, import pipeline
-    test_encryption.py           # Fernet encrypt/decrypt
-    test_data_utils.py           # Seed data generators
-    test_bank_configs.py         # Bank config lookup
-    test_bank_sync_registry.py   # Adapter registry pattern
-  integration/
-    test_auth_routes.py          # Login, logout, password/username change
-    test_cashflow_routes.py      # CRUD, filters, search, import, bulk edit
-    test_category_routes.py      # CRUD, delete protection
-    test_tag_routes.py           # CRUD, delete protection
-    test_investment_routes.py    # CRUD, filters
-    test_investment_type_routes.py # CRUD, delete protection
-    test_settings_routes.py      # Settings, seed data, DB reset
-  security/
-    test_csrf.py                 # CSRF enforcement on all POST endpoints
-    test_auth_security.py        # Auth bypass, open redirect, session security
-    test_input_validation.py     # XSS, SQL injection, type validation
-    test_file_upload.py          # File type/size validation
-    test_headers.py              # Security headers verification
-  api/
-    test_category_data_api.py    # JSON API endpoint tests
+├── conftest.py          → Fixtures: app, db, client, auth_client, sample_*
+├── unit/                → Models, utils, processors
+├── integration/         → Route tests (CRUD, filters, import)
+├── security/            → CSRF, XSS, auth bypass, headers
+└── api/                 → JSON endpoint tests
 ```
 
-### Test Fixtures (conftest.py)
+### Test Conventions
+- Markers: `@pytest.mark.unit`, `@pytest.mark.integration`, `@pytest.mark.security`, `@pytest.mark.api`
+- CSRF tokens: use `get_csrf_token(client, url)` helper from conftest
+- DB queries after requests: wrap in `with app.app_context():`
+- Fixtures: `auth_client` (logged-in), `client` (anonymous), `sample_*` (test data)
 
-- `app` - Flask test app with SQLite in-memory DB
-- `db` - Fresh database per test (create_all/drop_all)
-- `client` - Unauthenticated test client
-- `admin_user` - Creates admin user
-- `auth_client` - Authenticated test client (auto-login)
-- `sample_category`, `sample_subcategory` - Category fixtures
-- `sample_tag` - Tag fixture
-- `sample_transaction` - CashflowTransaction with tag
-- `sample_investment_type` - InvestmentType fixture
-- `sample_investment` - InvestmentTransaction fixture
-- `get_csrf_token(client, url)` - Extract CSRF token from page
+## Do / Don't
 
-## Development Workflow (MANDATORY)
+### DO
+- Use `from models import db` for database access
+- Use `db.Numeric(12, 2)` for all money fields
+- Use `datetime.now(timezone.utc)` for timestamps
+- Use `db.session.get(Model, id)` for primary key lookups
+- Use `flash()` with Turkish user-facing messages
+- Use try/except with `db.session.rollback()` in all route POST handlers
+- Use `logger.error()` before flash on exceptions
+- Wrap hierarchical queries to handle parent/child relationships
+- Write tests before committing — run `make test`
+- Keep JS inline in templates
+- Use Tailwind classes for layout, custom CSS classes for components
 
-### Test-First Rule
-- **Every code change MUST have corresponding tests.** No exceptions.
-- New routes: add integration tests in `tests/integration/`
-- New utility functions: add unit tests in `tests/unit/`
-- Security-sensitive changes: add tests in `tests/security/`
-- API changes: add tests in `tests/api/`
+### DON'T
+- Don't use `from models.__init__ import db` (creates separate SQLAlchemy instance)
+- Don't use `datetime.utcnow()` (deprecated)
+- Don't use `Model.query.get(id)` (legacy pattern)
+- Don't use Float for money (precision loss)
+- Don't create separate .js files
+- Don't add npm/webpack/frontend build tools
+- Don't add light theme or theme switching
+- Don't allow deletion of categories/tags/types with existing transactions
+- Don't skip CSRF tokens in POST forms
+- Don't run `pip install` locally — everything runs in Docker
+- Don't commit without passing tests
+- Don't add multi-user or tenant features
 
-### Before Every Commit
-1. Write or update tests for the changed code
-2. Run `make test` to verify ALL tests pass
-3. A git pre-commit hook will block commits if tests fail
-4. Claude Code hooks also enforce this automatically
+## Acceptance Criteria
 
-### Test Commands
+### Backend (Routes/Models)
+- [ ] All POST routes wrapped in try/except with rollback
+- [ ] Input validation for enum fields (income/expense, buy/sell)
+- [ ] Delete protection for parent records with children
+- [ ] Flash messages in Turkish for user feedback
+- [ ] Logger.error() on all caught exceptions
+- [ ] CSRF protection on all forms
+- [ ] Integration tests covering happy path + edge cases
 
-| Command | Description |
-|---|---|
-| `make test` | Run all tests in Docker (terminal output) |
-| `make test-report` | Run tests + generate `tests/report.html` (open in browser) |
-| `make test-cov` | Run tests + generate coverage report in `htmlcov/index.html` |
-| `make test-security` | Run only security tests |
+### Frontend (Templates)
+- [ ] Extends `base.html` with proper block structure
+- [ ] Mobile-responsive (works on md: breakpoint)
+- [ ] Dark theme only — uses design system colors
+- [ ] CSRF hidden input in all forms
+- [ ] Flash message display via base template
+- [ ] Consistent card/form layout matching existing pages
+- [ ] Font Awesome icons where appropriate
 
-### Test File Conventions
-- Fixtures in `tests/conftest.py` (shared: `auth_client`, `sample_category`, `sample_tag`, etc.)
-- Use `get_csrf_token(client, url)` helper for CSRF tokens in integration tests
-- Use `pytest.mark.unit`, `pytest.mark.integration`, `pytest.mark.security`, `pytest.mark.api` markers
-- Use `with app.app_context():` when querying DB after HTTP requests in integration tests
+### Database Changes
+- [ ] Alembic migration generated and tested
+- [ ] Numeric(12,2) for money, never Float
+- [ ] Proper FK constraints and indexes
+- [ ] Default values use `lambda: datetime.now(timezone.utc)`
 
-### Custom Slash Commands
-- `/test` - Run test suite and analyze results
-- `/test-fix <test_name>` - Debug and fix a specific failing test
+## Environment & Running
 
-### Code Quality Rules
-- Use `datetime.now(timezone.utc)` instead of `datetime.utcnow()` (deprecated)
-- Use `db.session.get(Model, id)` instead of `Model.query.get(id)` (legacy)
-- All POST forms must include CSRF token
-- Validate input types (income/expense, buy/sell) before processing
+```bash
+make dev          # Development with hot-reload
+make dev-d        # Development in background
+make prod         # Production (Gunicorn)
+make down         # Stop all services
+make test         # Run tests in Docker
+make test-report  # Tests + HTML report
+```
 
-## Important Notes
+Required env vars: `POSTGRES_PASSWORD`, `SECRET_KEY` (production).
+Optional: `FLASK_ENV`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `BEHIND_PROXY`.
 
-- **No REST API**: Server-side rendered app. One JSON endpoint exists: `/cashflow/api/category-data` for chart drill-down via AJAX.
-- **No frontend build step**: No npm, no webpack, no compiled CSS/JS. Tailwind is loaded via CDN with inline config.
-- **Single-user only**: No multi-tenancy. One admin user auto-created on first run.
-- **Turkish bank support**: Excel import supports Yapi Kredi and Kuveyt Turk formats. Bank sync adapter exists for Yapi Kredi API (OAuth2).
-- **Seed data available**: Settings page has buttons to create default categories (13 parents with subs), tags (14), and investment types (5 parents with children), plus dummy transaction data.
-- **Custom CSS has Bootstrap-like class names**: `.card`, `.btn`, `.badge`, `.alert`, `.table` are custom dark-theme classes in `style.css`, not actual Bootstrap.
-- **Database migrations**: Run automatically on container start via `flask db upgrade`. Use `flask db migrate -m "description"` to generate new migrations.
-- **PWA manifest**: `site.webmanifest` defines the app for home screen installation.
+## Self-Maintenance
+
+**This file must stay in sync with the codebase.** When you make changes that affect any documented pattern — colors, schema, architecture, conventions, stack — update the relevant section in this file within the same session. Do not wait for the user to ask.
+
+Trigger files (a PostToolUse hook will remind you):
+- `base_layout.html`, `style.css` → Design System section
+- `app.py`, `config.py`, `requirements.txt` → Tech Stack / Architecture sections
+- New `models/*.py` → Schema Overview
+- New `routes/*.py` → Architecture Fundamentals (blueprint list)
+
+When updating this file: keep it concise, actionable, and focused on what an AI assistant needs to write correct code. No prose, no redundancy.
