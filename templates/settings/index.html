@@ -5,28 +5,26 @@
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
-    <h1 class="text-2xl font-bold">Settings</h1>
+    <h1 class="text-h1">Settings</h1>
   </div>
 
   <!-- External Tools -->
-  <div class="bg-card rounded-xl shadow p-4 sm:p-6 space-y-6">
+  <div class="card card-body space-y-6">
     <div class="space-y-4">
-      <h2 class="text-xl font-semibold">External Tools</h2>
-      <p class="text-gray-400 text-sm">Configure URLs for external tools like PgAdmin.</p>
+      <h2 class="text-h2">External Tools</h2>
+      <p class="text-[var(--text-muted)] text-sm">Configure URLs for external tools like PgAdmin.</p>
 
-      <!-- PgAdmin URL -->
       <form action="{{ url_for('settings.update_pgadmin_url') }}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="flex flex-col space-y-2">
-          <label for="pgadmin_url" class="block text-sm font-medium text-gray-300">PgAdmin URL</label>
+          <label for="pgadmin_url" class="form-label">PgAdmin URL</label>
           <div class="flex flex-col sm:flex-row gap-2">
             <input type="url" id="pgadmin_url" name="pgadmin_url" value="{{ pgadmin_url }}"
               placeholder="http://localhost:5050"
-              class="w-full sm:flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+              class="form-control w-full sm:flex-1"
               required>
-            <button type="submit"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-              <i class="fas fa-save"></i>
+            <button type="submit" class="btn btn-primary btn-sm w-full sm:w-auto">
+              <i data-lucide="check" class="w-4 h-4"></i>
               Update
             </button>
           </div>
@@ -36,64 +34,60 @@
   </div>
 
   <!-- Bank Connections -->
-  <div class="bg-card rounded-xl shadow p-4 sm:p-6 space-y-6">
+  <div class="card card-body space-y-6">
     <div class="space-y-4">
-      <h2 class="text-xl font-semibold">Bank Connections</h2>
-      <p class="text-gray-400 text-sm">Connect your bank accounts to automatically sync transactions.</p>
+      <h2 class="text-h2">Bank Connections</h2>
+      <p class="text-[var(--text-muted)] text-sm">Connect your bank accounts to automatically sync transactions.</p>
 
-      <!-- Add Bank Connection Form -->
       <form action="{{ url_for('settings.add_bank_connection') }}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="flex flex-col space-y-2">
-          <label class="block text-sm font-medium text-gray-300">New Connection</label>
+          <label class="form-label">New Connection</label>
           <div class="flex flex-col sm:flex-row flex-wrap gap-2">
-            <select id="bank_code" name="bank_code" required
-              class="w-full sm:w-auto px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+            <select id="bank_code" name="bank_code" required class="form-select w-full sm:w-auto">
               <option value="">Select bank...</option>
               {% for code, name in available_banks %}
               <option value="{{ code }}">{{ name }}</option>
               {% endfor %}
             </select>
             <input type="text" id="client_id" name="client_id" required placeholder="Client ID"
-              class="w-full sm:flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+              class="form-control w-full sm:flex-1">
             <input type="password" id="client_secret" name="client_secret" required placeholder="Client Secret"
-              class="w-full sm:flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+              class="form-control w-full sm:flex-1">
             <input type="text" id="account_id" name="account_id" placeholder="Account ID (optional)"
-              class="w-full sm:flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-            <button type="submit"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-              <i class="fas fa-plus"></i>
+              class="form-control w-full sm:flex-1">
+            <button type="submit" class="btn btn-primary btn-sm w-full sm:w-auto">
+              <i data-lucide="plus" class="w-4 h-4"></i>
               Add
             </button>
           </div>
         </div>
       </form>
 
-      <!-- Existing Connections -->
       {% if bank_connections %}
       <div class="flex flex-col space-y-2 mt-2">
-        <label class="block text-sm font-medium text-gray-300">Active Connections</label>
+        <label class="form-label">Active Connections</label>
         {% for conn in bank_connections %}
         <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-          <div class="flex-1 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white flex flex-wrap items-center gap-2 sm:gap-3">
+          <div class="flex-1 px-3 py-2 bg-[var(--bg-elevated)] border border-[var(--border-default)] rounded-lg text-[var(--text-primary)] flex flex-wrap items-center gap-2 sm:gap-3">
             <span class="font-medium">{{ conn.bank_name }}</span>
             {% if conn.is_active %}
-            <span class="px-1.5 py-0.5 rounded text-xs bg-green-700/20 text-green-300">Active</span>
+            <span class="badge badge-positive">Active</span>
             {% else %}
-            <span class="px-1.5 py-0.5 rounded text-xs bg-gray-700/40 text-gray-400">Inactive</span>
+            <span class="badge badge-default">Inactive</span>
             {% endif %}
             {% if conn.account_id %}
-            <span class="text-sm text-gray-500">{{ conn.account_id }}</span>
+            <span class="text-sm text-[var(--text-muted)]">{{ conn.account_id }}</span>
             {% endif %}
-            <span class="text-sm text-gray-500 sm:ml-auto">
+            <span class="text-sm text-[var(--text-muted)] sm:ml-auto">
               {% if conn.last_sync_at %}
                 {{ conn.last_sync_at.strftime('%d.%m.%Y %H:%M') }}
                 {% if conn.last_sync_status == 'success' %}
-                <span class="text-green-400">— {{ conn.last_sync_message }}</span>
+                <span class="text-positive">— {{ conn.last_sync_message }}</span>
                 {% elif conn.last_sync_status == 'error' %}
-                <span class="text-red-400">— {{ conn.last_sync_message }}</span>
+                <span class="text-negative">— {{ conn.last_sync_message }}</span>
                 {% elif conn.last_sync_status == 'partial' %}
-                <span class="text-yellow-400">— {{ conn.last_sync_message }}</span>
+                <span class="text-warning">— {{ conn.last_sync_message }}</span>
                 {% endif %}
               {% else %}
                 Never synced
@@ -103,27 +97,27 @@
           <div class="flex flex-wrap gap-2">
             <form action="{{ url_for('settings.test_bank_connection', id=conn.id) }}" method="POST" style="display:inline;">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-                <i class="fas fa-plug"></i> Test
+              <button type="submit" class="btn btn-secondary btn-sm">
+                <i data-lucide="plug" class="w-4 h-4"></i> Test
               </button>
             </form>
             <form action="{{ url_for('settings.toggle_bank_connection', id=conn.id) }}" method="POST" style="display:inline;">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
               {% if conn.is_active %}
-              <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-yellow-700/10 text-yellow-400 hover:bg-yellow-700/20 transition text-sm">
-                <i class="fas fa-toggle-on"></i> Deactivate
+              <button type="submit" class="btn btn-warning btn-sm">
+                <i data-lucide="toggle-right" class="w-4 h-4"></i> Deactivate
               </button>
               {% else %}
-              <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-green-700/10 text-green-400 hover:bg-green-700/20 transition text-sm">
-                <i class="fas fa-toggle-off"></i> Activate
+              <button type="submit" class="btn btn-success btn-sm">
+                <i data-lucide="toggle-left" class="w-4 h-4"></i> Activate
               </button>
               {% endif %}
             </form>
             <form action="{{ url_for('settings.delete_bank_connection', id=conn.id) }}" method="POST" style="display:inline;"
               onsubmit="return confirm('Delete this bank connection?');">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-sm">
-                <i class="fas fa-trash"></i> Delete
+              <button type="submit" class="btn btn-danger btn-sm">
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Delete
               </button>
             </form>
           </div>
@@ -135,57 +129,49 @@
   </div>
 
   <!-- Default Data -->
-  <div class="bg-card rounded-xl shadow p-4 sm:p-6 space-y-6">
+  <div class="card card-body space-y-6">
     <div class="space-y-4">
-      <h2 class="text-xl font-semibold">Default Data</h2>
-      <p class="text-gray-400 text-sm">Existing data will not be recreated, only missing data will be added.
-      </p>
+      <h2 class="text-h2">Default Data</h2>
+      <p class="text-[var(--text-muted)] text-sm">Existing data will not be recreated, only missing data will be added.</p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Default Categories -->
-        <div class="p-4 bg-darkbg/40 rounded-lg border border-primary/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-primary">Default Categories</h3>
-          <p class="text-gray-400 text-sm mb-4">Creates income and expense categories.</p>
+        <div class="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--primary-muted)] flex flex-col">
+          <h3 class="text-h3 text-primary mb-2">Default Categories</h3>
+          <p class="text-[var(--text-muted)] text-sm mb-4">Creates income and expense categories.</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.create_default_categories_route') }}" method="POST" class="inline">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button type="submit"
-                class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm font-medium">
-                <i class="fas fa-folder"></i>
-Create Categories
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i data-lucide="folder" class="w-4 h-4"></i>
+                Create Categories
               </button>
             </form>
           </div>
         </div>
 
-        <!-- Default Tags -->
-        <div class="p-4 bg-darkbg/40 rounded-lg border border-primary/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-primary">Default Tags</h3>
-          <p class="text-gray-400 text-sm mb-4">Creates default tags to be used for tagging transactions.</p>
+        <div class="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--primary-muted)] flex flex-col">
+          <h3 class="text-h3 text-primary mb-2">Default Tags</h3>
+          <p class="text-[var(--text-muted)] text-sm mb-4">Creates default tags to be used for tagging transactions.</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.create_default_tags_route') }}" method="POST" class="inline">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button type="submit"
-                class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm font-medium">
-                <i class="fas fa-tag"></i>
-Create Tags
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i data-lucide="tag" class="w-4 h-4"></i>
+                Create Tags
               </button>
             </form>
           </div>
         </div>
 
-        <!-- Default Investment Types -->
-        <div class="p-4 bg-darkbg/40 rounded-lg border border-primary/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-primary">Default Investment Types</h3>
-          <p class="text-gray-400 text-sm mb-4">Creates default investment types to categorize investments.
-          </p>
+        <div class="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--primary-muted)] flex flex-col">
+          <h3 class="text-h3 text-primary mb-2">Default Investment Types</h3>
+          <p class="text-[var(--text-muted)] text-sm mb-4">Creates default investment types to categorize investments.</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.create_default_investment_types_route') }}" method="POST" class="inline">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button type="submit"
-                class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm font-medium">
-                <i class="fas fa-chart-line"></i>
-Create Investment Types
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i data-lucide="line-chart" class="w-4 h-4"></i>
+                Create Investment Types
               </button>
             </form>
           </div>
@@ -195,41 +181,35 @@ Create Investment Types
   </div>
 
   <!-- Database Management -->
-  <div class="bg-card rounded-xl shadow p-4 sm:p-6 space-y-6">
+  <div class="card card-body space-y-6">
     <div class="space-y-4">
-      <h2 class="text-xl font-semibold">Database Management</h2>
+      <h2 class="text-h2">Database Management</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Dummy Data -->
-        <div class="p-4 bg-darkbg/40 rounded-lg border border-primary/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-primary">Dummy Data</h3>
-          <p class="text-gray-400 text-sm mb-4">Creates default categories, tags, investment types and sample
-            transactions.</p>
+        <div class="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--primary-muted)] flex flex-col">
+          <h3 class="text-h3 text-primary mb-2">Dummy Data</h3>
+          <p class="text-[var(--text-muted)] text-sm mb-4">Creates default categories, tags, investment types and sample transactions.</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.create_dummy_data_route') }}" method="POST" class="inline">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button type="submit"
-                class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition text-sm font-medium">
-                <i class="fas fa-database"></i>
-Create Dummy Data
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i data-lucide="database" class="w-4 h-4"></i>
+                Create Dummy Data
               </button>
             </form>
           </div>
         </div>
 
-        <!-- Reset Database -->
-        <div class="p-4 bg-darkbg/40 rounded-lg border border-red-500/20 flex flex-col">
-          <h3 class="text-lg font-medium mb-2 text-red-500">Reset Database</h3>
-          <p class="text-gray-400 text-sm mb-4">Deletes all data and resets the database. This action cannot be
-            undone!</p>
+        <div class="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[rgba(212,97,110,0.3)] flex flex-col">
+          <h3 class="text-h3 text-negative mb-2">Reset Database</h3>
+          <p class="text-[var(--text-muted)] text-sm mb-4">Deletes all data and resets the database. This action cannot be undone!</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.reset_database') }}" method="POST" class="inline"
               onsubmit="return confirm('All data will be deleted! Are you sure about this action?');">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button type="submit"
-                class="inline-flex items-center gap-2 px-3 py-2 rounded-md !bg-red-500 !text-white hover:!bg-red-600 transition text-sm font-medium">
-                <i class="fas fa-trash"></i>
-Reset Database
+              <button type="submit" class="btn btn-danger">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                Reset Database
               </button>
             </form>
           </div>

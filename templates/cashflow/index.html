@@ -5,38 +5,32 @@
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-    <h1 class="text-2xl font-semibold">Cashflow Transactions</h1>
+    <h1 class="text-h1">Cashflow Transactions</h1>
     <div class="flex flex-wrap gap-2">
       <form action="{{ url_for('cashflow.sync_transactions') }}" method="POST" style="display:inline;" id="sync-form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button type="submit" id="sync-btn" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-          <i class="fas fa-sync-alt" id="sync-icon"></i>
+        <button type="submit" id="sync-btn" class="btn btn-secondary btn-sm">
+          <i data-lucide="refresh-cw" class="w-4 h-4" id="sync-icon"></i>
           Sync
         </button>
       </form>
-      <form action="{{ url_for('cashflow.import_excel') }}" method="get" style="display:inline;">
-        <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-          <i class="fas fa-file-excel"></i>
-          Excel Import
-        </button>
-      </form>
-      <form action="{{ url_for('cashflow.add_cashflow') }}" method="get" style="display:inline;">
-        <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-          <i class="fas fa-plus"></i>
-          New Transaction
-        </button>
-      </form>
+      <a href="{{ url_for('cashflow.import_excel') }}" class="btn btn-secondary btn-sm">
+        <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+        Excel Import
+      </a>
+      <a href="{{ url_for('cashflow.add_cashflow') }}" class="btn btn-primary btn-sm">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        New Transaction
+      </a>
     </div>
   </div>
 
   <!-- Filters -->
-  <div class="bg-card rounded-xl shadow p-4">
+  <div class="card card-body">
     <form method="get" action="{{ url_for('cashflow.index') }}" class="flex flex-wrap items-end gap-4">
-      <!-- Category Filter -->
       <div class="flex-1 min-w-[150px]">
-        <label for="category_id" class="block text-xs font-medium text-gray-400 mb-1">Category</label>
-        <select id="category_id" name="category_id"
-                class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+        <label for="category_id" class="form-label">Category</label>
+        <select id="category_id" name="category_id" class="form-select form-select-sm w-full">
           <option value="">All Categories</option>
           {% for category in categories %}
             <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>{{ category.name }}</option>
@@ -47,11 +41,9 @@
         </select>
       </div>
 
-      <!-- Tag Filter -->
       <div class="flex-1 min-w-[150px]">
-        <label for="tag_id" class="block text-xs font-medium text-gray-400 mb-1">Tag</label>
-        <select id="tag_id" name="tag_id"
-                class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+        <label for="tag_id" class="form-label">Tag</label>
+        <select id="tag_id" name="tag_id" class="form-select form-select-sm w-full">
           <option value="">All Tags</option>
           {% for tag in tags %}
             <option value="{{ tag.id }}" {% if selected_tag == tag.id %}selected{% endif %}>{{ tag.name }}</option>
@@ -59,119 +51,106 @@
         </select>
       </div>
 
-      <!-- Type Filter -->
       <div class="flex-1 min-w-[120px]">
-        <label for="type" class="block text-xs font-medium text-gray-400 mb-1">Type</label>
-        <select id="type" name="type"
-                class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+        <label for="type" class="form-label">Type</label>
+        <select id="type" name="type" class="form-select form-select-sm w-full">
           <option value="">All Types</option>
           <option value="income" {% if selected_type == 'income' %}selected{% endif %}>Income</option>
           <option value="expense" {% if selected_type == 'expense' %}selected{% endif %}>Expense</option>
         </select>
       </div>
 
-      <!-- Date From -->
       <div class="flex-1 min-w-[140px]">
-        <label for="date_from" class="block text-xs font-medium text-gray-400 mb-1">From</label>
+        <label for="date_from" class="form-label">From</label>
         <input type="date" id="date_from" name="date_from" value="{{ selected_date_from or '' }}"
-               class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+               class="form-control form-control-sm w-full">
       </div>
 
-      <!-- Date To -->
       <div class="flex-1 min-w-[140px]">
-        <label for="date_to" class="block text-xs font-medium text-gray-400 mb-1">To</label>
+        <label for="date_to" class="form-label">To</label>
         <input type="date" id="date_to" name="date_to" value="{{ selected_date_to or '' }}"
-               class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+               class="form-control form-control-sm w-full">
       </div>
 
-      <!-- Description Search -->
       <div class="flex-1 min-w-[180px]">
-        <label for="search" class="block text-xs font-medium text-gray-400 mb-1">Description</label>
+        <label for="search" class="form-label">Description</label>
         <input type="text" id="search" name="search" value="{{ selected_search or '' }}" placeholder="Search..."
-               class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+               class="form-control form-control-sm w-full">
       </div>
 
-      <!-- Filter Buttons -->
       <div class="flex gap-2">
-        <button type="submit" class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-          <i class="fas fa-filter"></i>
+        <button type="submit" class="btn btn-secondary btn-sm">
+          <i data-lucide="filter" class="w-4 h-4"></i>
           Filter
         </button>
-        <a href="{{ url_for('cashflow.index') }}" class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
-          <i class="fas fa-times"></i>
+        <a href="{{ url_for('cashflow.index') }}" class="btn btn-ghost btn-sm">
+          <i data-lucide="x" class="w-4 h-4"></i>
           Clear
         </a>
       </div>
     </form>
   </div>
 
-  <div class="bg-card rounded-xl shadow p-0 mb-8">
+  <div class="card overflow-hidden">
     {% if transactions %}
-      <div class="overflow-x-auto">
-      <table class="min-w-full text-sm align-middle">
+      <div class="table-responsive">
+      <table class="table">
         <thead>
-          <tr class="bg-darkbg/80">
-            <th class="py-3 px-4 text-left">
-              <input type="checkbox" id="select-all" class="rounded border-gray-600 text-primary focus:ring-primary/50 cursor-pointer">
+          <tr>
+            <th>
+              <input type="checkbox" id="select-all" class="rounded border-[var(--border-default)] text-primary focus:ring-[var(--primary-border)] cursor-pointer">
             </th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap">Date</th>
-            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap">Amount</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap">Category</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap min-w-[250px]">Tags</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400 w-full">Description</th>
-            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap">Actions</th>
+            <th>Date</th>
+            <th class="text-right">Amount</th>
+            <th>Category</th>
+            <th class="min-w-[250px]">Tags</th>
+            <th class="w-full">Description</th>
+            <th class="text-right">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-800">
+        <tbody>
           {% for transaction in transactions %}
-          <tr class="hover:bg-darkbg/40 transition">
-            <td class="py-2 px-4">
-              <input type="checkbox" class="row-checkbox rounded border-gray-600 text-primary focus:ring-primary/50 cursor-pointer" value="{{ transaction.id }}">
+          <tr>
+            <td>
+              <input type="checkbox" class="row-checkbox rounded border-[var(--border-default)] text-primary focus:ring-[var(--primary-border)] cursor-pointer" value="{{ transaction.id }}">
             </td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ transaction.date.strftime('%d.%m.%Y') }}</td>
-            <td class="py-2 px-4 text-right whitespace-nowrap">
-              <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-semibold {% if transaction.type == 'income' %}bg-green-700/20 text-green-300{% else %}bg-red-700/20 text-red-300{% endif %}" title="{{ transaction.type.capitalize() }}">
-                {% if transaction.type == 'income' %}
-                  <i class="fas fa-plus text-sm"></i>
-                {% else %}
-                  <i class="fas fa-minus text-sm"></i>
-                {% endif %}
-                {{ "%.2f"|format(transaction.amount) }} ₺
+            <td class="whitespace-nowrap">{{ transaction.date.strftime('%d.%m.%Y') }}</td>
+            <td class="col-amount whitespace-nowrap">
+              <span class="amount {% if transaction.type == 'income' %}amount-positive{% else %}amount-negative{% endif %}">
+                {% if transaction.type == 'income' %}+{% else %}-{% endif %}{{ "%.2f"|format(transaction.amount) }} ₺
               </span>
             </td>
-            <td class="py-2 px-4 whitespace-nowrap">
+            <td class="whitespace-nowrap">
               {% if transaction.category.parent %}
-                <span class="text-gray-400">{{ transaction.category.parent.name }} /</span>
+                <span class="text-[var(--text-muted)]">{{ transaction.category.parent.name }} /</span>
               {% endif %}
               {{ transaction.category.name }}
             </td>
-            <td class="py-2 px-4">
+            <td>
               {% if transaction.tags %}
                 <div class="flex flex-wrap gap-1">
                   {% for tag in transaction.tags %}
-                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary/10 text-primary text-xs font-medium whitespace-nowrap">
-                      <i class="fas fa-tag text-sm"></i>
+                    <span class="badge badge-primary">
+                      <i data-lucide="tag" class="w-3 h-3"></i>
                       {{ tag.name }}
                     </span>
                   {% endfor %}
                 </div>
               {% else %}-{% endif %}
             </td>
-            <td class="py-2 px-4 max-w-0 truncate" title="{{ transaction.description }}">{{ transaction.description }}</td>
-            <td class="py-2 px-4 text-right whitespace-nowrap">
-              <form action="{{ url_for('cashflow.edit_cashflow', id=transaction.id) }}" method="get" style="display:inline;">
-                <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-                  <i class="fas fa-pencil-alt"></i>
-Edit
-                </button>
-              </form>
-              <form action="{{ url_for('cashflow.delete_cashflow', id=transaction.id) }}" method="POST" style="display:inline;">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Are you sure you want to delete this transaction?')">
-                  <i class="fas fa-trash"></i>
-Delete
-                </button>
-              </form>
+            <td class="max-w-0 truncate" title="{{ transaction.description }}">{{ transaction.description }}</td>
+            <td class="text-right whitespace-nowrap">
+              <div class="row-actions inline-flex items-center gap-1">
+                <a href="{{ url_for('cashflow.edit_cashflow', id=transaction.id) }}" class="btn btn-ghost btn-sm">
+                  <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                </a>
+                <form action="{{ url_for('cashflow.delete_cashflow', id=transaction.id) }}" method="POST" style="display:inline;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this transaction?')">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </form>
+              </div>
             </td>
           </tr>
           {% endfor %}
@@ -180,37 +159,39 @@ Delete
       </div>
 
       <!-- Summary -->
-      <div class="bg-darkbg/40 px-4 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-sm border-t border-gray-800 rounded-b-xl">
-        <span class="text-gray-400">
-          Showing <span class="text-white font-medium">{{ transactions|length }}</span> transaction(s)
+      <div class="card-footer flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-sm">
+        <span class="text-[var(--text-muted)]">
+          Showing <span class="text-[var(--text-primary)] font-medium">{{ transactions|length }}</span> transaction(s)
         </span>
         <div class="flex flex-wrap gap-3 sm:gap-6">
           {% set total_income = transactions | selectattr('type', 'equalto', 'income') | map(attribute='amount') | sum %}
           {% set total_expense = transactions | selectattr('type', 'equalto', 'expense') | map(attribute='amount') | sum %}
-          <span class="text-green-400">
-            <i class="fas fa-arrow-up mr-1"></i>
+          <span class="amount amount-positive">
+            <i data-lucide="trending-up" class="w-3.5 h-3.5 inline-block align-text-bottom mr-1"></i>
             Income: {{ "%.2f"|format(total_income) }} ₺
           </span>
-          <span class="text-red-400">
-            <i class="fas fa-arrow-down mr-1"></i>
+          <span class="amount amount-negative">
+            <i data-lucide="trending-down" class="w-3.5 h-3.5 inline-block align-text-bottom mr-1"></i>
             Expense: {{ "%.2f"|format(total_expense) }} ₺
           </span>
-          <span class="text-primary font-medium">
+          <span class="amount text-primary">
             Net: {{ "%.2f"|format(total_income - total_expense) }} ₺
           </span>
         </div>
       </div>
     {% else %}
-      <div class="p-8 text-center">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
-          <i class="fas fa-exchange-alt text-2xl"></i>
-        </div>
+      <div class="empty-state">
+        <i data-lucide="arrow-left-right" class="empty-state-icon"></i>
         {% if selected_category or selected_tag or selected_type or selected_date_from or selected_date_to or selected_search %}
-        <h3 class="text-lg font-medium text-gray-200 mb-1">No transactions match your filters</h3>
-        <p class="text-gray-400">Try adjusting your filter criteria or <a href="{{ url_for('cashflow.index') }}" class="text-primary hover:underline">clear all filters</a>.</p>
+        <div class="empty-state-title">No transactions match your filters</div>
+        <div class="empty-state-description">Try adjusting your filter criteria or <a href="{{ url_for('cashflow.index') }}" class="text-primary hover:underline">clear all filters</a>.</div>
         {% else %}
-        <h3 class="text-lg font-medium text-gray-200 mb-1">No transactions found yet</h3>
-        <p class="text-gray-400">You can add a new transaction using the "New Transaction" button.</p>
+        <div class="empty-state-title">No transactions found yet</div>
+        <div class="empty-state-description">You can add a new transaction using the "New Transaction" button.</div>
+        <a href="{{ url_for('cashflow.add_cashflow') }}" class="btn btn-primary btn-sm">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          New Transaction
+        </a>
         {% endif %}
       </div>
     {% endif %}
@@ -231,16 +212,14 @@ Delete
       <input type="hidden" name="filter_date_to" value="{{ selected_date_to or '' }}">
       <input type="hidden" name="filter_search" value="{{ selected_search or '' }}">
 
-      <div class="bg-card rounded-xl shadow-2xl border border-gray-700/50 px-4 py-3 flex flex-wrap items-center gap-3">
-        <!-- Count -->
-        <span class="text-sm text-gray-300 whitespace-nowrap">
+      <div class="card card-body !py-3 flex flex-wrap items-center gap-3 shadow-lg">
+        <span class="text-sm text-[var(--text-secondary)] whitespace-nowrap">
           <span id="bulk-count" class="text-primary font-semibold">0</span> selected
         </span>
 
-        <div class="w-px h-5 bg-gray-700"></div>
+        <div class="w-px h-5 bg-[var(--border-default)]"></div>
 
-        <!-- Category -->
-        <select name="category_id" class="px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+        <select name="category_id" class="form-select form-select-sm">
           <option value="">Category (no change)</option>
           {% for category in categories %}
             {% if category.subcategories %}
@@ -257,41 +236,38 @@ Delete
 
         <!-- Tags dropdown -->
         <div class="relative">
-          <button type="button" id="tags-toggle"
-                  class="inline-flex items-center gap-2 px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-sm text-white hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50 transition">
+          <button type="button" id="tags-toggle" class="btn btn-secondary btn-sm">
             <span id="tags-label">Tags (no change)</span>
-            <i class="fas fa-chevron-up text-[10px] text-gray-500 ml-1"></i>
+            <i data-lucide="chevron-up" class="w-3 h-3 ml-1"></i>
           </button>
 
-          <!-- Tags popover -->
-          <div id="tags-popover" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 bg-card rounded-xl shadow-2xl border border-gray-700/50 p-4 hidden w-80">
+          <div id="tags-popover" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 card card-body hidden w-80 shadow-lg">
             <div class="flex items-center justify-between mb-3">
-              <span class="text-sm font-medium text-gray-300">Select Tags</span>
+              <span class="text-sm font-medium text-[var(--text-secondary)]">Select Tags</span>
               <div class="flex gap-3">
-                <label class="inline-flex items-center gap-1.5 text-sm text-gray-400 cursor-pointer">
-                  <input type="radio" name="tag_mode" value="replace" class="text-primary focus:ring-primary/50"> Replace
+                <label class="inline-flex items-center gap-1.5 text-sm text-[var(--text-muted)] cursor-pointer">
+                  <input type="radio" name="tag_mode" value="replace" class="text-primary focus:ring-[var(--primary-border)]"> Replace
                 </label>
-                <label class="inline-flex items-center gap-1.5 text-sm text-gray-400 cursor-pointer">
-                  <input type="radio" name="tag_mode" value="add" checked class="text-primary focus:ring-primary/50"> Add
+                <label class="inline-flex items-center gap-1.5 text-sm text-[var(--text-muted)] cursor-pointer">
+                  <input type="radio" name="tag_mode" value="add" checked class="text-primary focus:ring-[var(--primary-border)]"> Add
                 </label>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-1.5 max-h-52 overflow-y-auto">
               {% for tag in tags %}
-              <label class="inline-flex items-center gap-2 px-2.5 py-2 rounded-md bg-darkbg hover:bg-gray-700/50 cursor-pointer text-sm transition">
-                <input type="checkbox" name="tags[]" value="{{ tag.id }}" class="bulk-tag-cb rounded border-gray-600 text-primary focus:ring-primary/50">
-                <span class="text-gray-300">{{ tag.name }}</span>
+              <label class="inline-flex items-center gap-2 px-2.5 py-2 rounded-md bg-[var(--bg-elevated)] hover:bg-[var(--bg-overlay)] cursor-pointer text-sm transition">
+                <input type="checkbox" name="tags[]" value="{{ tag.id }}" class="bulk-tag-cb rounded border-[var(--border-default)] text-primary focus:ring-[var(--primary-border)]">
+                <span class="text-[var(--text-secondary)]">{{ tag.name }}</span>
               </label>
               {% endfor %}
             </div>
           </div>
         </div>
 
-        <div class="w-px h-5 bg-gray-700"></div>
+        <div class="w-px h-5 bg-[var(--border-default)]"></div>
 
-        <!-- Apply -->
-        <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-          <i class="fas fa-check"></i>
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i data-lucide="check" class="w-4 h-4"></i>
           Apply
         </button>
       </div>
@@ -324,7 +300,7 @@ Delete
       tagsPopover.classList.add('hidden');
     }
 
-    bulkIds.innerHTML = '';
+    bulkIds.replaceChildren();
     checked.forEach(function(cb) {
       var input = document.createElement('input');
       input.type = 'hidden';
@@ -377,7 +353,7 @@ Delete
       var icon = document.getElementById('sync-icon');
       btn.disabled = true;
       btn.classList.add('opacity-50', 'cursor-not-allowed');
-      icon.classList.add('fa-spin');
+      icon.classList.add('animate-spin');
     });
   }
 })();

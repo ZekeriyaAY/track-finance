@@ -4,52 +4,52 @@
 
 {% block content %}
 <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">Cash Flow Dashboard</h1>
+    <h1 class="text-h1">Cash Flow Dashboard</h1>
 </div>
 
 <!-- Filter Card -->
-<div class="bg-card rounded-xl shadow p-4 border border-gray-700 mb-6">
+<div class="card card-body mb-6">
     <form method="get" class="flex flex-wrap items-center gap-2 md:gap-4">
         <!-- Date Preset Buttons -->
         <div class="flex flex-wrap gap-2">
-            <button type="button" data-preset="current-month" onclick="setDatePreset('current-month')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
-                <i class="fas fa-calendar-day text-xs"></i> This Month
+            <button type="button" data-preset="current-month" onclick="setDatePreset('current-month')" class="preset-btn btn btn-ghost btn-sm">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> This Month
             </button>
-            <button type="button" data-preset="last-month" onclick="setDatePreset('last-month')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
-                <i class="fas fa-calendar-alt text-xs"></i> Last Month
+            <button type="button" data-preset="last-month" onclick="setDatePreset('last-month')" class="preset-btn btn btn-ghost btn-sm">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Last Month
             </button>
-            <button type="button" data-preset="last-30-days" onclick="setDatePreset('last-30-days')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+            <button type="button" data-preset="last-30-days" onclick="setDatePreset('last-30-days')" class="preset-btn btn btn-ghost btn-sm">
                 30 Days
             </button>
-            <button type="button" data-preset="last-3-months" onclick="setDatePreset('last-3-months')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+            <button type="button" data-preset="last-3-months" onclick="setDatePreset('last-3-months')" class="preset-btn btn btn-ghost btn-sm">
                 3 Months
             </button>
-            <button type="button" data-preset="last-6-months" onclick="setDatePreset('last-6-months')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
+            <button type="button" data-preset="last-6-months" onclick="setDatePreset('last-6-months')" class="preset-btn btn btn-ghost btn-sm">
                 6 Months
             </button>
-            <button type="button" data-preset="last-year" onclick="setDatePreset('last-year')" class="preset-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
-                <i class="fas fa-calendar text-xs"></i> 1 Year
+            <button type="button" data-preset="last-year" onclick="setDatePreset('last-year')" class="preset-btn btn btn-ghost btn-sm">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 1 Year
             </button>
         </div>
 
         <!-- Separator -->
-        <div class="hidden md:block w-px h-8 bg-gray-700"></div>
+        <div class="hidden md:block w-px h-8 bg-[var(--border-default)]"></div>
 
         <!-- Date Inputs -->
         <div class="flex items-center gap-2">
-            <span class="text-xs text-gray-500">From</span>
-            <input type="date" id="date_from" name="date_from" value="{{ date_from }}" class="px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary/50">
-            <span class="text-xs text-gray-500">to</span>
-            <input type="date" id="date_to" name="date_to" value="{{ date_to }}" class="px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary/50">
+            <span class="text-caption text-[var(--text-muted)]">From</span>
+            <input type="date" id="date_from" name="date_from" value="{{ date_from }}" class="form-control form-control-sm">
+            <span class="text-caption text-[var(--text-muted)]">to</span>
+            <input type="date" id="date_to" name="date_to" value="{{ date_to }}" class="form-control form-control-sm">
         </div>
 
         <!-- Action Buttons -->
         <div class="flex gap-2">
-            <button type="submit" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-                <i class="fas fa-filter"></i> Filter
+            <button type="submit" class="btn btn-secondary btn-sm">
+                <i data-lucide="filter" class="w-4 h-4"></i> Filter
             </button>
-            <a href="{{ url_for('cashflow.dashboard') }}" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition text-sm">
-                <i class="fas fa-times"></i> Reset
+            <a href="{{ url_for('cashflow.dashboard') }}" class="btn btn-ghost btn-sm">
+                <i data-lucide="x" class="w-4 h-4"></i> Reset
             </a>
         </div>
     </form>
@@ -57,58 +57,58 @@
 
 <!-- KPI Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-    <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total Income</div>
-        <div class="text-2xl font-bold text-green-400">{{ "{:,.2f}".format(total_income) }}</div>
+    <div class="card card-body">
+        <div class="text-caption text-[var(--text-muted)] mb-1">Total Income</div>
+        <div class="text-display amount amount-positive">{{ "{:,.2f}".format(total_income) }}</div>
         {% if income_change is not none %}
-        <div class="mt-2 text-xs flex items-center gap-1 {% if income_change >= 0 %}text-green-400{% else %}text-red-400{% endif %}">
-            <i class="fas {% if income_change >= 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %}"></i>
+        <div class="mt-2 text-body-sm flex items-center gap-1 {% if income_change >= 0 %}text-positive{% else %}text-negative{% endif %}">
+            <i data-lucide="{% if income_change >= 0 %}trending-up{% else %}trending-down{% endif %}" class="w-3.5 h-3.5"></i>
             <span>{{ "{:+.1f}%".format(income_change) }} vs prev period</span>
         </div>
         {% endif %}
     </div>
-    <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Total Expense</div>
-        <div class="text-2xl font-bold text-red-400">{{ "{:,.2f}".format(total_expense) }}</div>
+    <div class="card card-body">
+        <div class="text-caption text-[var(--text-muted)] mb-1">Total Expense</div>
+        <div class="text-display amount amount-negative">{{ "{:,.2f}".format(total_expense) }}</div>
         {% if expense_change is not none %}
-        <div class="mt-2 text-xs flex items-center gap-1 {% if expense_change <= 0 %}text-green-400{% else %}text-red-400{% endif %}">
-            <i class="fas {% if expense_change <= 0 %}fa-arrow-down{% else %}fa-arrow-up{% endif %}"></i>
+        <div class="mt-2 text-body-sm flex items-center gap-1 {% if expense_change <= 0 %}text-positive{% else %}text-negative{% endif %}">
+            <i data-lucide="{% if expense_change <= 0 %}trending-down{% else %}trending-up{% endif %}" class="w-3.5 h-3.5"></i>
             <span>{{ "{:+.1f}%".format(expense_change) }} vs prev period</span>
         </div>
         {% endif %}
     </div>
-    <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Net Savings</div>
-        <div class="text-2xl font-bold {% if net_savings >= 0 %}text-green-400{% else %}text-red-400{% endif %}">{{ "{:,.2f}".format(net_savings) }}</div>
+    <div class="card card-body">
+        <div class="text-caption text-[var(--text-muted)] mb-1">Net Savings</div>
+        <div class="text-display amount {% if net_savings >= 0 %}amount-positive{% else %}amount-negative{% endif %}">{{ "{:,.2f}".format(net_savings) }}</div>
         {% if savings_change is not none %}
-        <div class="mt-2 text-xs flex items-center gap-1 {% if savings_change >= 0 %}text-green-400{% else %}text-red-400{% endif %}">
-            <i class="fas {% if savings_change >= 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %}"></i>
+        <div class="mt-2 text-body-sm flex items-center gap-1 {% if savings_change >= 0 %}text-positive{% else %}text-negative{% endif %}">
+            <i data-lucide="{% if savings_change >= 0 %}trending-up{% else %}trending-down{% endif %}" class="w-3.5 h-3.5"></i>
             <span>{{ "{:+.1f}%".format(savings_change) }} vs prev period</span>
         </div>
         {% endif %}
     </div>
-    <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Transactions</div>
-        <div class="text-2xl font-bold text-blue-400">{{ transaction_count }}</div>
+    <div class="card card-body">
+        <div class="text-caption text-[var(--text-muted)] mb-1">Transactions</div>
+        <div class="text-display text-info">{{ transaction_count }}</div>
     </div>
 </div>
 
 <!-- Charts Row 1 -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-    <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <h2 class="text-sm font-semibold text-gray-300 mb-3">Monthly Income vs Expense</h2>
+    <div class="card card-body">
+        <h2 class="text-h3 text-[var(--text-secondary)] mb-3">Monthly Income vs Expense</h2>
         <div class="h-72">
             <canvas id="monthlyChart"></canvas>
         </div>
     </div>
-    <div class="bg-card rounded-lg p-5 border border-gray-700">
+    <div class="card card-body">
         <div class="flex items-center justify-between mb-3">
-            <h2 class="text-sm font-semibold text-gray-300">Expense by Category</h2>
+            <h2 class="text-h3 text-[var(--text-secondary)]">Expense by Category</h2>
             <div id="categoryDrilldownNav" class="hidden items-center gap-2 text-sm">
-                <button onclick="exitDrillDown()" class="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition">
-                    <i class="fas fa-arrow-left text-xs"></i> All Categories
+                <button onclick="exitDrillDown()" class="btn btn-ghost btn-sm">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> All Categories
                 </button>
-                <span class="text-gray-500">|</span>
+                <span class="text-[var(--text-muted)]">|</span>
                 <span id="drilldownParentName" class="text-primary font-medium"></span>
             </div>
         </div>
@@ -120,14 +120,14 @@
 
 <!-- Charts Row 2 -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-    <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <h2 class="text-sm font-semibold text-gray-300 mb-3">Daily Trend</h2>
+    <div class="card card-body">
+        <h2 class="text-h3 text-[var(--text-secondary)] mb-3">Daily Trend</h2>
         <div class="h-72">
             <canvas id="dailyChart"></canvas>
         </div>
     </div>
-    <div class="bg-card rounded-lg p-5 border border-gray-700">
-        <h2 class="text-sm font-semibold text-gray-300 mb-3">Monthly Net Savings</h2>
+    <div class="card card-body">
+        <h2 class="text-h3 text-[var(--text-secondary)] mb-3">Monthly Net Savings</h2>
         <div class="h-72">
             <canvas id="netChart"></canvas>
         </div>
@@ -135,14 +135,14 @@
 </div>
 
 <!-- Full width chart -->
-<div class="bg-card rounded-lg p-5 border border-gray-700 mb-8">
+<div class="card card-body mb-8">
     <div class="flex items-center justify-between mb-3">
-        <h2 class="text-sm font-semibold text-gray-300">Top 10 Expense Categories</h2>
+        <h2 class="text-h3 text-[var(--text-secondary)]">Top 10 Expense Categories</h2>
         <div id="top10DrilldownNav" class="hidden items-center gap-2 text-sm">
-            <button onclick="exitTop10DrillDown()" class="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition">
-                <i class="fas fa-arrow-left text-xs"></i> All Categories
+            <button onclick="exitTop10DrillDown()" class="btn btn-ghost btn-sm">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> All Categories
             </button>
-            <span class="text-gray-500">|</span>
+            <span class="text-[var(--text-muted)]">|</span>
             <span id="top10DrilldownParentName" class="text-primary font-medium"></span>
         </div>
     </div>
@@ -153,55 +153,53 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
-const COLORS = {
-    income: 'rgba(74, 222, 128, 0.8)',
-    expense: 'rgba(248, 113, 113, 0.8)',
-    net: 'rgba(96, 165, 250, 0.8)',
-    netNeg: 'rgba(248, 113, 113, 0.8)',
-    incomeMA: 'rgba(74, 222, 128, 0.4)',
-    expenseMA: 'rgba(248, 113, 113, 0.4)',
+var COLORS = {
+    income: 'rgba(109, 186, 138, 0.8)',
+    expense: 'rgba(212, 97, 110, 0.8)',
+    net: 'rgba(91, 159, 212, 0.8)',
+    netNeg: 'rgba(212, 97, 110, 0.8)',
+    incomeMA: 'rgba(109, 186, 138, 0.4)',
+    expenseMA: 'rgba(212, 97, 110, 0.4)',
     doughnut: [
-        '#6366f1','#f59e0b','#10b981','#ef4444','#8b5cf6',
-        '#ec4899','#14b8a6','#f97316','#06b6d4','#84cc16',
-        '#e11d48','#7c3aed','#0ea5e9','#d946ef','#facc15'
+        '#e5884a','#6dba8a','#5b9fd4','#d4616e','#d4a054',
+        '#8b5cf6','#ec4899','#14b8a6','#f97316','#06b6d4',
+        '#84cc16','#e11d48','#7c3aed','#0ea5e9','#d946ef'
     ]
 };
 Chart.defaults.color = '#9ca3af';
-Chart.defaults.borderColor = 'rgba(75,85,99,0.3)';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
 
-const monthlyLabels = {{ monthly_labels | tojson }};
-const monthlyIncome = {{ monthly_income | tojson }};
-const monthlyExpense = {{ monthly_expense | tojson }};
-const monthlyNet = {{ monthly_net | tojson }};
-const categoryLabels = {{ category_labels | tojson }};
-const categoryValues = {{ category_values | tojson }};
-const top10Labels = {{ top10_labels | tojson }};
-const top10Values = {{ top10_values | tojson }};
-const dailyLabels = {{ daily_labels | tojson }};
-const dailyIncome = {{ daily_income | tojson }};
-const dailyExpense = {{ daily_expense | tojson }};
-const dailyIncomeMA = {{ daily_income_ma | tojson }};
-const dailyExpenseMA = {{ daily_expense_ma | tojson }};
-const dateFrom = '{{ date_from }}';
-const dateTo = '{{ date_to }}';
+var monthlyLabels = {{ monthly_labels | tojson }};
+var monthlyIncome = {{ monthly_income | tojson }};
+var monthlyExpense = {{ monthly_expense | tojson }};
+var monthlyNet = {{ monthly_net | tojson }};
+var categoryLabels = {{ category_labels | tojson }};
+var categoryValues = {{ category_values | tojson }};
+var top10Labels = {{ top10_labels | tojson }};
+var top10Values = {{ top10_values | tojson }};
+var dailyLabels = {{ daily_labels | tojson }};
+var dailyIncome = {{ daily_income | tojson }};
+var dailyExpense = {{ daily_expense | tojson }};
+var dailyIncomeMA = {{ daily_income_ma | tojson }};
+var dailyExpenseMA = {{ daily_expense_ma | tojson }};
+var dateFrom = '{{ date_from }}';
+var dateTo = '{{ date_to }}';
 
 // Drill-down state
-let currentCategoryIds = {{ category_ids | tojson }};
-let currentHasChildren = {{ category_has_children | tojson }};
-let isDrillDownMode = false;
+var currentCategoryIds = {{ category_ids | tojson }};
+var currentHasChildren = {{ category_has_children | tojson }};
+var isDrillDownMode = false;
 
-// Helper function to format date as YYYY-MM-DD (local timezone)
 function formatDate(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    var year = date.getFullYear();
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, '0');
+    return year + '-' + month + '-' + day;
 }
 
-// Date preset function
 function setDatePreset(preset) {
-    const today = new Date();
-    let dateFromVal, dateToVal = new Date(today);
+    var today = new Date();
+    var dateFromVal, dateToVal = new Date(today);
 
     switch(preset) {
         case 'current-month':
@@ -231,13 +229,12 @@ function setDatePreset(preset) {
     document.querySelector('form').submit();
 }
 
-// Highlight active preset on page load
 function highlightActivePreset() {
-    const today = new Date();
-    const currentFrom = new Date(dateFrom);
-    const currentTo = new Date(dateTo);
+    var today = new Date();
+    var currentFrom = new Date(dateFrom);
+    var currentTo = new Date(dateTo);
 
-    const presets = {
+    var presets = {
         'current-month': {
             from: new Date(today.getFullYear(), today.getMonth(), 1),
             to: today
@@ -264,23 +261,24 @@ function highlightActivePreset() {
         }
     };
 
-    // Check which preset matches current dates
-    for (const [preset, dates] of Object.entries(presets)) {
-        const fromMatch = formatDate(currentFrom) === formatDate(dates.from);
-        const toMatch = formatDate(currentTo) === formatDate(dates.to);
+    for (var key in presets) {
+        var dates = presets[key];
+        var fromMatch = formatDate(currentFrom) === formatDate(dates.from);
+        var toMatch = formatDate(currentTo) === formatDate(dates.to);
 
         if (fromMatch && toMatch) {
-            const btn = document.querySelector(`[data-preset="${preset}"]`);
+            var btn = document.querySelector('[data-preset="' + key + '"]');
             if (btn) {
-                btn.classList.remove('bg-gray-700/30', 'text-gray-400');
-                btn.classList.add('bg-primary/10', 'text-primary');
+                btn.classList.remove('btn-ghost');
+                btn.classList.add('btn-secondary');
+                btn.style.borderColor = 'var(--primary-border)';
+                btn.style.color = 'var(--primary)';
             }
             break;
         }
     }
 }
 
-// Run on page load
 highlightActivePreset();
 
 // Monthly Income vs Expense
@@ -296,40 +294,36 @@ new Chart(document.getElementById('monthlyChart'), {
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
 });
 
-// Dynamic height for category chart based on legend items
 function updateCategoryChartHeight(itemCount) {
-    const container = document.getElementById('categoryChartContainer');
-    // Base height 288px (h-72), add 20px per item beyond 10
-    const baseHeight = 288;
-    const extraItems = Math.max(0, itemCount - 10);
-    const newHeight = baseHeight + (extraItems * 20);
+    var container = document.getElementById('categoryChartContainer');
+    var baseHeight = 288;
+    var extraItems = Math.max(0, itemCount - 10);
+    var newHeight = baseHeight + (extraItems * 20);
     container.style.height = newHeight + 'px';
 }
 
-// Pointer cursor plugin for clickable slices and legend labels
-const pointerCursorPlugin = {
+var pointerCursorPlugin = {
     id: 'pointerCursor',
-    afterEvent(chart, args) {
+    afterEvent: function(chart, args) {
         if (args.event.type !== 'mousemove' || isDrillDownMode) {
             chart.canvas.style.cursor = 'default';
             return;
         }
-        // Check chart slices
-        const elements = chart.getElementsAtEventForMode(args.event, 'nearest', { intersect: true }, false);
+        var elements = chart.getElementsAtEventForMode(args.event, 'nearest', { intersect: true }, false);
         if (elements.length > 0) {
-            const idx = elements[0].index;
+            var idx = elements[0].index;
             chart.canvas.style.cursor = currentHasChildren[idx] ? 'pointer' : 'default';
             return;
         }
-        // Check legend labels
-        const legend = chart.legend;
+        var legend = chart.legend;
         if (legend) {
-            const {x, y} = args.event;
-            for (const item of legend.legendItems || []) {
-                const hitBox = legend.legendHitBoxes[item.index];
+            var x = args.event.x, y = args.event.y;
+            var items = legend.legendItems || [];
+            for (var i = 0; i < items.length; i++) {
+                var hitBox = legend.legendHitBoxes[items[i].index];
                 if (hitBox && x >= hitBox.left && x <= hitBox.left + hitBox.width &&
                     y >= hitBox.top && y <= hitBox.top + hitBox.height) {
-                    chart.canvas.style.cursor = currentHasChildren[item.index] ? 'pointer' : 'default';
+                    chart.canvas.style.cursor = currentHasChildren[items[i].index] ? 'pointer' : 'default';
                     return;
                 }
             }
@@ -338,13 +332,11 @@ const pointerCursorPlugin = {
     }
 };
 
-// Responsive legend position helper
 function getLegendPosition() {
     return window.innerWidth < 768 ? 'bottom' : 'right';
 }
 
-// Category Doughnut (with global reference for toggle)
-let categoryChart = new Chart(document.getElementById('categoryChart'), {
+var categoryChart = new Chart(document.getElementById('categoryChart'), {
     type: 'doughnut',
     data: {
         labels: categoryLabels,
@@ -357,10 +349,10 @@ let categoryChart = new Chart(document.getElementById('categoryChart'), {
             legend: {
                 position: getLegendPosition(),
                 onClick: function(e, legendItem, legend) {
-                    const idx = legendItem.index;
+                    var idx = legendItem.index;
                     if (!isDrillDownMode && currentHasChildren[idx]) {
-                        const parentId = currentCategoryIds[idx];
-                        const parentName = legend.chart.data.labels[idx];
+                        var parentId = currentCategoryIds[idx];
+                        var parentName = legend.chart.data.labels[idx];
                         drillDownIntoCategory(parentId, parentName);
                     } else {
                         Chart.defaults.plugins.legend.onClick.call(this, e, legendItem, legend);
@@ -373,73 +365,65 @@ let categoryChart = new Chart(document.getElementById('categoryChart'), {
     plugins: [pointerCursorPlugin]
 });
 
-// Set initial height based on category count
 updateCategoryChartHeight(categoryLabels.length);
 
-// Chart click handler
 function handleCategoryChartClick(event, elements) {
     if (isDrillDownMode || elements.length === 0) return;
-    const idx = elements[0].index;
+    var idx = elements[0].index;
     if (!currentHasChildren[idx]) return;
-    const parentId = currentCategoryIds[idx];
-    const parentName = categoryChart.data.labels[idx];
+    var parentId = currentCategoryIds[idx];
+    var parentName = categoryChart.data.labels[idx];
     drillDownIntoCategory(parentId, parentName);
 }
 
-// Drill into a parent category's children
-async function drillDownIntoCategory(parentId, parentName) {
-    try {
-        const response = await fetch(`/cashflow/api/category-data?date_from=${dateFrom}&date_to=${dateTo}&view_mode=children_of&parent_id=${parentId}`);
-        const data = await response.json();
+function drillDownIntoCategory(parentId, parentName) {
+    fetch('/cashflow/api/category-data?date_from=' + dateFrom + '&date_to=' + dateTo + '&view_mode=children_of&parent_id=' + parentId)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.labels.length === 0) return;
 
-        if (data.labels.length === 0) return;
+            isDrillDownMode = true;
+            categoryChart.data.labels = data.labels;
+            categoryChart.data.datasets[0].data = data.values;
+            updateCategoryChartHeight(data.labels.length);
+            categoryChart.update();
 
-        isDrillDownMode = true;
+            var nav = document.getElementById('categoryDrilldownNav');
+            nav.classList.remove('hidden');
+            nav.classList.add('flex');
+            document.getElementById('drilldownParentName').textContent = parentName;
 
-        // Update chart
-        categoryChart.data.labels = data.labels;
-        categoryChart.data.datasets[0].data = data.values;
-        updateCategoryChartHeight(data.labels.length);
-        categoryChart.update();
-
-        // Show breadcrumb
-        const nav = document.getElementById('categoryDrilldownNav');
-        nav.classList.remove('hidden');
-        nav.classList.add('flex');
-        document.getElementById('drilldownParentName').textContent = parentName;
-
-        // Update state
-        currentCategoryIds = data.category_ids;
-        currentHasChildren = data.has_children;
-    } catch (error) {
-        console.error('Error drilling down:', error);
-    }
+            currentCategoryIds = data.category_ids;
+            currentHasChildren = data.has_children;
+        })
+        .catch(function(error) {
+            console.error('Error drilling down:', error);
+        });
 }
 
-// Exit drill-down and return to parent view
-async function exitDrillDown() {
+function exitDrillDown() {
     isDrillDownMode = false;
 
-    // Hide breadcrumb
-    const nav = document.getElementById('categoryDrilldownNav');
+    var nav = document.getElementById('categoryDrilldownNav');
     nav.classList.add('hidden');
     nav.classList.remove('flex');
 
-    try {
-        const response = await fetch(`/cashflow/api/category-data?date_from=${dateFrom}&date_to=${dateTo}&view_mode=parent`);
-        const data = await response.json();
-        categoryChart.data.labels = data.labels;
-        categoryChart.data.datasets[0].data = data.values;
-        updateCategoryChartHeight(data.labels.length);
-        categoryChart.update();
+    fetch('/cashflow/api/category-data?date_from=' + dateFrom + '&date_to=' + dateTo + '&view_mode=parent')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            categoryChart.data.labels = data.labels;
+            categoryChart.data.datasets[0].data = data.values;
+            updateCategoryChartHeight(data.labels.length);
+            categoryChart.update();
 
-        if (data.category_ids) {
-            currentCategoryIds = data.category_ids;
-            currentHasChildren = data.has_children;
-        }
-    } catch (error) {
-        console.error('Error exiting drill-down:', error);
-    }
+            if (data.category_ids) {
+                currentCategoryIds = data.category_ids;
+                currentHasChildren = data.has_children;
+            }
+        })
+        .catch(function(error) {
+            console.error('Error exiting drill-down:', error);
+        });
 }
 
 // Daily Trend with Moving Averages
@@ -466,7 +450,7 @@ new Chart(document.getElementById('netChart'), {
             label: 'Net Savings',
             data: monthlyNet,
             borderColor: COLORS.net,
-            backgroundColor: 'rgba(96,165,250,0.15)',
+            backgroundColor: 'rgba(91,159,212,0.15)',
             fill: true,
             tension: 0.3
         }]
@@ -475,21 +459,20 @@ new Chart(document.getElementById('netChart'), {
 });
 
 // Top 10 drill-down state
-let top10CategoryIds = currentCategoryIds.slice(0, 10);
-let top10HasChildren = currentHasChildren.slice(0, 10);
-let isTop10DrillDown = false;
+var top10CategoryIds = currentCategoryIds.slice(0, 10);
+var top10HasChildren = currentHasChildren.slice(0, 10);
+var isTop10DrillDown = false;
 
-// Pointer cursor plugin for top 10 clickable bars
-const top10PointerPlugin = {
+var top10PointerPlugin = {
     id: 'top10Pointer',
-    afterEvent(chart, args) {
+    afterEvent: function(chart, args) {
         if (args.event.type !== 'mousemove' || isTop10DrillDown) {
             chart.canvas.style.cursor = 'default';
             return;
         }
-        const elements = chart.getElementsAtEventForMode(args.event, 'nearest', { intersect: true }, false);
+        var elements = chart.getElementsAtEventForMode(args.event, 'nearest', { intersect: true }, false);
         if (elements.length > 0) {
-            const idx = elements[0].index;
+            var idx = elements[0].index;
             chart.canvas.style.cursor = top10HasChildren[idx] ? 'pointer' : 'default';
         } else {
             chart.canvas.style.cursor = 'default';
@@ -497,8 +480,7 @@ const top10PointerPlugin = {
     }
 };
 
-// Top 10 Horizontal Bar
-let top10Chart = new Chart(document.getElementById('top10Chart'), {
+var top10Chart = new Chart(document.getElementById('top10Chart'), {
     type: 'bar',
     data: {
         labels: top10Labels,
@@ -510,7 +492,7 @@ let top10Chart = new Chart(document.getElementById('top10Chart'), {
         plugins: { legend: { display: false } },
         onClick: function(event, elements) {
             if (isTop10DrillDown || elements.length === 0) return;
-            const idx = elements[0].index;
+            var idx = elements[0].index;
             if (!top10HasChildren[idx]) return;
             drillDownTop10(top10CategoryIds[idx], top10Chart.data.labels[idx]);
         }
@@ -518,62 +500,61 @@ let top10Chart = new Chart(document.getElementById('top10Chart'), {
     plugins: [top10PointerPlugin]
 });
 
-// Drill into a parent category in top 10
-async function drillDownTop10(parentId, parentName) {
-    try {
-        const response = await fetch(`/cashflow/api/category-data?date_from=${dateFrom}&date_to=${dateTo}&view_mode=children_of&parent_id=${parentId}`);
-        const data = await response.json();
-        if (data.labels.length === 0) return;
+function drillDownTop10(parentId, parentName) {
+    fetch('/cashflow/api/category-data?date_from=' + dateFrom + '&date_to=' + dateTo + '&view_mode=children_of&parent_id=' + parentId)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.labels.length === 0) return;
 
-        isTop10DrillDown = true;
+            isTop10DrillDown = true;
 
-        const sliced = Math.min(data.labels.length, 10);
-        top10Chart.data.labels = data.labels.slice(0, sliced);
-        top10Chart.data.datasets[0].data = data.values.slice(0, sliced);
-        top10Chart.data.datasets[0].backgroundColor = COLORS.doughnut.slice(0, sliced);
-        top10Chart.update();
+            var sliced = Math.min(data.labels.length, 10);
+            top10Chart.data.labels = data.labels.slice(0, sliced);
+            top10Chart.data.datasets[0].data = data.values.slice(0, sliced);
+            top10Chart.data.datasets[0].backgroundColor = COLORS.doughnut.slice(0, sliced);
+            top10Chart.update();
 
-        top10CategoryIds = data.category_ids.slice(0, sliced);
-        top10HasChildren = data.has_children.slice(0, sliced);
+            top10CategoryIds = data.category_ids.slice(0, sliced);
+            top10HasChildren = data.has_children.slice(0, sliced);
 
-        const nav = document.getElementById('top10DrilldownNav');
-        nav.classList.remove('hidden');
-        nav.classList.add('flex');
-        document.getElementById('top10DrilldownParentName').textContent = parentName;
-    } catch (error) {
-        console.error('Error drilling down top 10:', error);
-    }
+            var nav = document.getElementById('top10DrilldownNav');
+            nav.classList.remove('hidden');
+            nav.classList.add('flex');
+            document.getElementById('top10DrilldownParentName').textContent = parentName;
+        })
+        .catch(function(error) {
+            console.error('Error drilling down top 10:', error);
+        });
 }
 
-// Exit top 10 drill-down
-async function exitTop10DrillDown() {
+function exitTop10DrillDown() {
     isTop10DrillDown = false;
 
-    const nav = document.getElementById('top10DrilldownNav');
+    var nav = document.getElementById('top10DrilldownNav');
     nav.classList.add('hidden');
     nav.classList.remove('flex');
 
-    try {
-        const response = await fetch(`/cashflow/api/category-data?date_from=${dateFrom}&date_to=${dateTo}&view_mode=parent`);
-        const data = await response.json();
-        const sliced = Math.min(data.labels.length, 10);
-        top10Chart.data.labels = data.labels.slice(0, sliced);
-        top10Chart.data.datasets[0].data = data.values.slice(0, sliced);
-        top10Chart.data.datasets[0].backgroundColor = COLORS.doughnut.slice(0, sliced);
-        top10Chart.update();
+    fetch('/cashflow/api/category-data?date_from=' + dateFrom + '&date_to=' + dateTo + '&view_mode=parent')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var sliced = Math.min(data.labels.length, 10);
+            top10Chart.data.labels = data.labels.slice(0, sliced);
+            top10Chart.data.datasets[0].data = data.values.slice(0, sliced);
+            top10Chart.data.datasets[0].backgroundColor = COLORS.doughnut.slice(0, sliced);
+            top10Chart.update();
 
-        if (data.category_ids) {
-            top10CategoryIds = data.category_ids.slice(0, sliced);
-            top10HasChildren = data.has_children.slice(0, sliced);
-        }
-    } catch (error) {
-        console.error('Error exiting top 10 drill-down:', error);
-    }
+            if (data.category_ids) {
+                top10CategoryIds = data.category_ids.slice(0, sliced);
+                top10HasChildren = data.has_children.slice(0, sliced);
+            }
+        })
+        .catch(function(error) {
+            console.error('Error exiting top 10 drill-down:', error);
+        });
 }
 
-// Update chart legend positions on window resize (e.g., device rotation)
 window.addEventListener('resize', function() {
-    const newPosition = getLegendPosition();
+    var newPosition = getLegendPosition();
     if (categoryChart.options.plugins.legend.position !== newPosition) {
         categoryChart.options.plugins.legend.position = newPosition;
         categoryChart.update();

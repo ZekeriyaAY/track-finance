@@ -5,97 +5,94 @@
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-    <h1 class="text-2xl font-semibold">Import Rules</h1>
-    <form action="{{ url_for('categorization_rule.add_rule') }}" method="get" style="display:inline;">
-      <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-        <i class="fas fa-plus"></i>
-New Rule
-      </button>
-    </form>
+    <h1 class="text-h1">Import Rules</h1>
+    <a href="{{ url_for('categorization_rule.add_rule') }}" class="btn btn-primary btn-sm">
+      <i data-lucide="plus" class="w-4 h-4"></i>
+      New Rule
+    </a>
   </div>
 
-  <div class="bg-card rounded-xl shadow p-4 mb-4">
-    <p class="text-sm text-gray-400">
-      <i class="fas fa-info-circle mr-1"></i>
+  <div class="card card-body !py-3">
+    <p class="text-body-sm text-[var(--text-muted)]">
+      <i data-lucide="info" class="w-4 h-4 inline-block align-text-bottom mr-1"></i>
       Rules are evaluated in priority order during Excel import. The first matching rule assigns the category and tags. Transactions that don't match any rule are assigned to the "Import" category.
     </p>
   </div>
 
-  <div class="bg-card rounded-xl shadow p-0 overflow-x-auto mb-8">
+  <div class="card overflow-hidden">
     {% if rules %}
-      <table class="min-w-full text-sm align-middle" id="rules-table">
+      <div class="table-responsive">
+      <table class="table" id="rules-table">
         <thead>
-          <tr class="bg-darkbg/80">
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">#</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Name</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Condition</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Category</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Tags</th>
-            <th class="py-3 px-4 text-left font-semibold text-xs uppercase tracking-wider text-gray-400">Type</th>
-            <th class="py-3 px-4 text-center font-semibold text-xs uppercase tracking-wider text-gray-400">Status</th>
-            <th class="py-3 px-4 text-right font-semibold text-xs uppercase tracking-wider text-gray-400">Actions</th>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Condition</th>
+            <th>Category</th>
+            <th>Tags</th>
+            <th>Type</th>
+            <th class="text-center">Status</th>
+            <th class="text-right">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-800" id="rules-body">
+        <tbody id="rules-body">
           {% for rule in rules %}
-          <tr class="hover:bg-darkbg/40 transition" data-rule-id="{{ rule.id }}">
-            <td class="py-2 px-4 text-gray-400">{{ loop.index }}</td>
-            <td class="py-2 px-4 font-medium">{{ rule.name }}</td>
-            <td class="py-2 px-4">
-              <span class="text-gray-400">description</span>
-              <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-primary/10 text-primary text-xs mx-1">{{ rule.operator.replace('_', ' ') }}</span>
-              <span class="text-yellow-400">"{{ rule.value }}"</span>
+          <tr data-rule-id="{{ rule.id }}">
+            <td class="text-[var(--text-muted)]">{{ loop.index }}</td>
+            <td class="font-medium">{{ rule.name }}</td>
+            <td>
+              <span class="text-[var(--text-muted)]">description</span>
+              <span class="badge badge-primary mx-1">{{ rule.operator.replace('_', ' ') }}</span>
+              <span class="text-warning">"{{ rule.value }}"</span>
             </td>
-            <td class="py-2 px-4">
+            <td>
               {% if rule.category.parent %}
-                <span class="text-gray-500">{{ rule.category.parent.name }} /</span>
+                <span class="text-[var(--text-muted)]">{{ rule.category.parent.name }} /</span>
               {% endif %}
               {{ rule.category.name }}
             </td>
-            <td class="py-2 px-4">
+            <td>
               {% for tag in rule.tags %}
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary/10 text-primary text-xs">{{ tag.name }}</span>
+                <span class="badge badge-primary">{{ tag.name }}</span>
               {% endfor %}
-              {% if not rule.tags %}<span class="text-gray-600">-</span>{% endif %}
+              {% if not rule.tags %}<span class="text-[var(--text-muted)]">-</span>{% endif %}
             </td>
-            <td class="py-2 px-4">
+            <td>
               {% if rule.type_override %}
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs {% if rule.type_override == 'income' %}bg-green-700/10 text-green-500{% else %}bg-red-700/10 text-red-500{% endif %}">
+                <span class="badge {% if rule.type_override == 'income' %}badge-positive{% else %}badge-negative{% endif %}">
                   {{ rule.type_override }}
                 </span>
               {% else %}
-                <span class="text-gray-600">-</span>
+                <span class="text-[var(--text-muted)]">-</span>
               {% endif %}
             </td>
-            <td class="py-2 px-4 text-center">
+            <td class="text-center">
               {% if rule.is_active %}
-                <span class="inline-flex items-center px-2 py-0.5 rounded bg-green-700/10 text-green-500 text-xs">Active</span>
+                <span class="badge badge-positive">Active</span>
               {% else %}
-                <span class="inline-flex items-center px-2 py-0.5 rounded bg-gray-700/30 text-gray-500 text-xs">Inactive</span>
+                <span class="badge badge-default">Inactive</span>
               {% endif %}
             </td>
-            <td class="py-2 px-4 text-right whitespace-nowrap">
+            <td class="text-right whitespace-nowrap">
               {% if not loop.first %}
-              <button type="button" onclick="moveRule({{ rule.id }}, 'up')" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-darkbg text-gray-400 hover:text-white hover:bg-gray-700 transition text-xs mr-1" title="Move Up">
-                <i class="fas fa-arrow-up"></i>
+              <button type="button" onclick="moveRule({{ rule.id }}, 'up')" class="btn btn-ghost btn-sm btn-icon" title="Move Up">
+                <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
               </button>
               {% endif %}
               {% if not loop.last %}
-              <button type="button" onclick="moveRule({{ rule.id }}, 'down')" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-darkbg text-gray-400 hover:text-white hover:bg-gray-700 transition text-xs mr-1" title="Move Down">
-                <i class="fas fa-arrow-down"></i>
+              <button type="button" onclick="moveRule({{ rule.id }}, 'down')" class="btn btn-ghost btn-sm btn-icon" title="Move Down">
+                <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
               </button>
               {% endif %}
-              <form action="{{ url_for('categorization_rule.edit_rule', id=rule.id) }}" method="get" style="display:inline;">
-                <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition text-xs font-medium mr-1">
-                  <i class="fas fa-pencil-alt"></i>
-Edit
-                </button>
-              </form>
+              <a href="{{ url_for('categorization_rule.edit_rule', id=rule.id) }}" class="btn btn-ghost btn-sm">
+                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                Edit
+              </a>
               <form action="{{ url_for('categorization_rule.delete_rule', id=rule.id) }}" method="POST" style="display:inline;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-xs font-medium" onclick="return confirm('Are you sure you want to delete this rule?')">
-                  <i class="fas fa-trash"></i>
-Delete
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this rule?')">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  Delete
                 </button>
               </form>
             </td>
@@ -103,13 +100,16 @@ Delete
           {% endfor %}
         </tbody>
       </table>
+      </div>
     {% else %}
-      <div class="p-8 text-center">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
-          <i class="fas fa-wand-magic-sparkles text-2xl"></i>
-        </div>
-        <h3 class="text-lg font-medium text-gray-200 mb-1">No rules defined yet</h3>
-        <p class="text-gray-400">Create rules to auto-categorize transactions during Excel import.</p>
+      <div class="empty-state">
+        <i data-lucide="wand-2" class="empty-state-icon"></i>
+        <div class="empty-state-title">No rules defined yet</div>
+        <div class="empty-state-description">Create rules to auto-categorize transactions during Excel import.</div>
+        <a href="{{ url_for('categorization_rule.add_rule') }}" class="btn btn-primary btn-sm">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          New Rule
+        </a>
       </div>
     {% endif %}
   </div>
@@ -117,15 +117,17 @@ Delete
 
 <script>
 function moveRule(ruleId, direction) {
-  const rows = Array.from(document.querySelectorAll('#rules-body tr'));
-  const ruleIds = rows.map(r => parseInt(r.dataset.ruleId));
-  const idx = ruleIds.indexOf(ruleId);
+  var rows = Array.from(document.querySelectorAll('#rules-body tr'));
+  var ruleIds = rows.map(function(r) { return parseInt(r.dataset.ruleId); });
+  var idx = ruleIds.indexOf(ruleId);
   if (idx === -1) return;
 
-  const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+  var swapIdx = direction === 'up' ? idx - 1 : idx + 1;
   if (swapIdx < 0 || swapIdx >= ruleIds.length) return;
 
-  [ruleIds[idx], ruleIds[swapIdx]] = [ruleIds[swapIdx], ruleIds[idx]];
+  var tmp = ruleIds[idx];
+  ruleIds[idx] = ruleIds[swapIdx];
+  ruleIds[swapIdx] = tmp;
 
   fetch('{{ url_for("categorization_rule.reorder") }}', {
     method: 'POST',
@@ -134,7 +136,7 @@ function moveRule(ruleId, direction) {
       'X-CSRFToken': '{{ csrf_token() }}'
     },
     body: JSON.stringify({ rule_ids: ruleIds })
-  }).then(r => {
+  }).then(function(r) {
     if (r.ok) location.reload();
   });
 }

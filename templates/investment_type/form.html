@@ -5,57 +5,55 @@
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold">{{ 'Edit Investment Type' if type else 'Add New Investment Type' }}</h1>
-    <form method="get" action="{{ url_for('investment_type.index') }}">
-      <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-        <i class="fas fa-arrow-left"></i>
-Go Back
-      </button>
-    </form>
+    <h1 class="text-h1">{{ 'Edit Investment Type' if type else 'Add New Investment Type' }}</h1>
+    <a href="{{ url_for('investment_type.index') }}" class="btn btn-ghost btn-sm">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      Go Back
+    </a>
   </div>
 
-  <div class="bg-card rounded-xl shadow p-6">
+  <div class="card card-body">
     <form method="POST" action="{{ url_for('investment_type.edit_investment_type', id=type.id) if type else url_for('investment_type.add_investment_type') }}" class="space-y-6">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-2">
-          <label for="name" class="block text-sm font-medium text-gray-300">Type Name</label>
-          <input type="text" id="name" name="name" value="{{ type.name if type else '' }}" required 
-                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+          <label for="name" class="form-label">Type Name</label>
+          <input type="text" id="name" name="name" value="{{ type.name if type else '' }}" required
+                 class="form-control w-full"
                  oninput="updateIconPreview()">
         </div>
 
         <div class="space-y-2">
-          <label for="code" class="block text-sm font-medium text-gray-300">Code</label>
-          <input type="text" id="code" name="code" value="{{ type.code if type else '' }}" required 
-                 class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+          <label for="code" class="form-label">Code</label>
+          <input type="text" id="code" name="code" value="{{ type.code if type else '' }}" required
+                 class="form-control w-full">
         </div>
 
         <div class="space-y-2 md:col-span-2">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="space-y-2">
-              <label for="icon" class="block text-sm font-medium text-gray-300">Icon</label>
-              <input type="text" id="icon" name="icon" value="{{ type.icon if type else 'fas fa-chart-pie' }}" 
-                     class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+              <label for="icon" class="form-label">Icon</label>
+              <input type="text" id="icon" name="icon" value="{{ type.icon if type else 'fas fa-chart-pie' }}"
+                     class="form-control w-full"
                      oninput="updateIconPreview()">
-              <p class="text-sm text-gray-400">Font Awesome icon class</p>
+              <p class="form-text">Font Awesome icon class</p>
             </div>
 
             <div class="space-y-2">
-              <label for="color" class="block text-sm font-medium text-gray-300">Color</label>
-              <div class="h-[34px]">
-                <input type="color" id="color" name="color" value="{{ type.color if type else '#3B82F6' }}" 
-                       class="w-full h-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+              <label for="color" class="form-label">Color</label>
+              <div class="h-[40px]">
+                <input type="color" id="color" name="color" value="{{ type.color if type else '#3B82F6' }}"
+                       class="form-control w-full h-full p-1"
                        oninput="updateIconPreview()">
               </div>
             </div>
 
             <div class="space-y-2">
-              <label class="block text-sm font-medium text-gray-300">Preview</label>
-              <div class="p-2 bg-darkbg border border-gray-700 rounded-md h-[34px] flex items-center">
+              <label class="form-label">Preview</label>
+              <div class="form-control w-full flex items-center">
                 <div class="flex items-center gap-2">
                   <i id="iconPreview" class="{{ type.icon if type else 'fas fa-chart-pie' }}" style="color: {{ type.color if type else '#3B82F6' }}"></i>
-                  <span class="text-sm text-gray-300" id="iconPreviewText">{{ type.name if type else '' }}</span>
+                  <span class="text-sm text-[var(--text-secondary)]" id="iconPreviewText">{{ type.name if type else '' }}</span>
                 </div>
               </div>
             </div>
@@ -63,9 +61,8 @@ Go Back
         </div>
 
         <div class="space-y-2 md:col-span-2">
-          <label for="parent_id" class="block text-sm font-medium text-gray-300">Parent Type</label>
-          <select id="parent_id" name="parent_id" 
-                  class="w-full px-2 py-1 bg-darkbg border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+          <label for="parent_id" class="form-label">Parent Type</label>
+          <select id="parent_id" name="parent_id" class="form-select w-full">
             <option value="">Main Type</option>
             {% for parent in types %}
               {% if not parent.parent_id and (not type or parent.id != type.id) %}
@@ -77,12 +74,12 @@ Go Back
       </div>
 
       <div class="flex justify-end gap-3 mt-6">
-        <a href="{{ url_for('investment_type.index') }}" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-red-700/10 text-red-500 hover:bg-red-700/20 transition text-sm">
-          <i class="fas fa-times"></i>
+        <a href="{{ url_for('investment_type.index') }}" class="btn btn-secondary btn-sm">
+          <i data-lucide="x" class="w-4 h-4"></i>
           Cancel
         </a>
-        <button type="submit" class="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition text-sm">
-          <i class="fas fa-save"></i>
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i data-lucide="check" class="w-4 h-4"></i>
           Save
         </button>
       </div>
@@ -97,7 +94,7 @@ function updateIconPreview() {
   const nameInput = document.getElementById('name');
   const iconPreview = document.getElementById('iconPreview');
   const iconPreviewText = document.getElementById('iconPreviewText');
-  
+
   iconPreview.className = iconInput.value;
   iconPreview.style.color = colorInput.value;
   iconPreviewText.textContent = nameInput.value;
