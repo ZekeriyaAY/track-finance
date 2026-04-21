@@ -414,17 +414,17 @@ tailwind.config = {
 
 ---
 
-## Checklist — Implementasyon Öncesi
+## Checklist — Implementasyon
 
-- [ ] Geist Sans + Mono font CDN eklenmesi
-- [ ] Lucide icons CDN veya SVG sprite eklenmesi
-- [ ] Tailwind config güncellenmesi (base_layout.html)
-- [ ] CSS custom properties tanımlanması (style.css)
-- [ ] Toast notification component (JS)
-- [ ] Skeleton loading component
-- [ ] Sidebar navigation component
-- [ ] Button variants (primary, secondary, ghost, danger)
-- [ ] Table component (hover actions, sticky amount)
-- [ ] Empty state component
-- [ ] Counter animation utility (JS)
-- [ ] Motion/transition utilities
+- [x] Geist Sans + Mono font CDN eklenmesi
+- [x] Lucide icons CDN veya SVG sprite eklenmesi
+- [x] Tailwind config güncellenmesi (base_layout.html)
+- [x] CSS custom properties tanımlanması (style.css)
+- [x] Toast notification component (JS)
+- [x] Skeleton loading component
+- [x] Sidebar navigation component
+- [x] Button variants (primary, secondary, ghost, danger)
+- [x] Table component (hover actions, sticky amount)
+- [x] Empty state component
+- [x] Counter animation utility (JS)
+- [x] Motion/transition utilities

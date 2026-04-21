@@ -8,7 +8,7 @@ Target: One person tracking their own income/expenses and investments. No multi-
 ## Tech Stack
 
 - **Backend:** Python 3.11, Flask 3.0.2, SQLAlchemy 2.0, PostgreSQL 15
-- **Frontend:** Jinja2 SSR, Tailwind CSS (CDN), Chart.js v4 (CDN), Font Awesome 6.5.2 (CDN)
+- **Frontend:** Jinja2 SSR, Tailwind CSS (CDN), Chart.js v4 (CDN), Lucide Icons (CDN), Geist Sans/Mono (CDN)
 - **Auth:** Flask-Login, single admin user (auto-created on first run)
 - **Container:** Docker Compose (app + db + pgadmin), Gunicorn in production
 - **Tests:** pytest in Docker, SQLite in-memory for test isolation
@@ -21,7 +21,7 @@ app.py (factory: create_app)
 ├── routes/          → Flask Blueprints (one per domain)
 ├── utils/           → Pure functions, bank adapters, data processors
 ├── templates/       → Jinja2 (base_layout → base → page)
-├── static/css/      → Custom dark-theme CSS (Bootstrap-like class names)
+├── static/css/      → Custom dark-theme CSS (design system component classes)
 └── tests/           → unit/ integration/ security/ api/
 ```
 
@@ -115,29 +115,40 @@ Settings (id, key, value)
 ### Colors (dark theme only, no light mode)
 | Token | Hex | Usage |
 |-------|-----|-------|
-| `primary` | `#0d6efd` | Buttons, links, active states |
-| `darkbg` | `#1a1d20` | Page background |
-| `card` | `#23272b` | Card/container background |
-| Text primary | `rgba(255,255,255,0.9)` | Headings, important text |
-| Text secondary | `rgba(255,255,255,0.7)` | Body text |
-| Text muted | `rgba(255,255,255,0.4)` | Labels, placeholders |
-| Border | `rgba(255,255,255,0.1)` | Dividers, card borders |
+| `primary` | `#e5884a` | Buttons, links, active states (warm amber) |
+| `bg-base` | `#0d1117` | Page background |
+| `bg-surface` | `#161b22` | Card/container background |
+| `bg-elevated` | `#1c2128` | Modal, dropdown, popover |
+| `bg-overlay` | `#21262d` | Hover state, active row |
+| `positive` | `#6dba8a` | Income amounts, success |
+| `negative` | `#d4616e` | Expense amounts, errors |
+| `text-primary` | `#e6edf3` | Headings, important text |
+| `text-secondary` | `#9ca3af` | Body text |
+| `text-muted` | `#6b7280` | Labels, placeholders |
+| `border-default` | `rgba(255,255,255,0.08)` | Dividers, card borders |
 
 ### UI Components
-- **Font:** Inter (Google Fonts) — weights 400, 500, 600, 700
-- **Cards:** `bg-card` background, `rounded-lg`, subtle border, shadow
-- **Buttons:** `.btn` class (custom CSS), inline-flex, transitions
-- **Forms:** Dark inputs with `rgba(255,255,255,0.03)` background
-- **Tables:** Custom `.table` class with hover states
-- **Flash messages:** success (green), danger (red), warning (yellow), info (blue)
-- **Icons:** Font Awesome 6.5.2 classes (`fa-solid fa-*`)
+- **Font:** Geist Sans (CDN) for UI, Geist Mono for amounts/numbers — weights 400, 500, 600, 700
+- **Cards:** `.card` class, `bg-surface` background, `rounded-lg`, subtle border, shadow
+- **Buttons:** `.btn-primary`, `.btn-secondary`, `.btn-ghost`, `.btn-danger` (CSS component classes)
+- **Forms:** `.form-control` dark inputs with `bg-elevated` background
+- **Tables:** `.table` class with hover states, `.amount` for money formatting
+- **Flash messages:** Toast notifications — success (green), danger (red), warning (yellow), info (blue)
+- **Icons:** Lucide icons (primary), Font Awesome (legacy for investment type custom icons only)
+- **Typography:** `.text-display`, `.text-h1`, `.text-h2`, `.text-h3`, `.text-body`, `.text-caption`
+- **Badges:** `.badge-positive`, `.badge-negative`, `.badge-warning`, `.badge-info`
+- **Empty states:** `.empty-state` component with icon + message + CTA
+- **Skeletons:** `.skeleton` loading placeholders with pulse animation
+- **Counter animation:** `.counter-animate` with `data-target` and `data-decimals` for KPI cards
 - **Spacing:** Tailwind utilities (px-4, py-2, gap-2, etc.)
+- **Navigation:** Sidebar layout (collapsed 64px, expanded 240px overlay)
 
 ### Template Rules
 - Extend `base.html` (or `base_minimal.html` for login only)
 - CSRF token required in ALL POST forms: `<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">`
 - Mobile-responsive: use Tailwind responsive prefixes (`md:`, `lg:`)
 - No external JS files — all JavaScript inline in `<script>` tags within templates
+- Icons: use Lucide icons via `<i data-lucide="icon-name"></i>` (Font Awesome only for legacy investment type icons)
 
 ## Testing (MANDATORY)
 
@@ -218,7 +229,7 @@ tests/
 - [ ] CSRF hidden input in all forms
 - [ ] Flash message display via base template
 - [ ] Consistent card/form layout matching existing pages
-- [ ] Font Awesome icons where appropriate
+- [ ] Lucide icons where appropriate (Font Awesome only for legacy investment type icons)
 
 ### Database Changes
 - [ ] Alembic migration generated and tested

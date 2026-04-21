@@ -219,6 +219,55 @@
         toast.classList.add('toast-exit');
         setTimeout(function() { toast.remove(); }, 150);
     }
+
+    // --- Counter animation (dashboard hero numbers) ---
+    (function() {
+        var DURATION = 600;
+        var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function formatNumber(value, decimals) {
+            var parts = value.toFixed(decimals).split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return decimals > 0 ? parts.join('.') : parts[0];
+        }
+
+        function easeOut(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+
+        function animateCounter(el) {
+            var target = parseFloat(el.dataset.target);
+            var decimals = parseInt(el.dataset.decimals) || 0;
+
+            if (isNaN(target)) {
+                return;
+            }
+
+            if (reducedMotion) {
+                el.textContent = formatNumber(target, decimals);
+                return;
+            }
+
+            var start = null;
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                var progress = Math.min((timestamp - start) / DURATION, 1);
+                var current = target * easeOut(progress);
+                el.textContent = formatNumber(current, decimals);
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    el.textContent = formatNumber(target, decimals);
+                }
+            }
+            requestAnimationFrame(step);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var counters = document.querySelectorAll('.counter-animate');
+            counters.forEach(animateCounter);
+        });
+    })();
     </script>
 
     <!-- Flash messages → Toast conversion -->
