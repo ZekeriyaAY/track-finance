@@ -25,11 +25,14 @@
         </thead>
         <tbody>
           {% for category in categories %}
-            <tr>
+            <tr class="row-parent">
               <td>
                 <span class="inline-flex items-center gap-2">
                   <i data-lucide="folder" class="w-4 h-4"></i>
                   {{ category.name }}
+                  {% if category.subcategories %}
+                    <span class="text-[var(--text-muted)] text-xs font-normal">({{ category.subcategories|length }})</span>
+                  {% endif %}
                 </span>
               </td>
               <td class="text-right">
@@ -62,9 +65,10 @@
             </tr>
             {% if category.subcategories %}
               {% for subcategory in category.subcategories %}
-                <tr>
-                  <td class="pl-8">
-                    <span class="inline-flex items-center gap-2 text-[var(--text-secondary)]">
+                <tr class="row-child">
+                  <td>
+                    <span class="inline-flex items-center gap-2">
+                      <span class="tree-connector">└</span>
                       <i data-lucide="folder" class="w-4 h-4"></i>
                       {{ subcategory.name }}
                     </span>

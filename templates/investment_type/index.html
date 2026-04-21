@@ -26,11 +26,14 @@
         </thead>
         <tbody>
           {% for type in types %}
-            <tr>
+            <tr class="row-parent">
               <td>
                 <span class="inline-flex items-center gap-2">
                   <i class="{{ type.icon }}" style="color: {{ type.color }}"></i>
                   {{ type.name }}
+                  {% if type.children %}
+                    <span class="text-[var(--text-muted)] text-xs font-normal">({{ type.children|length }})</span>
+                  {% endif %}
                 </span>
               </td>
               <td class="text-[var(--text-secondary)]">{{ type.code }}</td>
@@ -58,9 +61,10 @@
             </tr>
             {% if type.children %}
               {% for child in type.children %}
-                <tr>
-                  <td class="pl-8">
-                    <span class="inline-flex items-center gap-2 text-[var(--text-secondary)]">
+                <tr class="row-child">
+                  <td>
+                    <span class="inline-flex items-center gap-2">
+                      <span class="tree-connector">└</span>
                       <i class="{{ child.icon }}" style="color: {{ child.color }}"></i>
                       {{ child.name }}
                     </span>
