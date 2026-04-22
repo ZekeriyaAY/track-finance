@@ -186,6 +186,7 @@ var dailyIncomeMA = {{ daily_income_ma | tojson }};
 var dailyExpenseMA = {{ daily_expense_ma | tojson }};
 var dateFrom = '{{ date_from }}';
 var dateTo = '{{ date_to }}';
+var serverToday = '{{ server_today }}';
 
 // Drill-down state
 var currentCategoryIds = {{ category_ids | tojson }};
@@ -200,7 +201,7 @@ function formatDate(date) {
 }
 
 function setDatePreset(preset) {
-    var today = new Date();
+    var today = new Date(serverToday + 'T12:00:00');
     var dateFromVal, dateToVal = new Date(today);
 
     switch(preset) {
@@ -232,48 +233,43 @@ function setDatePreset(preset) {
 }
 
 function highlightActivePreset() {
-    var today = new Date();
-    var currentFrom = new Date(dateFrom);
-    var currentTo = new Date(dateTo);
+    // serverToday is the backend's date.today() — avoids browser/Docker TZ mismatch
+    var today = new Date(serverToday + 'T12:00:00');
+    var t = serverToday;
 
     var presets = {
         'current-month': {
-            from: new Date(today.getFullYear(), today.getMonth(), 1),
-            to: today
+            from: formatDate(new Date(today.getFullYear(), today.getMonth(), 1)),
+            to: t
         },
         'last-month': {
-            from: new Date(today.getFullYear(), today.getMonth() - 1, 1),
-            to: new Date(today.getFullYear(), today.getMonth(), 0)
+            from: formatDate(new Date(today.getFullYear(), today.getMonth() - 1, 1)),
+            to: formatDate(new Date(today.getFullYear(), today.getMonth(), 0))
         },
         'last-30-days': {
-            from: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30),
-            to: today
+            from: (function() { var d = new Date(today); d.setDate(d.getDate() - 30); return formatDate(d); })(),
+            to: t
         },
         'last-3-months': {
-            from: new Date(today.getFullYear(), today.getMonth() - 3, today.getDate()),
-            to: today
+            from: formatDate(new Date(today.getFullYear(), today.getMonth() - 3, today.getDate())),
+            to: t
         },
         'last-6-months': {
-            from: new Date(today.getFullYear(), today.getMonth() - 6, today.getDate()),
-            to: today
+            from: formatDate(new Date(today.getFullYear(), today.getMonth() - 6, today.getDate())),
+            to: t
         },
         'last-year': {
-            from: new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()),
-            to: today
+            from: formatDate(new Date(today.getFullYear() - 1, today.getMonth(), today.getDate())),
+            to: t
         }
     };
 
     for (var key in presets) {
-        var dates = presets[key];
-        var fromMatch = formatDate(currentFrom) === formatDate(dates.from);
-        var toMatch = formatDate(currentTo) === formatDate(dates.to);
-
-        if (fromMatch && toMatch) {
+        if (dateFrom === presets[key].from && dateTo === presets[key].to) {
             var btn = document.querySelector('[data-preset="' + key + '"]');
             if (btn) {
                 btn.classList.remove('btn-ghost');
-                btn.classList.add('btn-secondary');
-                btn.style.borderColor = 'var(--primary-border)';
+                btn.style.backgroundColor = 'var(--primary-muted)';
                 btn.style.color = 'var(--primary)';
             }
             break;

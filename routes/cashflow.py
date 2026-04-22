@@ -221,6 +221,7 @@ def dashboard():
         daily_expense_ma=daily_expense_ma,
         date_from=d_from.isoformat(),
         date_to=d_to.isoformat(),
+        server_today=today.isoformat(),
     )
 
 @cashflow_bp.route('/')
