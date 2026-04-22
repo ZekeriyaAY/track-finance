@@ -19,12 +19,12 @@ def update_pgadmin_url():
         flash('PgAdmin URL cannot be empty.', 'error')
         return redirect(url_for('settings.index'))
     
-    # URL formatını kontrol et
+    # Validate URL format
     if not pgadmin_url.startswith(('http://', 'https://')):
         pgadmin_url = 'http://' + pgadmin_url
     
     try:
-        # Veritabanında PgAdmin URL'sini güncelle
+        # Update PgAdmin URL in database
         Settings.set_setting('pgadmin_url', pgadmin_url)
         flash('PgAdmin URL updated successfully.', 'success')
     except Exception as e:
@@ -36,7 +36,7 @@ def update_pgadmin_url():
 
 @settings_bp.route('/')
 def index():
-    # Veritabanından URL'leri al, yoksa varsayılan değerleri kullan
+    # Get URLs from database, fall back to defaults
     pgadmin_url = Settings.get_setting('pgadmin_url', 'http://localhost:5050')
     bank_connections = BankConnection.query.order_by(BankConnection.created_at.desc()).all()
     available_banks = get_available_banks()

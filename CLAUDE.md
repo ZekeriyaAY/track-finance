@@ -2,7 +2,7 @@
 
 ## Project Identity
 
-**Where's My Money?** — Self-hosted, single-user personal finance tracker. Turkish Lira (TRY) only.
+**Where's My Money?** — Self-hosted, single-user personal finance tracker.
 Target: One person tracking their own income/expenses and investments. No multi-tenancy, no public API.
 
 ## Tech Stack
@@ -67,12 +67,12 @@ def add_resource():
             # validate, create, commit
             db.session.add(obj)
             db.session.commit()
-            flash('Başarıyla eklendi.', 'success')
+            flash('Added successfully.', 'success')
             return redirect(url_for('blueprint.index'))
         except Exception as e:
             db.session.rollback()
             logger.error(f"Error: {e}")
-            flash('Bir hata oluştu.', 'danger')
+            flash('An error occurred.', 'danger')
     return render_template('feature/form.html')
 ```
 
@@ -189,7 +189,7 @@ tests/
 - Use `db.Numeric(12, 2)` for all money fields
 - Use `datetime.now(timezone.utc)` for timestamps
 - Use `db.session.get(Model, id)` for primary key lookups
-- Use `flash()` with Turkish user-facing messages
+- Use `flash()` with English user-facing messages
 - Use try/except with `db.session.rollback()` in all route POST handlers
 - Use `logger.error()` before flash on exceptions
 - Wrap hierarchical queries to handle parent/child relationships
@@ -217,7 +217,7 @@ tests/
 - [ ] All POST routes wrapped in try/except with rollback
 - [ ] Input validation for enum fields (income/expense, buy/sell)
 - [ ] Delete protection for parent records with children
-- [ ] Flash messages in Turkish for user feedback
+- [ ] Flash messages in English for user feedback
 - [ ] Logger.error() on all caught exceptions
 - [ ] CSRF protection on all forms
 - [ ] Integration tests covering happy path + edge cases

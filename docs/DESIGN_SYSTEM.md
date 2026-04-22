@@ -1,58 +1,58 @@
 # Design System — Where's My Money?
 
-> Felsefe: Ciddiyet ile samimiyet arasında denge. Para konusunda güven veren ama gün içinde açmaktan sıkılmayan bir arayüz.
+> Philosophy: A balance between seriousness and approachability. An interface that inspires trust when it comes to money, yet never feels tedious to open throughout the day.
 
-## Prensipler
+## Principles
 
-1. **Az renk, doğru yerde renk.** Renk vurgu içindir. Pozitif/negatif tutarlar ve primary action dışında renkli element yok.
-2. **Hiyerarşi kritiktir.** Her sayfada tek bir "kahraman" bilgi. Kullanıcı 1 saniyede en önemli şeyi görmeli.
-3. **Tabular nums her yerde.** Rakamlar alt alta geldiğinde noktalar hizalanmalı.
-4. **Hareket anlam taşımalı.** Animasyonlar dekoratif değil, geçişleri anlamlandırmak için.
-5. **Boşluk = lüks.** Sıkıştırmak yerine nefes aldırmak.
+1. **Few colors, placed with intention.** Color is for emphasis. No colored elements beyond positive/negative amounts and the primary action.
+2. **Hierarchy is critical.** Each page has a single "hero" piece of information. The user should see the most important thing within 1 second.
+3. **Tabular nums everywhere.** When numbers are stacked vertically, decimal points must align.
+4. **Motion must carry meaning.** Animations are not decorative — they exist to clarify transitions.
+5. **Whitespace = luxury.** Let the layout breathe instead of cramming elements together.
 
 ---
 
 ## Color Palette
 
 ### Backgrounds (Blue-neutral dark)
-| Token | Hex | Kullanım |
-|-------|-----|----------|
-| `bg-base` | `#0d1117` | Sayfa arkaplani |
-| `bg-surface` | `#161b22` | Kart, container |
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `bg-base` | `#0d1117` | Page background |
+| `bg-surface` | `#161b22` | Card, container |
 | `bg-elevated` | `#1c2128` | Modal, dropdown, popover |
 | `bg-overlay` | `#21262d` | Hover state, active row |
 
 ### Primary (Warm Amber)
-| Token | Hex | Kullanım |
-|-------|-----|----------|
+| Token | Hex | Usage |
+|-------|-----|-------|
 | `primary` | `#e5884a` | Primary button, active link |
 | `primary-hover` | `#d67a3c` | Primary hover state |
 | `primary-muted` | `rgba(229, 136, 74, 0.12)` | Soft background (active nav, badge) |
 | `primary-border` | `rgba(229, 136, 74, 0.3)` | Focus ring, active border |
 
 ### Semantic
-| Token | Hex | Kullanım |
-|-------|-----|----------|
-| `positive` | `#6dba8a` | Gelir tutarı, başarı |
-| `positive-muted` | `rgba(109, 186, 138, 0.12)` | Başarı toast background |
-| `negative` | `#d4616e` | Gider tutarı, hata |
-| `negative-muted` | `rgba(212, 97, 110, 0.12)` | Hata toast background |
-| `warning` | `#d4a054` | Uyarı |
-| `info` | `#5b9fd4` | Bilgi |
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `positive` | `#6dba8a` | Income amount, success |
+| `positive-muted` | `rgba(109, 186, 138, 0.12)` | Success toast background |
+| `negative` | `#d4616e` | Expense amount, error |
+| `negative-muted` | `rgba(212, 97, 110, 0.12)` | Error toast background |
+| `warning` | `#d4a054` | Warning |
+| `info` | `#5b9fd4` | Info |
 
 ### Text
-| Token | Hex | Kullanım |
-|-------|-----|----------|
-| `text-primary` | `#e6edf3` | Başlıklar, önemli metin |
-| `text-secondary` | `#9ca3af` | Gövde metni |
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `text-primary` | `#e6edf3` | Headings, important text |
+| `text-secondary` | `#9ca3af` | Body text |
 | `text-muted` | `#6b7280` | Label, caption, placeholder |
-| `text-on-primary` | `#0d1117` | Primary buton üzerindeki metin |
+| `text-on-primary` | `#0d1117` | Text on primary button |
 
 ### Borders
-| Token | Value | Kullanım |
-|-------|-------|----------|
-| `border-default` | `rgba(255, 255, 255, 0.08)` | Kart border, divider |
-| `border-subtle` | `rgba(255, 255, 255, 0.04)` | Hafif ayırıcı |
+| Token | Value | Usage |
+|-------|-------|-------|
+| `border-default` | `rgba(255, 255, 255, 0.08)` | Card border, divider |
+| `border-subtle` | `rgba(255, 255, 255, 0.04)` | Subtle separator |
 | `border-focus` | `rgba(229, 136, 74, 0.5)` | Focus ring |
 
 ---
@@ -60,10 +60,10 @@
 ## Typography
 
 ### Font Stack
-| Kullanım | Font | Fallback |
-|----------|------|----------|
-| UI, başlıklar, gövde | Geist Sans | system-ui, sans-serif |
-| Rakamlar, tutarlar, kod | Geist Mono | ui-monospace, monospace |
+| Usage | Font | Fallback |
+|-------|------|----------|
+| UI, headings, body | Geist Sans | system-ui, sans-serif |
+| Numbers, amounts, code | Geist Mono | ui-monospace, monospace |
 
 ### Loading
 ```html
@@ -73,56 +73,56 @@
 ```
 
 ### Scale
-| Token | Size | Weight | Tracking | Kullanım |
-|-------|------|--------|----------|----------|
+| Token | Size | Weight | Tracking | Usage |
+|-------|------|--------|----------|-------|
 | `display` | 32px / 2rem | 700 | -0.025em (tight) | Dashboard hero number |
-| `heading-1` | 24px / 1.5rem | 600 | -0.025em (tight) | Sayfa başlığı |
-| `heading-2` | 18px / 1.125rem | 600 | -0.015em | Section başlığı |
-| `heading-3` | 15px / 0.9375rem | 500 | -0.01em | Kart başlığı |
-| `body` | 14px / 0.875rem | 400 | normal | Genel gövde metni |
-| `body-sm` | 13px / 0.8125rem | 400 | normal | Tablo hücreleri |
-| `caption` | 12px / 0.75rem | 500 | 0.025em (wider) | Label, uppercase metin |
-| `mono-amount` | inherit | 600 | normal | Para tutarları (Geist Mono) |
+| `heading-1` | 24px / 1.5rem | 600 | -0.025em (tight) | Page title |
+| `heading-2` | 18px / 1.125rem | 600 | -0.015em | Section title |
+| `heading-3` | 15px / 0.9375rem | 500 | -0.01em | Card title |
+| `body` | 14px / 0.875rem | 400 | normal | General body text |
+| `body-sm` | 13px / 0.8125rem | 400 | normal | Table cells |
+| `caption` | 12px / 0.75rem | 500 | 0.025em (wider) | Label, uppercase text |
+| `mono-amount` | inherit | 600 | normal | Money amounts (Geist Mono) |
 
-### Kurallar
-- Para tutarı **ASLA** normal sans font ile gösterilmez → her zaman `font-mono tabular-nums`
-- Başlıklarda `tracking-tight` (-0.025em)
-- UPPERCASE metinlerde (caption) `tracking-wider` (+0.025em)
-- Para tutarında minimum `font-semibold`, hero'da `font-bold`
-- Line-height: başlıklar `1.2`, gövde `1.5`, tablo `1.4`
+### Rules
+- Money amounts must **NEVER** be displayed in a regular sans font — always use `font-mono tabular-nums`
+- Use `tracking-tight` (-0.025em) for headings
+- Use `tracking-wider` (+0.025em) for UPPERCASE text (caption)
+- Money amounts require at minimum `font-semibold`; hero amounts use `font-bold`
+- Line-height: headings `1.2`, body `1.5`, tables `1.4`
 
 ---
 
 ## Spacing System (4px base)
 
-| Token | Value | Kullanım |
-|-------|-------|----------|
-| `space-0.5` | 2px | İnce ayırıcı |
-| `space-1` | 4px | İkon ile metin arası |
-| `space-2` | 8px | İç element padding |
+| Token | Value | Usage |
+|-------|-------|-------|
+| `space-0.5` | 2px | Thin separator |
+| `space-1` | 4px | Gap between icon and text |
+| `space-2` | 8px | Inner element padding |
 | `space-3` | 12px | Compact padding |
-| `space-4` | 16px | Standart padding |
-| `space-5` | 20px | Kart iç padding |
-| `space-6` | 24px | Section arası |
-| `space-8` | 32px | Büyük section arası |
+| `space-4` | 16px | Standard padding |
+| `space-5` | 20px | Card inner padding |
+| `space-6` | 24px | Between sections |
+| `space-8` | 32px | Between large sections |
 | `space-10` | 40px | Page padding (desktop) |
 | `space-12` | 48px | Major section break |
 | `space-16` | 64px | Page top/bottom |
 
-### Spacing Kuralları
-- Kart iç padding: `space-5` (20px)
-- Kart arası gap: `space-4` (16px)
-- Form field arası: `space-4` (16px)
-- Tablo satır padding: `space-3` y, `space-4` x
-- Page container padding: `space-6` (mobil), `space-10` (desktop)
-- Sidebar genişlik: collapsed `space-16` (64px), expanded `240px`
+### Spacing Rules
+- Card inner padding: `space-5` (20px)
+- Gap between cards: `space-4` (16px)
+- Gap between form fields: `space-4` (16px)
+- Table row padding: `space-3` y, `space-4` x
+- Page container padding: `space-6` (mobile), `space-10` (desktop)
+- Sidebar width: collapsed `space-16` (64px), expanded `240px`
 
 ---
 
 ## Border Radius
 
-| Token | Value | Kullanım |
-|-------|-------|----------|
+| Token | Value | Usage |
+|-------|-------|-------|
 | `radius-sm` | 6px | Input, badge, tag |
 | `radius-md` | 8px | Button, dropdown |
 | `radius-lg` | 12px | Card, modal |
@@ -133,8 +133,8 @@
 
 ## Shadows
 
-| Token | Value | Kullanım |
-|-------|-------|----------|
+| Token | Value | Usage |
+|-------|-------|-------|
 | `shadow-sm` | `0 1px 2px rgba(0,0,0,0.3)` | Button, input |
 | `shadow-md` | `0 4px 12px rgba(0,0,0,0.25)` | Card, dropdown |
 | `shadow-lg` | `0 8px 24px rgba(0,0,0,0.35)` | Modal, toast |
@@ -146,20 +146,20 @@
 
 ### Buttons
 
-| Variant | Background | Text | Border | Kullanım |
-|---------|-----------|------|--------|----------|
-| **Primary** | `primary` | `text-on-primary` | none | Sayfadaki tek ana aksiyon (Kaydet, Ekle) |
-| **Secondary** | `transparent` | `text-primary` | `border-default` | İkincil aksiyonlar (İptal, Filtrele) |
-| **Ghost** | `transparent` | `text-secondary` | none | Üçüncül (Düzenle, inline actions) |
-| **Danger** | `negative-muted` | `negative` | none | Silme işlemleri |
+| Variant | Background | Text | Border | Usage |
+|---------|-----------|------|--------|-------|
+| **Primary** | `primary` | `text-on-primary` | none | The single main action on a page (Save, Add) |
+| **Secondary** | `transparent` | `text-primary` | `border-default` | Secondary actions (Cancel, Filter) |
+| **Ghost** | `transparent` | `text-secondary` | none | Tertiary actions (Edit, inline actions) |
+| **Danger** | `negative-muted` | `negative` | none | Delete operations |
 
-**Kurallar:**
-- Bir sayfada **en fazla 1** primary buton olmalı
-- Buton boyutları: `sm` (28px h), `md` (36px h), `lg` (44px h)
-- İkon + metin arası: `space-2` (8px)
-- Minimum genişlik: metin boyutuna göre, padding `space-3` x (12px) `space-2` y (8px)
-- Hover: hafif brightness artışı (105%)
-- Active: scale(0.98) + brightness düşüşü
+**Rules:**
+- A page should have **at most 1** primary button
+- Button sizes: `sm` (28px h), `md` (36px h), `lg` (44px h)
+- Gap between icon and text: `space-2` (8px)
+- Minimum width: based on text size, padding `space-3` x (12px) `space-2` y (8px)
+- Hover: slight brightness increase (105%)
+- Active: scale(0.98) + brightness decrease
 - Transition: `all 150ms ease`
 
 ### Cards
@@ -173,119 +173,119 @@
 └─────────────────────────────┘
 ```
 
-- Header: `heading-3` + `text-muted` alt açıklama
-- Divider: `border-subtle` ile `my-4`
-- Footer (opsiyonel): Muted background ile aksiyonlar
+- Header: `heading-3` + `text-muted` subtitle
+- Divider: `border-subtle` with `my-4`
+- Footer (optional): Actions on a muted background
 
 ### Tables
 
-| Özellik | Uygulama |
-|---------|----------|
+| Property | Implementation |
+|----------|----------------|
 | Header | `caption` style, uppercase, `text-muted`, `border-b border-default` |
-| Satır | `body-sm`, hover → `bg-overlay` |
-| Amount kolonu | Sağa hizalı, `font-mono tabular-nums font-semibold`, sticky |
-| Aksiyonlar | `...` butonu varsayılan gizli → satır hover'da belirir → tıklayınca dropdown açılır |
+| Row | `body-sm`, hover → `bg-overlay` |
+| Amount column | Right-aligned, `font-mono tabular-nums font-semibold`, sticky |
+| Actions | `...` button hidden by default → appears on row hover → click opens dropdown |
 | Checkbox | 16x16px, `radius-sm`, `border-default` |
-| Empty state | İllüstrasyon/ikon + samimi mesaj + CTA button |
-| Zebra | Yok — hover yeterli, temiz görünüm |
+| Empty state | Illustration/icon + friendly message + CTA button |
+| Zebra | None — hover is sufficient, keeps a clean look |
 
 **Amount Formatting:**
 ```
-Gelir:  +1.234,56 ₺  (text-positive, font-mono font-semibold)
-Gider:  -1.234,56 ₺  (text-negative, font-mono font-semibold)
-Nötr:    1.234,56 ₺  (text-primary, font-mono font-semibold)
+Income:   +1.234,56 ₺  (text-positive, font-mono font-semibold)
+Expense:  -1.234,56 ₺  (text-negative, font-mono font-semibold)
+Neutral:   1.234,56 ₺  (text-primary, font-mono font-semibold)
 ```
 
 ### Tags / Badges
 
 ```
 ┌──────────────┐
-│  Tag Label   │  border: 1px solid (renk, %30 opacity)
+│  Tag Label   │  border: 1px solid (color, 30% opacity)
 └──────────────┘  background: transparent
-                  text: renk, %80 opacity
+                  text: color, 80% opacity
                   radius: radius-full (pill)
                   padding: space-1 y, space-2 x
                   font: caption size
 ```
 
-- Dolgu (fill) YOK — sadece ince renkli border
-- Renkler: önceden tanımlı 6-8 renk paleti (tag oluşturulurken seçilir veya otomatik atanır)
+- NO fill — only a thin colored border
+- Colors: a predefined palette of 6-8 colors (selected or auto-assigned when creating a tag)
 
 ### Toast Notifications
 
-| Özellik | Değer |
-|---------|-------|
-| Pozisyon | Sağ üst |
-| Genişlik | 360px max |
+| Property | Value |
+|----------|-------|
+| Position | Top right |
+| Width | 360px max |
 | Radius | `radius-xl` (16px) |
 | Shadow | `shadow-lg` |
-| Animation | slideIn sağdan (200ms ease-out) |
-| Duration | Success: 4s, Error: 8s veya kalıcı (dismiss button) |
-| Stack | Üst üste, max 3 görünür |
+| Animation | slideIn from right (200ms ease-out) |
+| Duration | Success: 4s, Error: 8s or persistent (dismiss button) |
+| Stack | Stacked, max 3 visible |
 
-**Türler:**
-- Success: `positive-muted` bg, `positive` left-border (3px), samimi mesaj
-- Error: `negative-muted` bg, `negative` left-border, kalıcı, dismiss button
+**Types:**
+- Success: `positive-muted` bg, `positive` left-border (3px), friendly message
+- Error: `negative-muted` bg, `negative` left-border, persistent, dismiss button
 - Info: `bg-elevated`, `info` left-border
 - Warning: amber tone, `warning` left-border
 
-**Mesaj Dili (samimi):**
-- ~~"Başarıyla eklendi."~~ → "Eklendi, güzel!"
-- ~~"Bir hata oluştu."~~ → "Bir şeyler ters gitti, tekrar dener misin?"
-- ~~"Silindi."~~ → "Kaldırıldı."
-- ~~"Kaydedildi."~~ → "Tamam, kaydettim."
+**Message Tone (friendly):**
+- ~~"Successfully added."~~ → "Added, nice!"
+- ~~"An error occurred."~~ → "Something went wrong, want to try again?"
+- ~~"Deleted."~~ → "Removed."
+- ~~"Saved."~~ → "Got it, saved."
 
 ### Navigation (Sidebar)
 
 ```
 ┌──┐
-│  │ Collapsed: 64px genişlik
-│  │ İkon-only (20px icon, centered)
+│  │ Collapsed: 64px width
+│  │ Icon-only (20px icon, centered)
 │  │ Toggle (click) → expanded (240px) overlay
 │  │ Active item: primary-muted bg + primary icon
-│  │ Background: bg-base (sayfa ile aynı)
-│  │ Sağ border: border-subtle
+│  │ Background: bg-base (same as page)
+│  │ Right border: border-subtle
 │  │
-│  │ Alt kısım: user avatar + settings
+│  │ Bottom section: user avatar + settings
 └──┘
 
-Mobil: Hamburger → full-width drawer (soldan kayar)
+Mobile: Hamburger → full-width drawer (slides in from left)
 ```
 
 ### Form Inputs
 
-| Özellik | Değer |
-|---------|-------|
+| Property | Value |
+|----------|-------|
 | Background | `bg-elevated` |
 | Border | `border-default` |
 | Radius | `radius-sm` (6px) |
 | Height | 40px (md), 36px (sm) |
 | Focus | `shadow-glow` (primary border-focus) |
 | Placeholder | `text-muted` |
-| Label | `caption` style, `text-secondary`, üstte |
-| Error | `negative` border + altında error mesajı |
+| Label | `caption` style, `text-secondary`, above input |
+| Error | `negative` border + error message below |
 
 ### Empty States
 
 ```
 ┌─────────────────────────────────┐
 │                                 │
-│         [Muted icon/illus]      │  İkon: 48px, text-muted opacity
+│         [Muted icon/illus]      │  Icon: 48px, text-muted opacity
 │                                 │
-│     "Henüz işlem eklenmemiş"    │  heading-3, text-secondary
-│   "İlk işlemini ekleyerek       │  body, text-muted
-│    başlayabilirsin."            │
+│     "No transactions yet"       │  heading-3, text-secondary
+│   "Get started by adding        │  body, text-muted
+│    your first transaction."     │
 │                                 │
-│       [+ Yeni İşlem Ekle]      │  Primary button (tek CTA)
+│       [+ Add Transaction]       │  Primary button (single CTA)
 │                                 │
 └─────────────────────────────────┘
 ```
 
 ### Loading States (Skeleton)
 
-- Kart: `bg-overlay` rounded bloklar, pulse animation (1.5s)
-- Tablo: 5 satır skeleton row, farklı genişliklerde
-- Dashboard: Metric card'lar skeleton + chart placeholder
+- Card: `bg-overlay` rounded blocks, pulse animation (1.5s)
+- Table: 5 skeleton rows, varying widths
+- Dashboard: Metric card skeletons + chart placeholder
 - Animation: `opacity 0.4 → 1 → 0.4` loop (subtle pulse)
 
 ---
@@ -304,59 +304,59 @@ Mobil: Hamburger → full-width drawer (soldan kayar)
 | Dropdown open | `opacity 0 → 1` + `translateY(-4px) → 0` | 150ms | ease-out |
 | Page transition | `opacity 0.5 → 1` | 100ms | ease |
 
-**Kurallar:**
-- `prefers-reduced-motion` kontrolü her zaman eklenir
-- 200ms üstü animasyon yok (sluggish hissettirmemeli)
-- Counter animation sadece dashboard hero numbers'da
+**Rules:**
+- `prefers-reduced-motion` check is always included
+- No animation longer than 200ms (must not feel sluggish)
+- Counter animation only on dashboard hero numbers
 
 ---
 
 ## Iconography (Lucide)
 
 - **Size:** 16px (inline), 20px (nav, button), 24px (empty state), 48px (hero empty state)
-- **Stroke:** 1.5px (varsayılan Lucide)
-- **Color:** `currentColor` (parent'ın text rengini alır)
-- **Alignment:** Metin ile `vertical-align: middle` veya flex `items-center`
+- **Stroke:** 1.5px (Lucide default)
+- **Color:** `currentColor` (inherits text color from parent)
+- **Alignment:** `vertical-align: middle` with text, or flex `items-center`
 
-Sık kullanılan ikonlar:
-| Aksiyon | İkon |
-|---------|------|
-| Ekle | `plus` |
-| Düzenle | `pencil` |
-| Sil | `trash-2` |
-| Filtre | `filter` |
-| Arama | `search` |
-| Gelir | `trending-up` |
-| Gider | `trending-down` |
-| Takvim | `calendar` |
-| Kategori | `folder` |
+Commonly used icons:
+| Action | Icon |
+|--------|------|
+| Add | `plus` |
+| Edit | `pencil` |
+| Delete | `trash-2` |
+| Filter | `filter` |
+| Search | `search` |
+| Income | `trending-up` |
+| Expense | `trending-down` |
+| Calendar | `calendar` |
+| Category | `folder` |
 | Tag | `tag` |
-| Yatırım | `line-chart` |
-| Ayarlar | `settings` |
-| Çıkış | `log-out` |
+| Investment | `line-chart` |
+| Settings | `settings` |
+| Log out | `log-out` |
 | Menu (more) | `more-horizontal` |
-| Kapat | `x` |
-| Başarı | `check-circle` |
-| Hata | `alert-circle` |
+| Close | `x` |
+| Success | `check-circle` |
+| Error | `alert-circle` |
 
 ---
 
 ## Responsive Breakpoints
 
-| Token | Width | Kullanım |
-|-------|-------|----------|
-| `sm` | 640px | Mobil landscape |
+| Token | Width | Usage |
+|-------|-------|-------|
+| `sm` | 640px | Mobile landscape |
 | `md` | 768px | Tablet |
-| `lg` | 1024px | Desktop (sidebar gösterir) |
+| `lg` | 1024px | Desktop (shows sidebar) |
 | `xl` | 1280px | Wide desktop |
 
-### Mobil Adaptasyonlar
+### Mobile Adaptations
 - Sidebar → hamburger drawer
-- Tablo → horizontal scroll wrapper + sticky first col & amount col
-- Kart grid → single column stack
+- Table → horizontal scroll wrapper + sticky first col & amount col
+- Card grid → single column stack
 - Modal → full-screen sheet (bottom sheet)
 - Page padding: `space-4` (16px)
-- Font size: body 14px'de kalır, heading-1 → 20px'e düşer
+- Font size: body stays at 14px, heading-1 → reduced to 20px
 
 ---
 
@@ -414,12 +414,12 @@ tailwind.config = {
 
 ---
 
-## Checklist — Implementasyon
+## Checklist — Implementation
 
-- [x] Geist Sans + Mono font CDN eklenmesi
-- [x] Lucide icons CDN veya SVG sprite eklenmesi
-- [x] Tailwind config güncellenmesi (base_layout.html)
-- [x] CSS custom properties tanımlanması (style.css)
+- [x] Add Geist Sans + Mono font CDN
+- [x] Add Lucide icons CDN or SVG sprite
+- [x] Update Tailwind config (base_layout.html)
+- [x] Define CSS custom properties (style.css)
 - [x] Toast notification component (JS)
 - [x] Skeleton loading component
 - [x] Sidebar navigation component
