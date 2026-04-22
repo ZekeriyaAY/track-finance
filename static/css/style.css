@@ -57,11 +57,38 @@
 }
 
 /* --- Base --- */
+:root {
+    color-scheme: dark;
+}
+
 body {
     color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.5;
+}
+
+/* Dark theme form override — Tailwind forms plugin sets white backgrounds
+   on all form elements. Since Tailwind CDN generates styles after our CSS,
+   !important is required to guarantee the dark background. */
+input:not([type='checkbox']):not([type='radio']):not([type='hidden']):not([type='submit']):not([type='button']):not([type='reset']),
+select,
+textarea {
+    background-color: var(--bg-elevated) !important;
+    border-color: var(--border-default) !important;
+    color: var(--text-primary) !important;
+}
+
+[type='checkbox'],
+[type='radio'] {
+    background-color: transparent !important;
+    border-color: var(--border-default) !important;
+}
+
+[type='checkbox']:checked,
+[type='radio']:checked {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
 }
 
 /* --- Typography Utilities --- */
