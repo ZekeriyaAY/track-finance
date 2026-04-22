@@ -32,7 +32,7 @@
             <th>Tags</th>
             <th>Type</th>
             <th class="text-center">Status</th>
-            <th class="text-right">Actions</th>
+            <th class="text-right"><span class="sr-only">Actions</span></th>
           </tr>
         </thead>
         <tbody id="rules-body">
@@ -74,27 +74,27 @@
               {% endif %}
             </td>
             <td class="text-right whitespace-nowrap">
-              {% if not loop.first %}
-              <button type="button" onclick="moveRule({{ rule.id }}, 'up')" class="btn btn-ghost btn-sm btn-icon" title="Move Up">
-                <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
-              </button>
-              {% endif %}
-              {% if not loop.last %}
-              <button type="button" onclick="moveRule({{ rule.id }}, 'down')" class="btn btn-ghost btn-sm btn-icon" title="Move Down">
-                <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
-              </button>
-              {% endif %}
-              <a href="{{ url_for('categorization_rule.edit_rule', id=rule.id) }}" class="btn btn-ghost btn-sm">
-                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
-                Edit
-              </a>
-              <form action="{{ url_for('categorization_rule.delete_rule', id=rule.id) }}" method="POST" style="display:inline;">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this rule?')">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                  Delete
+              <div class="row-actions inline-flex items-center gap-1">
+                {% if not loop.first %}
+                <button type="button" onclick="moveRule({{ rule.id }}, 'up')" class="btn btn-ghost btn-sm btn-icon" title="Move Up">
+                  <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
                 </button>
-              </form>
+                {% endif %}
+                {% if not loop.last %}
+                <button type="button" onclick="moveRule({{ rule.id }}, 'down')" class="btn btn-ghost btn-sm btn-icon" title="Move Down">
+                  <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
+                </button>
+                {% endif %}
+                <a href="{{ url_for('categorization_rule.edit_rule', id=rule.id) }}" class="btn btn-ghost btn-sm">
+                  <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                </a>
+                <form action="{{ url_for('categorization_rule.delete_rule', id=rule.id) }}" method="POST" style="display:inline;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this rule?')">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </form>
+              </div>
             </td>
           </tr>
           {% endfor %}
