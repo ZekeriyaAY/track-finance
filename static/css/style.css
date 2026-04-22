@@ -68,21 +68,37 @@ body {
     line-height: 1.5;
 }
 
-/* Dark theme form override — Tailwind forms plugin sets white backgrounds
-   on all form elements. Since Tailwind CDN generates styles after our CSS,
-   !important is required to guarantee the dark background. */
+/* Dark theme form override — Tailwind forms plugin sets white backgrounds,
+   0px radius, and blue focus rings on all form elements. Since Tailwind CDN
+   generates styles after our CSS, !important is required to override. */
 input:not([type='checkbox']):not([type='radio']):not([type='hidden']):not([type='submit']):not([type='button']):not([type='reset']),
 select,
 textarea {
     background-color: var(--bg-elevated) !important;
     border-color: var(--border-default) !important;
     color: var(--text-primary) !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+input:not([type='checkbox']):not([type='radio']):not([type='hidden']):not([type='submit']):not([type='button']):not([type='reset']):focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary-border) !important;
+    box-shadow: var(--shadow-glow) !important;
+    outline: none !important;
+    --tw-ring-color: transparent !important;
 }
 
 [type='checkbox'],
 [type='radio'] {
     background-color: transparent !important;
     border-color: var(--border-default) !important;
+}
+
+[type='checkbox']:focus,
+[type='radio']:focus {
+    --tw-ring-color: var(--primary-border) !important;
+    --tw-ring-offset-color: var(--bg-base) !important;
 }
 
 [type='checkbox']:checked,
