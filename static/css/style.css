@@ -390,10 +390,6 @@ textarea:focus {
     padding-left: 2.5rem;
 }
 
-.table .row-child td {
-    color: var(--text-secondary);
-}
-
 /* ============================================
    FORMS
    ============================================ */
