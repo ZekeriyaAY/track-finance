@@ -16,6 +16,18 @@
           }
         ]
       }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/vault/.claude-hooks/queue-session.sh",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }

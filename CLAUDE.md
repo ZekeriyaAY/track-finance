@@ -251,6 +251,43 @@ make test-report  # Tests + HTML report
 Required env vars: `POSTGRES_PASSWORD`, `SECRET_KEY` (production).
 Optional: `FLASK_ENV`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `BEHIND_PROXY`.
 
+## Wiki Usage
+
+This project maintains a structured knowledge vault at `vault/`. You must
+consult it in the following situations:
+
+1. **Before touching a component file**: If you're about to edit
+   `routes/X.py`, `models/X.py`, or `templates/X/`, first read
+   `vault/components/<component>.md` if it exists. It may contain domain
+   rules, gotchas, or decisions you need to respect.
+
+2. **Before proposing an architectural change**: If you're suggesting a
+   new library, pattern, or system-level change, first scan
+   `vault/decisions/` for relevant past decisions. Don't re-litigate
+   settled choices without flagging the conflict.
+
+3. **Before debugging a non-trivial issue**: Check `vault/bugs/` for
+   similar past patterns. If you recognize a match, reference the
+   relevant page.
+
+4. **When uncertain about project conventions**: Read `vault/patterns/`
+   before writing new route handlers, models, or tests.
+
+5. **Starting any new session with unclear scope**: Read `vault/index.md`
+   first to orient yourself.
+
+### Hard rules
+
+- You do NOT write to `vault/` during normal development sessions.
+  Vault writes happen only via `/vault-ingest`, `/vault-query`,
+  `/vault-lint` slash commands.
+- If vault content contradicts actual code, flag it to the user —
+  do not silently follow either. The user decides which is correct.
+- If you read a vault page, mention it briefly in your response
+  ("Checked `vault/components/cashflow.md` — noted that imports
+  are deduplicated by hash.") so the user knows the context you
+  brought in.
+
 ## Self-Maintenance
 
 **This file must stay in sync with the codebase.** When you make changes that affect any documented pattern — colors, schema, architecture, conventions, stack — update the relevant section in this file within the same session. Do not wait for the user to ask.
