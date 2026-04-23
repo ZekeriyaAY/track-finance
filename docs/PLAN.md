@@ -34,7 +34,7 @@
 
 - [x] **N+1 query optimization** — Category and tag index pages now use a single aggregation query (`GROUP BY category_id/tag_id, type`) instead of per-row model methods. Parent category counts include subcategory totals. Model methods kept for backward compatibility.
 
-- [ ] **Add database indexes** — Indexes are missing on frequently filtered columns. Needed: `cashflow_transaction.date`, `cashflow_transaction.category_id`, `cashflow_transaction.type`, `settings.key`, `categorization_rule.is_active` + `categorization_rule.priority`. To be added via Alembic migration.
+- [x] **Add database indexes** — Added indexes on `cashflow_transaction(date, category_id, type)`, `category(parent_id)`, `categorization_rule(is_active, priority)`, `cashflow_transaction_tags(tag_id)`. Migration: `c4d5e6f7a8b9`. `settings.key` already has unique index.
 
 - [ ] **Legacy Query.get() cleanup** — Test files use `Model.query.get(id)` (deprecated SQLAlchemy 1.x pattern), generating 22 warnings. All should be updated to `db.session.get(Model, id)`.
 
