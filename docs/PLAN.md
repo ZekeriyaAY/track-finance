@@ -30,7 +30,7 @@
 
 ## Performance & Technical Debt
 
-- [ ] **Pagination for transaction lists** — `routes/cashflow.py:273` fetches all records with `.all()`. This will cause memory and speed issues at 10K+ records. Page-based loading with SQLAlchemy `.paginate()` + page navigation in the UI should be added. The same applies to `routes/investment.py`.
+- [x] **Pagination for transaction lists** — Cashflow index uses `.paginate()` with 25 per page. Summary totals reflect all filtered results. Pagination nav preserves filter params. Investment routes were removed.
 
 - [ ] **N+1 query optimization** — `models/category.py` `get_income_count()` and `get_expense_count()` methods execute a separate DB query for each category row. The same issue exists in `models/tag.py`. Solution: instead of Python-level loops, use a single aggregation query (SQLAlchemy `func.count()` + `group_by()`) to fetch all counts in one query.
 

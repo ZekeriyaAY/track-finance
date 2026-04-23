@@ -222,6 +222,9 @@ def dashboard():
         server_today=today.isoformat(),
     )
 
+CASHFLOW_PER_PAGE = 25
+
+
 @cashflow_bp.route('/')
 def index():
     # Get filter parameters
@@ -231,51 +234,67 @@ def index():
     date_from = request.args.get('date_from')
     date_to = request.args.get('date_to')
     search = request.args.get('search', '').strip()
+    page = request.args.get('page', 1, type=int)
 
     # Build query with filters
     query = CashflowTransaction.query
 
     if search:
         query = query.filter(CashflowTransaction.description.ilike(f'%{search}%'))
-    
+
     if category_id:
         # Include subcategories as well
         category = db.session.get(Category, category_id)
         if category:
             category_ids = [category_id]
-            # Add subcategory IDs if this is a parent category
             subcategories = Category.query.filter_by(parent_id=category_id).all()
             category_ids.extend([sub.id for sub in subcategories])
             query = query.filter(CashflowTransaction.category_id.in_(category_ids))
-    
+
     if tag_id:
         query = query.filter(CashflowTransaction.tags.any(Tag.id == tag_id))
-    
+
     if type_filter in ['income', 'expense']:
         query = query.filter(CashflowTransaction.type == type_filter)
-    
+
     if date_from:
         try:
             date_from_parsed = datetime.strptime(date_from, '%Y-%m-%d')
             query = query.filter(CashflowTransaction.date >= date_from_parsed)
         except ValueError:
             pass
-    
+
     if date_to:
         try:
             date_to_parsed = datetime.strptime(date_to, '%Y-%m-%d')
             query = query.filter(CashflowTransaction.date <= date_to_parsed)
         except ValueError:
             pass
-    
-    transactions = query.order_by(CashflowTransaction.date.desc()).all()
-    
+
+    # Summary totals from full filtered query (before pagination)
+    total_income = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+        CashflowTransaction.id.in_(query.with_entities(CashflowTransaction.id)),
+        CashflowTransaction.type == 'income'
+    ).scalar()
+    total_expense = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
+        CashflowTransaction.id.in_(query.with_entities(CashflowTransaction.id)),
+        CashflowTransaction.type == 'expense'
+    ).scalar()
+
+    # Paginate
+    pagination = query.order_by(CashflowTransaction.date.desc()).paginate(
+        page=page, per_page=CASHFLOW_PER_PAGE, error_out=False
+    )
+
     # Get all categories and tags for filter dropdowns
     categories = Category.query.filter_by(parent_id=None).all()
     tags = Tag.query.all()
-    
+
     return render_template('cashflow/index.html',
-                           transactions=transactions,
+                           transactions=pagination.items,
+                           pagination=pagination,
+                           total_income=total_income,
+                           total_expense=total_expense,
                            categories=categories,
                            tags=tags,
                            selected_category=category_id,

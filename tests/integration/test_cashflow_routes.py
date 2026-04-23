@@ -221,6 +221,102 @@ class TestCashflowIndexRoute:
         assert b'Subcategory transaction' in response.data
 
 
+class TestCashflowPagination:
+    """Tests for cashflow transaction list pagination."""
+
+    def test_default_page_is_1(self, auth_client, sample_transaction):
+        """GET /cashflow/ without page param defaults to page 1."""
+        response = auth_client.get('/cashflow/')
+        assert response.status_code == 200
+        assert b'Test transaction' in response.data
+
+    def test_pagination_with_many_records(self, auth_client, app, db, sample_category):
+        """Pagination limits results per page and shows navigation."""
+        with app.app_context():
+            for i in range(30):
+                txn = CashflowTransaction(
+                    date=date(2024, 1, 1),
+                    type='expense',
+                    amount=10.0,
+                    description=f'Txn {i}',
+                    category_id=sample_category.id,
+                )
+                db.session.add(txn)
+            db.session.commit()
+
+        response = auth_client.get('/cashflow/')
+        assert response.status_code == 200
+        html = response.data.decode()
+        # Should show pagination (page 2 link)
+        assert 'page=2' in html
+        # Should show "of 30"
+        assert '30' in html
+
+    def test_page_2_shows_remaining(self, auth_client, app, db, sample_category):
+        """Page 2 shows the remaining transactions."""
+        with app.app_context():
+            for i in range(30):
+                txn = CashflowTransaction(
+                    date=date(2024, 1, 1),
+                    type='expense',
+                    amount=10.0,
+                    description=f'Bulk txn {i}',
+                    category_id=sample_category.id,
+                )
+                db.session.add(txn)
+            db.session.commit()
+
+        response = auth_client.get('/cashflow/?page=2')
+        assert response.status_code == 200
+        # Page 2 should have 5 items (30 total, 25 per page)
+        assert b'Bulk txn' in response.data
+
+    def test_invalid_page_returns_empty(self, auth_client, sample_transaction):
+        """Requesting a page beyond available data returns empty list."""
+        response = auth_client.get('/cashflow/?page=999')
+        assert response.status_code == 200
+
+    def test_filters_preserved_in_pagination(self, auth_client, app, db, sample_category):
+        """Filter params are preserved in pagination links."""
+        with app.app_context():
+            for i in range(30):
+                txn = CashflowTransaction(
+                    date=date(2024, 1, 1),
+                    type='expense',
+                    amount=10.0,
+                    description=f'Filtered {i}',
+                    category_id=sample_category.id,
+                )
+                db.session.add(txn)
+            db.session.commit()
+
+        response = auth_client.get(f'/cashflow/?type=expense&category_id={sample_category.id}')
+        assert response.status_code == 200
+        html = response.data.decode()
+        # Pagination links should preserve filters
+        assert f'category_id={sample_category.id}' in html
+        assert 'type=expense' in html
+
+    def test_summary_totals_reflect_all_pages(self, auth_client, app, db, sample_category):
+        """Income/expense totals reflect all filtered results, not just current page."""
+        with app.app_context():
+            for i in range(30):
+                txn = CashflowTransaction(
+                    date=date(2024, 1, 1),
+                    type='expense',
+                    amount=10.0,
+                    description=f'Sum txn {i}',
+                    category_id=sample_category.id,
+                )
+                db.session.add(txn)
+            db.session.commit()
+
+        response = auth_client.get('/cashflow/')
+        html = response.data.decode()
+        # Total expense should be 300.00 (30 * 10), not 250 (25 * 10)
+        assert '300.00' in html
+
+
 class TestAddCashflowRoute:
     """Tests for GET/POST /cashflow/add."""
 
