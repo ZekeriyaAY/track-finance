@@ -16,6 +16,8 @@
 
 - [x] **Friendly toast/flash messages** — Rewrote all flash messages across 6 route files to be concise and friendly (e.g. "Transaction added!", "Category removed.", "Something went wrong. Please try again.").
 
+- [ ] **Fix toast notification visibility** — Toast messages are nearly transparent and hard to read, especially when overlapping page buttons (e.g. "Excel Import", "New Transaction"). Increase background opacity and consider repositioning toasts so they don't overlap action buttons.
+
 - [ ] **Recurring transaction templates** — A template system for frequently recurring transactions (rent, salary, subscriptions). When a template is selected, the form should auto-fill. `CashflowTemplate` model + management UI on the Settings or Cashflow page.
 
 - [ ] **Filter panel as a drawer on mobile** — Cashflow and Investment filter areas stack poorly on mobile. Showing filters in a drawer/bottom-sheet on mobile, opened and closed with a "Filter" button, would provide a better UX.
