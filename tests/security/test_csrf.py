@@ -143,6 +143,13 @@ class TestCSRFProtectionMissingToken:
         })
         assert response.status_code == 400
 
+    def test_update_currency_requires_csrf(self, auth_client):
+        """POST /settings/update-currency without CSRF token returns 400."""
+        response = auth_client.post('/settings/update-currency', data={
+            'currency_symbol': '$',
+        })
+        assert response.status_code == 400
+
     def test_create_dummy_data_requires_csrf(self, auth_client):
         """POST /settings/create-dummy-data without CSRF token returns 400."""
         response = auth_client.post('/settings/create-dummy-data')

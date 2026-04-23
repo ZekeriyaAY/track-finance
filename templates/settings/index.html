@@ -33,6 +33,45 @@
     </div>
   </div>
 
+  <!-- Currency -->
+  <div class="card card-body space-y-6">
+    <div class="space-y-4">
+      <h2 class="text-h2">Currency</h2>
+      <p class="text-[var(--text-muted)] text-sm">Choose the currency symbol displayed across all pages.</p>
+
+      <form action="{{ url_for('settings.update_currency') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="flex flex-col space-y-2">
+          <label for="currency_symbol" class="form-label">Currency Symbol</label>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <select id="currency_symbol" name="currency_symbol" class="form-select w-full sm:w-auto" required>
+              {% set currencies = [
+                ('₺', 'Turkish Lira (₺)'),
+                ('$', 'US Dollar ($)'),
+                ('€', 'Euro (€)'),
+                ('£', 'British Pound (£)'),
+                ('¥', 'Japanese Yen (¥)'),
+                ('₹', 'Indian Rupee (₹)'),
+                ('₩', 'Korean Won (₩)'),
+                ('Fr', 'Swiss Franc (Fr)'),
+                ('R$', 'Brazilian Real (R$)'),
+                ('kr', 'Swedish Krona (kr)'),
+                ('zł', 'Polish Zloty (zł)'),
+              ] %}
+              {% for symbol, label in currencies %}
+              <option value="{{ symbol }}" {% if currency_symbol == symbol %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm w-full sm:w-auto">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              Update
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Default Data -->
   <div class="card card-body space-y-6">
     <div class="space-y-4">

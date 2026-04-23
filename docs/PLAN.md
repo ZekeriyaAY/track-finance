@@ -6,7 +6,7 @@
 
 - [x] **Remove investment feature** — Fully removed: models, routes, templates, sidebar links, seed data, settings UI, and all related tests. Migration: `b3e4f5a6c7d8`.
 
-- [ ] **Dynamic currency selection** — Instead of the currency being statically set to ₺, users should be able to choose their own currency. A currency option on the Settings page, and amount formatting and symbol display should be dynamic across all pages.
+- [x] **Dynamic currency selection** — Currency symbol stored in Settings DB, configurable via Settings page dropdown. Injected to all templates via context processor. Dashboard KPI cards and transaction list use dynamic symbol.
 
 - [x] **Full-width page layout** — Removed `max-w-7xl` constraint from `base.html`. Content now fills available width alongside the sidebar.
 

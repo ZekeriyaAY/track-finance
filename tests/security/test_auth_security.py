@@ -38,6 +38,7 @@ class TestUnauthenticatedAccessBlocked:
         '/categories/add',
         '/tags/add',
         '/settings/update-pgadmin-url',
+        '/settings/update-currency',
         '/settings/create-dummy-data',
         '/settings/create-default-categories',
         '/settings/create-default-tags',

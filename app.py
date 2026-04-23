@@ -123,10 +123,11 @@ def create_app(config_name=None):
         return redirect(url_for('cashflow.index'))
     
     @app.context_processor
-    def inject_external_urls():
+    def inject_global_settings():
         from models.settings import Settings
         pgadmin_url = Settings.get_setting('pgadmin_url', 'http://localhost:5050')
-        return dict(pgadmin_url=pgadmin_url)
+        currency_symbol = Settings.get_setting('currency_symbol', '₺')
+        return dict(pgadmin_url=pgadmin_url, currency_symbol=currency_symbol)
 
     # Import models for Alembic autogenerate
     from models.categorization_rule import CategorizationRule  # noqa: F401

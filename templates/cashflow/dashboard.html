@@ -59,7 +59,7 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
     <div class="card card-body">
         <div class="text-caption text-[var(--text-muted)] mb-1">Total Income</div>
-        <div class="text-display amount amount-positive counter-animate" data-target="{{ total_income }}" data-decimals="2">0</div>
+        <div class="text-display amount amount-positive counter-animate" data-target="{{ total_income }}" data-decimals="2" data-suffix=" {{ currency_symbol }}">0</div>
         {% if income_change is not none %}
         <div class="mt-2 text-body-sm flex items-center gap-1 {% if income_change >= 0 %}text-positive{% else %}text-negative{% endif %}">
             <i data-lucide="{% if income_change >= 0 %}trending-up{% else %}trending-down{% endif %}" class="w-3.5 h-3.5"></i>
@@ -69,7 +69,7 @@
     </div>
     <div class="card card-body">
         <div class="text-caption text-[var(--text-muted)] mb-1">Total Expense</div>
-        <div class="text-display amount amount-negative counter-animate" data-target="{{ total_expense }}" data-decimals="2">0</div>
+        <div class="text-display amount amount-negative counter-animate" data-target="{{ total_expense }}" data-decimals="2" data-suffix=" {{ currency_symbol }}">0</div>
         {% if expense_change is not none %}
         <div class="mt-2 text-body-sm flex items-center gap-1 {% if expense_change <= 0 %}text-positive{% else %}text-negative{% endif %}">
             <i data-lucide="{% if expense_change <= 0 %}trending-down{% else %}trending-up{% endif %}" class="w-3.5 h-3.5"></i>
@@ -79,7 +79,7 @@
     </div>
     <div class="card card-body">
         <div class="text-caption text-[var(--text-muted)] mb-1">Net Savings</div>
-        <div class="text-display amount {% if net_savings >= 0 %}amount-positive{% else %}amount-negative{% endif %} counter-animate" data-target="{{ net_savings }}" data-decimals="2">0</div>
+        <div class="text-display amount {% if net_savings >= 0 %}amount-positive{% else %}amount-negative{% endif %} counter-animate" data-target="{{ net_savings }}" data-decimals="2" data-suffix=" {{ currency_symbol }}">0</div>
         {% if savings_change is not none %}
         <div class="mt-2 text-body-sm flex items-center gap-1 {% if savings_change >= 0 %}text-positive{% else %}text-negative{% endif %}">
             <i data-lucide="{% if savings_change >= 0 %}trending-up{% else %}trending-down{% endif %}" class="w-3.5 h-3.5"></i>

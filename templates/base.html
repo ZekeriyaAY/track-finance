@@ -230,13 +230,14 @@
         function animateCounter(el) {
             var target = parseFloat(el.dataset.target);
             var decimals = parseInt(el.dataset.decimals) || 0;
+            var suffix = el.dataset.suffix || '';
 
             if (isNaN(target)) {
                 return;
             }
 
             if (reducedMotion) {
-                el.textContent = formatNumber(target, decimals);
+                el.textContent = formatNumber(target, decimals) + suffix;
                 return;
             }
 
@@ -245,11 +246,11 @@
                 if (!start) start = timestamp;
                 var progress = Math.min((timestamp - start) / DURATION, 1);
                 var current = target * easeOut(progress);
-                el.textContent = formatNumber(current, decimals);
+                el.textContent = formatNumber(current, decimals) + suffix;
                 if (progress < 1) {
                     requestAnimationFrame(step);
                 } else {
-                    el.textContent = formatNumber(target, decimals);
+                    el.textContent = formatNumber(target, decimals) + suffix;
                 }
             }
             requestAnimationFrame(step);

@@ -110,7 +110,7 @@
             <td class="whitespace-nowrap">{{ transaction.date.strftime('%d.%m.%Y') }}</td>
             <td class="col-amount whitespace-nowrap">
               <span class="amount {% if transaction.type == 'income' %}amount-positive{% else %}amount-negative{% endif %}">
-                {% if transaction.type == 'income' %}+{% else %}-{% endif %}{{ "%.2f"|format(transaction.amount) }} ₺
+                {% if transaction.type == 'income' %}+{% else %}-{% endif %}{{ "%.2f"|format(transaction.amount) }} {{ currency_symbol }}
               </span>
             </td>
             <td class="whitespace-nowrap">
@@ -161,14 +161,14 @@
           {% set total_expense = transactions | selectattr('type', 'equalto', 'expense') | map(attribute='amount') | sum %}
           <span class="amount amount-positive">
             <i data-lucide="trending-up" class="w-3.5 h-3.5 inline-block align-text-bottom mr-1"></i>
-            Income: {{ "%.2f"|format(total_income) }} ₺
+            Income: {{ "%.2f"|format(total_income) }} {{ currency_symbol }}
           </span>
           <span class="amount amount-negative">
             <i data-lucide="trending-down" class="w-3.5 h-3.5 inline-block align-text-bottom mr-1"></i>
-            Expense: {{ "%.2f"|format(total_expense) }} ₺
+            Expense: {{ "%.2f"|format(total_expense) }} {{ currency_symbol }}
           </span>
           <span class="amount text-primary">
-            Net: {{ "%.2f"|format(total_income - total_expense) }} ₺
+            Net: {{ "%.2f"|format(total_income - total_expense) }} {{ currency_symbol }}
           </span>
         </div>
       </div>

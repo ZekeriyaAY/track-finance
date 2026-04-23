@@ -107,6 +107,61 @@ class TestUpdatePgAdminUrlRoute:
         assert '/settings/' in response.headers.get('Location', '')
 
 
+class TestUpdateCurrencyRoute:
+    """Tests for POST /settings/update-currency."""
+
+    def test_update_currency_success(self, auth_client, app, db):
+        """POST /settings/update-currency updates the currency symbol."""
+        csrf = get_csrf_token(auth_client, '/settings/')
+        response = auth_client.post('/settings/update-currency', data={
+            'currency_symbol': '$',
+            'csrf_token': csrf,
+        }, follow_redirects=True)
+        assert response.status_code == 200
+        assert b'Currency updated successfully' in response.data
+
+        with app.app_context():
+            val = Settings.get_setting('currency_symbol')
+            assert val == '$'
+
+    def test_update_currency_empty(self, auth_client):
+        """POST /settings/update-currency with empty value shows error."""
+        csrf = get_csrf_token(auth_client, '/settings/')
+        response = auth_client.post('/settings/update-currency', data={
+            'currency_symbol': '',
+            'csrf_token': csrf,
+        }, follow_redirects=True)
+        assert response.status_code == 200
+        assert b'cannot be empty' in response.data
+
+    def test_update_currency_redirects(self, auth_client):
+        """POST /settings/update-currency redirects to settings index."""
+        csrf = get_csrf_token(auth_client, '/settings/')
+        response = auth_client.post('/settings/update-currency', data={
+            'currency_symbol': '€',
+            'csrf_token': csrf,
+        }, follow_redirects=False)
+        assert response.status_code == 302
+        assert '/settings/' in response.headers.get('Location', '')
+
+    def test_currency_symbol_shown_on_settings_page(self, auth_client, app, db):
+        """Settings page shows the current currency symbol."""
+        with app.app_context():
+            Settings.set_setting('currency_symbol', '£')
+        response = auth_client.get('/settings/')
+        assert response.status_code == 200
+        # The £ option should be selected
+        assert b'selected' in response.data
+
+    def test_currency_symbol_in_cashflow_index(self, auth_client, app, db, sample_transaction):
+        """Cashflow index page shows the configured currency symbol."""
+        with app.app_context():
+            Settings.set_setting('currency_symbol', '€')
+        response = auth_client.get('/cashflow/')
+        assert response.status_code == 200
+        assert '€'.encode() in response.data
+
+
 class TestCreateDefaultCategoriesRoute:
     """Tests for POST /settings/create-default-categories."""
 

@@ -32,12 +32,31 @@ def update_pgadmin_url():
     
     return redirect(url_for('settings.index'))
 
+@settings_bp.route('/update-currency', methods=['POST'])
+def update_currency():
+    currency_symbol = request.form.get('currency_symbol', '').strip()
+
+    if not currency_symbol:
+        flash('Currency symbol cannot be empty.', 'error')
+        return redirect(url_for('settings.index'))
+
+    try:
+        Settings.set_setting('currency_symbol', currency_symbol)
+        flash('Currency updated successfully.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error updating currency: {str(e)}")
+        flash('An error occurred while updating currency.', 'error')
+
+    return redirect(url_for('settings.index'))
+
 @settings_bp.route('/')
 def index():
-    # Get URLs from database, fall back to defaults
     pgadmin_url = Settings.get_setting('pgadmin_url', 'http://localhost:5050')
+    currency_symbol = Settings.get_setting('currency_symbol', '₺')
     return render_template('settings/index.html',
-                           pgadmin_url=pgadmin_url)
+                           pgadmin_url=pgadmin_url,
+                           currency_symbol=currency_symbol)
 
 @settings_bp.route('/create-dummy-data', methods=['POST'])
 def create_dummy_data_route():
