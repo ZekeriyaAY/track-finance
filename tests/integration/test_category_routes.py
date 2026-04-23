@@ -2,6 +2,7 @@
 import pytest
 from datetime import date
 from tests.conftest import get_csrf_token
+from models import db
 from models.category import Category
 from models.cashflow import CashflowTransaction
 
@@ -148,7 +149,7 @@ class TestEditCategoryRoute:
         assert b'Category updated!' in response.data
 
         with app.app_context():
-            cat = Category.query.get(sample_category.id)
+            cat = db.session.get(Category,sample_category.id)
             assert cat.name == 'Updated Category'
 
     def test_edit_category_duplicate_name(self, auth_client, app, db, sample_category):
@@ -196,7 +197,7 @@ class TestEditCategoryRoute:
         assert b'Category updated!' in response.data
 
         with app.app_context():
-            sub = Category.query.get(sample_subcategory.id)
+            sub = db.session.get(Category,sample_subcategory.id)
             assert sub.parent_id is None
 
 
@@ -214,7 +215,7 @@ class TestDeleteCategoryRoute:
         assert b'Category removed' in response.data
 
         with app.app_context():
-            cat = Category.query.get(cat_id)
+            cat = db.session.get(Category,cat_id)
             assert cat is None
 
     def test_delete_category_with_subcategories(self, auth_client, sample_category, sample_subcategory):
@@ -254,5 +255,5 @@ class TestDeleteCategoryRoute:
         assert b'Category removed' in response.data
 
         with app.app_context():
-            sub = Category.query.get(sub_id)
+            sub = db.session.get(Category,sub_id)
             assert sub is None

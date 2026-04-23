@@ -36,7 +36,7 @@
 
 - [x] **Add database indexes** — Added indexes on `cashflow_transaction(date, category_id, type)`, `category(parent_id)`, `categorization_rule(is_active, priority)`, `cashflow_transaction_tags(tag_id)`. Migration: `c4d5e6f7a8b9`. `settings.key` already has unique index.
 
-- [ ] **Legacy Query.get() cleanup** — Test files use `Model.query.get(id)` (deprecated SQLAlchemy 1.x pattern), generating 22 warnings. All should be updated to `db.session.get(Model, id)`.
+- [x] **Legacy Query.get() cleanup** — Replaced all `Model.query.get(id)` with `db.session.get(Model, id)` in app.py and test files. Zero LegacyAPIWarning remaining.
 
 - [ ] **Docker container timezone** — The container runs in UTC, so `date.today()` doesn't match the browser's local time. The dashboard preset highlight issue was fixed, but the root solution is: set the `TZ=Europe/Istanbul` environment variable in the container, or make all date comparisons timezone-aware.
 

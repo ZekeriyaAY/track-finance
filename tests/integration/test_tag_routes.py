@@ -1,6 +1,7 @@
 """Integration tests for tag routes (/tags)."""
 import pytest
 from tests.conftest import get_csrf_token
+from models import db
 from models.tag import Tag
 
 
@@ -117,7 +118,7 @@ class TestEditTagRoute:
         assert b'Tag updated!' in response.data
 
         with app.app_context():
-            tag = Tag.query.get(sample_tag.id)
+            tag = db.session.get(Tag,sample_tag.id)
             assert tag.name == 'Updated Tag'
 
     def test_edit_tag_duplicate_name(self, auth_client, app, db, sample_tag):
@@ -176,7 +177,7 @@ class TestDeleteTagRoute:
         assert b'Tag removed' in response.data
 
         with app.app_context():
-            tag = Tag.query.get(tag_id)
+            tag = db.session.get(Tag,tag_id)
             assert tag is None
 
     def test_delete_tag_with_transactions(self, auth_client, app, db, sample_tag, sample_transaction):
@@ -190,7 +191,7 @@ class TestDeleteTagRoute:
 
         # Tag should still exist
         with app.app_context():
-            tag = Tag.query.get(sample_tag.id)
+            tag = db.session.get(Tag,sample_tag.id)
             assert tag is not None
 
     def test_delete_nonexistent_tag(self, auth_client):

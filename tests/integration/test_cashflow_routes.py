@@ -2,6 +2,7 @@
 import pytest
 from datetime import date, datetime, timedelta
 from tests.conftest import get_csrf_token
+from models import db
 from models.cashflow import CashflowTransaction
 from models.category import Category
 from models.tag import Tag
@@ -431,7 +432,7 @@ class TestEditCashflowRoute:
         assert b'Changes saved!' in response.data
 
         with app.app_context():
-            txn = CashflowTransaction.query.get(sample_transaction.id)
+            txn = db.session.get(CashflowTransaction,sample_transaction.id)
             assert txn.description == 'Updated transaction'
             assert txn.amount == 200.00
             assert txn.type == 'income'
@@ -457,7 +458,7 @@ class TestEditCashflowRoute:
         assert b'Changes saved!' in response.data
 
         with app.app_context():
-            txn = CashflowTransaction.query.get(sample_transaction.id)
+            txn = db.session.get(CashflowTransaction,sample_transaction.id)
             assert len(txn.tags) == 0
 
 
@@ -475,7 +476,7 @@ class TestDeleteCashflowRoute:
         assert b'Transaction removed' in response.data
 
         with app.app_context():
-            txn = CashflowTransaction.query.get(txn_id)
+            txn = db.session.get(CashflowTransaction,txn_id)
             assert txn is None
 
     def test_delete_nonexistent_transaction(self, auth_client):
@@ -510,7 +511,7 @@ class TestBulkEditRoute:
         assert b'transaction(s) updated' in response.data
 
         with app.app_context():
-            txn = CashflowTransaction.query.get(sample_transaction.id)
+            txn = db.session.get(CashflowTransaction,sample_transaction.id)
             assert txn.category_id == new_cat_id
 
     def test_bulk_edit_tags_replace(self, auth_client, app, db, sample_transaction):
@@ -532,7 +533,7 @@ class TestBulkEditRoute:
         assert b'transaction(s) updated' in response.data
 
         with app.app_context():
-            txn = CashflowTransaction.query.get(sample_transaction.id)
+            txn = db.session.get(CashflowTransaction,sample_transaction.id)
             tag_ids = [t.id for t in txn.tags]
             assert new_tag_id in tag_ids
 
@@ -555,7 +556,7 @@ class TestBulkEditRoute:
         assert b'transaction(s) updated' in response.data
 
         with app.app_context():
-            txn = CashflowTransaction.query.get(sample_transaction.id)
+            txn = db.session.get(CashflowTransaction,sample_transaction.id)
             tag_ids = [t.id for t in txn.tags]
             # Both original and new tag should be present
             assert sample_tag.id in tag_ids
