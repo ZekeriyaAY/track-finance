@@ -11,12 +11,11 @@ Designed as a single-user, Docker-deployed application with integrated database 
 - **Hierarchical Categories & Tags** -- Self-referential parent/child category tree and flat tags with many-to-many transaction association. Transaction counts tracked per category and tag.
 - **Investment Tracking** -- Record buy/sell transactions for configurable investment types (stocks, ETFs, crypto, metals, currencies) organized in a parent/child hierarchy with custom icons and colors.
 - **Excel/CSV Import** -- Import bank statements from Yapi Kredi and Kuveyt Turk with automatic header detection, Turkish locale amount parsing, and column mapping. Supports `.xlsx`, `.xls`, and `.csv` formats.
-- **Bank Sync** -- Adapter-pattern bank API integration with encrypted credential storage (Fernet). Includes deduplication via external transaction ID constraints. Ships with a Yapi Kredi OAuth2 adapter.
 - **Dark Theme** -- Fully dark UI built with Tailwind CSS, custom color palette, and responsive design across desktop and mobile.
 - **PWA Support** -- Web app manifest with multiple icon sizes for home screen installation.
 - **Authentication** -- Single-user login with Flask-Login, Werkzeug password hashing, remember-me sessions (7 days), and automatic admin user creation on first run.
 - **Seed Data** -- One-click setup for default categories, tags, and investment types from the settings page, plus a dummy data generator for testing.
-- **Security** -- CSRF protection on all forms, security headers (X-Frame-Options, HSTS in production, etc.), encrypted bank credentials, and production enforcement of a secure SECRET_KEY.
+- **Security** -- CSRF protection on all forms, security headers (X-Frame-Options, HSTS in production, etc.), and production enforcement of a secure SECRET_KEY.
 
 ## Tech Stack
 
@@ -55,25 +54,19 @@ track-finance/
     cashflow.py                 # Cash flow transactions + junction table
     investment.py               # Investment types + transactions
     settings.py                 # Key-value settings store
-    bank_connection.py          # Bank API connections (encrypted credentials)
   routes/
     auth.py                     # Login, logout, account settings
-    cashflow.py                 # Dashboard, transactions, import, sync, bulk edit
+    cashflow.py                 # Dashboard, transactions, import, bulk edit
     category.py                 # Category CRUD
     tag.py                      # Tag CRUD
     investment.py               # Investment transaction CRUD
     investment_type.py          # Investment type CRUD
-    settings.py                 # App settings, seed data, bank connections, DB reset
+    settings.py                 # App settings, seed data, DB reset
   utils/
     data_utils.py               # Seed data and dummy data generators
     excel_processor.py          # Excel/CSV import pipeline
     bank_configs.py             # Bank-specific Excel format definitions
     encryption.py               # Fernet encryption helpers
-    bank_sync/
-      base.py                   # Abstract adapter, dataclasses, exceptions
-      registry.py               # Adapter registry (decorator pattern)
-      service.py                # Sync orchestration service
-      yapikredi_adapter.py      # Yapi Kredi bank API adapter
   templates/                    # Jinja2 templates (18 files, 3-level inheritance)
   static/
     css/style.css               # Custom dark theme styles

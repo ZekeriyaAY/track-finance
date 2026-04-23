@@ -10,7 +10,6 @@ from models.category import Category
 from models.tag import Tag
 from models.cashflow import CashflowTransaction
 from models.investment import InvestmentType, InvestmentTransaction
-from models.bank_connection import BankConnection
 from models import db as _db
 
 
@@ -82,11 +81,6 @@ class TestCSRFProtectionMissingToken:
         data['excel_file'] = (BytesIO(b'fake data'), 'test.xlsx')
         response = auth_client.post('/cashflow/import', data=data,
                                     content_type='multipart/form-data')
-        assert response.status_code == 400
-
-    def test_cashflow_sync_requires_csrf(self, auth_client):
-        """POST /cashflow/sync without CSRF token returns 400."""
-        response = auth_client.post('/cashflow/sync')
         assert response.status_code == 400
 
     def test_cashflow_bulk_edit_requires_csrf(self, auth_client, sample_transaction):
@@ -228,63 +222,6 @@ class TestCSRFProtectionMissingToken:
     def test_create_default_investment_types_requires_csrf(self, auth_client):
         """POST /settings/create-default-investment-types without CSRF token returns 400."""
         response = auth_client.post('/settings/create-default-investment-types')
-        assert response.status_code == 400
-
-    def test_bank_connection_add_requires_csrf(self, auth_client):
-        """POST /settings/bank-connections/add without CSRF token returns 400."""
-        response = auth_client.post('/settings/bank-connections/add', data={
-            'bank_code': 'yapikredi',
-            'client_id': 'test_id',
-            'client_secret': 'test_secret',
-        })
-        assert response.status_code == 400
-
-    def test_bank_connection_delete_requires_csrf(self, app, auth_client, db):
-        """POST /settings/bank-connections/delete/<id> without CSRF token returns 400."""
-        with app.app_context():
-            conn = BankConnection(
-                bank_code='yapikredi',
-                bank_name='Yapi Kredi',
-            )
-            conn.set_client_id('test')
-            conn.set_client_secret('test')
-            db.session.add(conn)
-            db.session.commit()
-            conn_id = conn.id
-
-        response = auth_client.post(f'/settings/bank-connections/delete/{conn_id}')
-        assert response.status_code == 400
-
-    def test_bank_connection_toggle_requires_csrf(self, app, auth_client, db):
-        """POST /settings/bank-connections/toggle/<id> without CSRF token returns 400."""
-        with app.app_context():
-            conn = BankConnection(
-                bank_code='yapikredi',
-                bank_name='Yapi Kredi',
-            )
-            conn.set_client_id('test')
-            conn.set_client_secret('test')
-            db.session.add(conn)
-            db.session.commit()
-            conn_id = conn.id
-
-        response = auth_client.post(f'/settings/bank-connections/toggle/{conn_id}')
-        assert response.status_code == 400
-
-    def test_bank_connection_test_requires_csrf(self, app, auth_client, db):
-        """POST /settings/bank-connections/test/<id> without CSRF token returns 400."""
-        with app.app_context():
-            conn = BankConnection(
-                bank_code='yapikredi',
-                bank_name='Yapi Kredi',
-            )
-            conn.set_client_id('test')
-            conn.set_client_secret('test')
-            db.session.add(conn)
-            db.session.commit()
-            conn_id = conn.id
-
-        response = auth_client.post(f'/settings/bank-connections/test/{conn_id}')
         assert response.status_code == 400
 
     def test_reset_database_requires_csrf(self, auth_client):

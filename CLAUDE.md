@@ -19,7 +19,7 @@ Target: One person tracking their own income/expenses and investments. No multi-
 app.py (factory: create_app)
 ├── models/          → SQLAlchemy models, db instance in __init__.py
 ├── routes/          → Flask Blueprints (one per domain)
-├── utils/           → Pure functions, bank adapters, data processors
+├── utils/           → Pure functions, Excel processors, data utilities
 ├── templates/       → Jinja2 (base_layout → base → page)
 ├── static/css/      → Custom dark-theme CSS (design system component classes)
 └── tests/           → unit/ integration/ security/ api/
@@ -31,7 +31,7 @@ app.py (factory: create_app)
 - Server-side rendering only — no SPA, no frontend build step, no npm
 - All JS is inline in templates (no separate .js files)
 - Hierarchical models via self-referential `parent_id` (Category, InvestmentType)
-- Bank sync uses adapter pattern with registry decorator (`utils/bank_sync/`)
+- Excel import uses bank-specific configs for parsing (`utils/bank_configs.py`)
 
 ## Code Conventions
 
@@ -93,7 +93,7 @@ class MyModel(db.Model):
 - **Query by ID:** `db.session.get(Model, id)` — never `Model.query.get(id)` (legacy)
 - **Hierarchical data:** Self-referential FK (`parent_id → same table`)
 - **Many-to-many:** Association tables with composite primary keys
-- **Unique constraints:** Used for deduplication (e.g., `external_transaction_id + bank_connection_id`)
+- **Unique constraints:** Used for deduplication where needed
 - **Delete protection:** Check for child records/transactions before allowing deletion
 - **Migrations:** Alembic via Flask-Migrate. Generate with `flask db migrate -m "description"`
 
@@ -102,11 +102,10 @@ class MyModel(db.Model):
 User (id, username, password_hash)
 Category (id, name, parent_id FK→self) → has many CashflowTransaction
 Tag (id, name) ←→ CashflowTransaction (M2M via cashflow_transaction_tags)
-CashflowTransaction (id, date, type[income/expense], amount, description, category_id, source, external_transaction_id, bank_connection_id)
+CashflowTransaction (id, date, type[income/expense], amount, description, category_id, source)
 InvestmentType (id, name, code, icon, color, parent_id FK→self) → has many InvestmentTransaction
 InvestmentTransaction (id, investment_type_id, transaction_date, transaction_type[buy/sell], price, quantity, total_amount, description)
 CategorizationRule (id, name, priority, is_active, field, operator, value, category_id, type_override) ←→ Tag (M2M)
-BankConnection (id, bank_code, bank_name, encrypted credentials, sync status)
 Settings (id, key, value)
 ```
 

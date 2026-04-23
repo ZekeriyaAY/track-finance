@@ -129,7 +129,6 @@ def create_app(config_name=None):
         return dict(pgadmin_url=pgadmin_url)
 
     # Import models for Alembic autogenerate
-    from models.bank_connection import BankConnection  # noqa: F401
     from models.categorization_rule import CategorizationRule  # noqa: F401
 
     # Import blueprints

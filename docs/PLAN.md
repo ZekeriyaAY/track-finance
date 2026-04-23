@@ -2,7 +2,7 @@
 
 ## Existing Feature Changes
 
-- [ ] **Remove bank integrations** — Since bank integration could not be implemented, the Bank Connections section on the Settings page, the Sync button in Cashflow, and the adapter code under `utils/bank_sync/` should all be cleaned up.
+- [x] **Remove bank integrations** — Removed: BankConnection model, utils/bank_sync/, Settings bank connections section, Cashflow sync button, related tests. Migration: `77a5c92582fe`.
 
 - [ ] **Remove investment pages** — Investment pages are not currently in active use. They should be removed from the sidebar, routes, and templates. Models and migrations can be kept; only UI access should be disabled.
 

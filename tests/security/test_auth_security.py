@@ -38,7 +38,6 @@ class TestUnauthenticatedAccessBlocked:
 
     @pytest.mark.parametrize("url", [
         '/cashflow/add',
-        '/cashflow/sync',
         '/cashflow/bulk-edit',
         '/categories/add',
         '/tags/add',

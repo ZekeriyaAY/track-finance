@@ -10,7 +10,6 @@ from models.tag import Tag
 from models.cashflow import CashflowTransaction
 from models.investment import InvestmentType, InvestmentTransaction
 from models.settings import Settings
-from models.bank_connection import BankConnection
 
 
 # ---------------------------------------------------------------------------
@@ -295,7 +294,7 @@ class TestCashflowTransactionModel:
 
     def test_source_types(self, app, db, sample_category):
         """All source types can be set."""
-        for src in ['manual', 'excel_import', 'bank_sync']:
+        for src in ['manual', 'excel_import']:
             txn = CashflowTransaction(
                 date=date(2024, 1, 1), type='expense', amount=10,
                 description=f'src-{src}', category_id=sample_category.id,
@@ -306,7 +305,6 @@ class TestCashflowTransactionModel:
 
         assert CashflowTransaction.query.filter_by(source='manual').count() == 1
         assert CashflowTransaction.query.filter_by(source='excel_import').count() == 1
-        assert CashflowTransaction.query.filter_by(source='bank_sync').count() == 1
 
     def test_tags_m2m(self, app, db, sample_category):
         """Many-to-many tag relationship works in both directions."""
@@ -339,69 +337,6 @@ class TestCashflowTransactionModel:
         assert txn.category.id == sample_category.id
         assert txn in sample_category.transactions
 
-    def test_unique_constraint_external_txn_bank(self, app, db, sample_category):
-        """Duplicate (external_transaction_id, bank_connection_id) raises IntegrityError."""
-        bank = BankConnection(
-            bank_code='test', bank_name='Test Bank',
-        )
-        db.session.add(bank)
-        db.session.flush()
-
-        txn1 = CashflowTransaction(
-            date=date(2024, 1, 1), type='expense', amount=10,
-            description='dup1', category_id=sample_category.id,
-            external_transaction_id='EXT-001',
-            bank_connection_id=bank.id,
-        )
-        db.session.add(txn1)
-        db.session.commit()
-
-        txn2 = CashflowTransaction(
-            date=date(2024, 1, 2), type='expense', amount=20,
-            description='dup2', category_id=sample_category.id,
-            external_transaction_id='EXT-001',
-            bank_connection_id=bank.id,
-        )
-        db.session.add(txn2)
-        with pytest.raises(IntegrityError):
-            db.session.commit()
-
-    def test_unique_constraint_allows_null_pair(self, app, db, sample_category):
-        """Two transactions with NULL external_transaction_id are allowed."""
-        txn1 = CashflowTransaction(
-            date=date(2024, 1, 1), type='expense', amount=10,
-            description='null-a', category_id=sample_category.id,
-        )
-        txn2 = CashflowTransaction(
-            date=date(2024, 1, 2), type='expense', amount=20,
-            description='null-b', category_id=sample_category.id,
-        )
-        db.session.add_all([txn1, txn2])
-        db.session.commit()  # should not raise
-
-        assert CashflowTransaction.query.count() == 2
-
-    def test_unique_constraint_different_bank(self, app, db, sample_category):
-        """Same external_transaction_id with different bank_connection_id is allowed."""
-        bank1 = BankConnection(bank_code='b1', bank_name='Bank 1')
-        bank2 = BankConnection(bank_code='b2', bank_name='Bank 2')
-        db.session.add_all([bank1, bank2])
-        db.session.flush()
-
-        txn1 = CashflowTransaction(
-            date=date(2024, 1, 1), type='expense', amount=10,
-            description='txn1', category_id=sample_category.id,
-            external_transaction_id='EXT-001', bank_connection_id=bank1.id,
-        )
-        txn2 = CashflowTransaction(
-            date=date(2024, 1, 1), type='expense', amount=10,
-            description='txn2', category_id=sample_category.id,
-            external_transaction_id='EXT-001', bank_connection_id=bank2.id,
-        )
-        db.session.add_all([txn1, txn2])
-        db.session.commit()  # should not raise
-
-        assert CashflowTransaction.query.count() == 2
 
 
 # ---------------------------------------------------------------------------
@@ -608,110 +543,3 @@ class TestSettingsModel:
         assert s.created_at is not None
 
 
-# ---------------------------------------------------------------------------
-# BankConnection model
-# ---------------------------------------------------------------------------
-@pytest.mark.unit
-class TestBankConnectionModel:
-    """Tests for BankConnection with encrypted credentials."""
-
-    def test_create_bank_connection(self, app, db):
-        """Basic creation with required fields."""
-        bc = BankConnection(
-            bank_code='yapikredi',
-            bank_name='Yapi Kredi',
-        )
-        db.session.add(bc)
-        db.session.commit()
-
-        assert bc.id is not None
-        assert bc.bank_code == 'yapikredi'
-        assert bc.is_active is True
-
-    def test_encrypt_decrypt_client_id(self, app, db):
-        """set_client_id / get_client_id roundtrip."""
-        bc = BankConnection(bank_code='test', bank_name='Test')
-        bc.set_client_id('my-client-id')
-        db.session.add(bc)
-        db.session.commit()
-
-        assert bc.client_id_encrypted is not None
-        assert bc.client_id_encrypted != 'my-client-id'
-        assert bc.get_client_id() == 'my-client-id'
-
-    def test_encrypt_decrypt_client_secret(self, app, db):
-        """set_client_secret / get_client_secret roundtrip."""
-        bc = BankConnection(bank_code='test', bank_name='Test')
-        bc.set_client_secret('super-secret')
-        db.session.add(bc)
-        db.session.commit()
-
-        assert bc.client_secret_encrypted is not None
-        assert bc.client_secret_encrypted != 'super-secret'
-        assert bc.get_client_secret() == 'super-secret'
-
-    def test_none_credentials(self, app, db):
-        """get_* returns None when encrypted value is None."""
-        bc = BankConnection(bank_code='test', bank_name='Test')
-        db.session.add(bc)
-        db.session.commit()
-
-        assert bc.get_client_id() is None
-        assert bc.get_client_secret() is None
-
-    def test_empty_string_credentials(self, app, db):
-        """Setting empty string returns None (encrypt_value returns None for empty)."""
-        bc = BankConnection(bank_code='test', bank_name='Test')
-        bc.set_client_id('')
-        bc.set_client_secret('')
-        db.session.add(bc)
-        db.session.commit()
-
-        assert bc.get_client_id() is None
-        assert bc.get_client_secret() is None
-
-    def test_is_active_default(self, app, db):
-        """is_active defaults to True."""
-        bc = BankConnection(bank_code='test', bank_name='Test')
-        db.session.add(bc)
-        db.session.commit()
-        assert bc.is_active is True
-
-    def test_sync_status_fields(self, app, db):
-        """Sync metadata fields can be set."""
-        bc = BankConnection(bank_code='test', bank_name='Test')
-        bc.last_sync_status = 'success'
-        bc.last_sync_message = '5 new, 0 skipped'
-        bc.last_sync_at = datetime.now(timezone.utc)
-        db.session.add(bc)
-        db.session.commit()
-
-        fetched = BankConnection.query.get(bc.id)
-        assert fetched.last_sync_status == 'success'
-        assert fetched.last_sync_message == '5 new, 0 skipped'
-        assert fetched.last_sync_at is not None
-
-    def test_transactions_relationship(self, app, db, sample_category):
-        """BankConnection.transactions dynamic relationship."""
-        bc = BankConnection(bank_code='test', bank_name='Test')
-        db.session.add(bc)
-        db.session.flush()
-
-        txn = CashflowTransaction(
-            date=date(2024, 1, 1), type='expense', amount=100,
-            description='bank-txn', category_id=sample_category.id,
-            bank_connection_id=bc.id,
-            external_transaction_id='EXT-1', source='bank_sync',
-        )
-        db.session.add(txn)
-        db.session.commit()
-
-        assert bc.transactions.count() == 1
-        assert bc.transactions.first().description == 'bank-txn'
-
-    def test_repr(self, app, db):
-        """__repr__ contains bank_name and bank_code."""
-        bc = BankConnection(bank_code='yk', bank_name='Yapi Kredi')
-        r = repr(bc)
-        assert 'Yapi Kredi' in r
-        assert 'yk' in r

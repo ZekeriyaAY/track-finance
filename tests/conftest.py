@@ -14,7 +14,6 @@ from models.tag import Tag
 from models.cashflow import CashflowTransaction
 from models.investment import InvestmentType, InvestmentTransaction
 from models.settings import Settings
-from models.bank_connection import BankConnection
 from models.categorization_rule import CategorizationRule
 
 

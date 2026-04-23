@@ -384,7 +384,7 @@ class TestDeleteCashflowRoute:
 
     def test_delete_nonexistent_transaction(self, auth_client):
         """POST /cashflow/delete/99999 for nonexistent ID redirects (404 handler)."""
-        csrf = get_csrf_token(auth_client, '/cashflow/')
+        csrf = get_csrf_token(auth_client, '/cashflow/add')
         response = auth_client.post('/cashflow/delete/99999', data={
             'csrf_token': csrf,
         }, follow_redirects=False)
@@ -467,7 +467,7 @@ class TestBulkEditRoute:
 
     def test_bulk_edit_no_transactions_selected(self, auth_client):
         """POST /cashflow/bulk-edit with no transaction IDs shows error."""
-        csrf = get_csrf_token(auth_client, '/cashflow/')
+        csrf = get_csrf_token(auth_client, '/cashflow/add')
         response = auth_client.post('/cashflow/bulk-edit', data={
             'tag_mode': 'replace',
             'csrf_token': csrf,
