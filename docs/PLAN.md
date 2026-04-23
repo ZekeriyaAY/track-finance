@@ -8,7 +8,7 @@
 
 - [ ] **Dynamic currency selection** — Instead of the currency being statically set to ₺, users should be able to choose their own currency. A currency option on the Settings page, and amount formatting and symbol display should be dynamic across all pages.
 
-- [ ] **Full-width page layout** — Pages are currently constrained by `max-w-7xl`. With the new sidebar design, pages should dynamically display at full width based on screen size. The `max-w-7xl` in `base.html` should be removed or replaced with a wider value.
+- [x] **Full-width page layout** — Removed `max-w-7xl` constraint from `base.html`. Content now fills available width alongside the sidebar.
 
 ## UX & Message Improvements
 
