@@ -1,0 +1,18 @@
+# Obsidian local config (user-specific, not shared)
+.obsidian/
+
+# Raw session transcripts (large, copied from ~/.claude/projects/)
+# Each session is a directory with main JSONL + subagent JSONLs
+raw/sessions/*/
+raw/sessions/*.jsonl
+!raw/sessions/.gitkeep
+
+# Ingest queue and manifest (local state)
+.ingest-queue.jsonl
+.ingested-manifest.json
+
+# Lint report (generated, regenerable)
+lint-report.md
+
+# Hook debug log
+.sessionend-debug.log
