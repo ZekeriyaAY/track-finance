@@ -43,7 +43,7 @@ class TestUpdatePgAdminUrlRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'PgAdmin URL updated successfully' in response.data
+        assert b'PgAdmin URL saved' in response.data
 
         with app.app_context():
             url = Settings.get_setting('pgadmin_url')
@@ -57,7 +57,7 @@ class TestUpdatePgAdminUrlRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'PgAdmin URL updated successfully' in response.data
+        assert b'PgAdmin URL saved' in response.data
 
         with app.app_context():
             url = Settings.get_setting('pgadmin_url')
@@ -118,7 +118,7 @@ class TestUpdateCurrencyRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Currency updated successfully' in response.data
+        assert b'Currency updated!' in response.data
 
         with app.app_context():
             val = Settings.get_setting('currency_symbol')
@@ -172,7 +172,7 @@ class TestCreateDefaultCategoriesRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Default categories created successfully' in response.data
+        assert b'Default categories created!' in response.data
 
         with app.app_context():
             count = Category.query.count()
@@ -198,7 +198,7 @@ class TestCreateDefaultTagsRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Default tags created successfully' in response.data
+        assert b'Default tags created!' in response.data
 
         with app.app_context():
             count = Tag.query.count()
@@ -224,7 +224,7 @@ class TestCreateDummyDataRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Dummy data created successfully' in response.data
+        assert b'Sample data ready!' in response.data
 
         with app.app_context():
             cashflow_count = CashflowTransaction.query.count()
@@ -254,7 +254,7 @@ class TestResetDatabaseRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Database data cleared successfully' in response.data
+        assert b'All data cleared' in response.data
 
         # Verify data was cleared
         with app.app_context():
@@ -269,7 +269,7 @@ class TestResetDatabaseRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Database data cleared successfully' in response.data
+        assert b'All data cleared' in response.data
 
     def test_reset_database_redirects(self, auth_client):
         """POST /settings/reset-database redirects to settings index."""

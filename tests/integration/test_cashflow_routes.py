@@ -243,7 +243,7 @@ class TestAddCashflowRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Transaction added successfully' in response.data
+        assert b'Transaction added!' in response.data
 
         # Verify in database
         with app.app_context():
@@ -267,7 +267,7 @@ class TestAddCashflowRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Transaction added successfully' in response.data
+        assert b'Transaction added!' in response.data
 
         with app.app_context():
             txn = CashflowTransaction.query.filter_by(description='Salary payment').first()
@@ -302,7 +302,7 @@ class TestAddCashflowRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Transaction added successfully' in response.data
+        assert b'Transaction added!' in response.data
 
         with app.app_context():
             txn = CashflowTransaction.query.filter_by(description='No tags transaction').first()
@@ -332,7 +332,7 @@ class TestEditCashflowRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Transaction updated successfully' in response.data
+        assert b'Changes saved!' in response.data
 
         with app.app_context():
             txn = CashflowTransaction.query.get(sample_transaction.id)
@@ -358,7 +358,7 @@ class TestEditCashflowRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Transaction updated successfully' in response.data
+        assert b'Changes saved!' in response.data
 
         with app.app_context():
             txn = CashflowTransaction.query.get(sample_transaction.id)
@@ -376,7 +376,7 @@ class TestDeleteCashflowRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Transaction deleted successfully' in response.data
+        assert b'Transaction removed' in response.data
 
         with app.app_context():
             txn = CashflowTransaction.query.get(txn_id)

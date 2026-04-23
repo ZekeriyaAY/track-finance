@@ -176,11 +176,11 @@
       <div class="empty-state">
         <i data-lucide="arrow-left-right" class="empty-state-icon"></i>
         {% if selected_category or selected_tag or selected_type or selected_date_from or selected_date_to or selected_search %}
-        <div class="empty-state-title">No transactions match your filters</div>
-        <div class="empty-state-description">Try adjusting your filter criteria or <a href="{{ url_for('cashflow.index') }}" class="text-primary hover:underline">clear all filters</a>.</div>
+        <div class="empty-state-title">Nothing matches your filters</div>
+        <div class="empty-state-description">Try loosening your criteria or <a href="{{ url_for('cashflow.index') }}" class="text-primary hover:underline">clear all filters</a> to see everything.</div>
         {% else %}
-        <div class="empty-state-title">No transactions found yet</div>
-        <div class="empty-state-description">You can add a new transaction using the "New Transaction" button.</div>
+        <div class="empty-state-title">It's quiet here so far</div>
+        <div class="empty-state-description">Get started by adding your first transaction!</div>
         <a href="{{ url_for('cashflow.add_cashflow') }}" class="btn btn-primary btn-sm">
           <i data-lucide="plus" class="w-4 h-4"></i>
           New Transaction

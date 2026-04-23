@@ -18,18 +18,18 @@ def add_tag():
         name = request.form['name']
         
         if Tag.query.filter_by(name=name).first():
-            flash('This tag already exists!', 'error')
+            flash('A tag with that name already exists.', 'error')
             return redirect(url_for('tag.add_tag'))
         
         try:
             tag = Tag(name=name)
             db.session.add(tag)
             db.session.commit()
-            flash('Tag added successfully!', 'success')
+            flash('Tag added!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error adding tag: {str(e)}')
-            flash('An error occurred while adding the tag.', 'error')
+            flash('Something went wrong. Please try again.', 'error')
         return redirect(url_for('tag.index'))
     return render_template('tag/form.html')
 
@@ -41,17 +41,17 @@ def edit_tag(id):
 
         existing = Tag.query.filter_by(name=name).first()
         if existing and existing.id != id:
-            flash('This tag already exists!', 'error')
+            flash('A tag with that name already exists.', 'error')
             return redirect(url_for('tag.edit_tag', id=id))
         
         try:
             tag.name = name
             db.session.commit()
-            flash('Tag updated successfully!', 'success')
+            flash('Tag updated!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error updating tag: {str(e)}')
-            flash('An error occurred while updating the tag.', 'error')
+            flash('Something went wrong. Please try again.', 'error')
         return redirect(url_for('tag.index'))
     return render_template('tag/form.html', tag=tag)
 
@@ -59,15 +59,15 @@ def edit_tag(id):
 def delete_tag(id):
     tag = db.get_or_404(Tag, id)
     if tag.transactions:
-        flash('This tag has associated transactions and cannot be deleted.', 'error')
+        flash("Can't delete — this tag has linked transactions.", 'error')
         return redirect(url_for('tag.index'))
 
     try:
         db.session.delete(tag)
         db.session.commit()
-        flash('Tag deleted successfully!', 'success')
+        flash('Tag removed.', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f'Error deleting tag: {str(e)}')
-        flash('An error occurred while deleting the tag.', 'error')
+        flash('Something went wrong. Please try again.', 'error')
     return redirect(url_for('tag.index'))

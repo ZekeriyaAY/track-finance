@@ -24,11 +24,11 @@ def update_pgadmin_url():
     try:
         # Update PgAdmin URL in database
         Settings.set_setting('pgadmin_url', pgadmin_url)
-        flash('PgAdmin URL updated successfully.', 'success')
+        flash('PgAdmin URL saved.', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f"Error updating PgAdmin URL: {str(e)}")
-        flash('An error occurred while updating PgAdmin URL.', 'error')
+        flash('Something went wrong. Please try again.', 'error')
     
     return redirect(url_for('settings.index'))
 
@@ -42,11 +42,11 @@ def update_currency():
 
     try:
         Settings.set_setting('currency_symbol', currency_symbol)
-        flash('Currency updated successfully.', 'success')
+        flash('Currency updated!', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f"Error updating currency: {str(e)}")
-        flash('An error occurred while updating currency.', 'error')
+        flash('Something went wrong. Please try again.', 'error')
 
     return redirect(url_for('settings.index'))
 
@@ -62,33 +62,33 @@ def index():
 def create_dummy_data_route():
     try:
         create_dummy_data()
-        flash('Dummy data created successfully.', 'success')
+        flash('Sample data ready!', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f"An error occurred while creating dummy data: {str(e)}")
-        flash('An error occurred while creating dummy data.', 'error')
+        flash('Something went wrong. Please try again.', 'error')
     return redirect(url_for('settings.index'))
 
 @settings_bp.route('/create-default-categories', methods=['POST'])
 def create_default_categories_route():
     try:
         create_default_categories()
-        flash('Default categories created successfully.', 'success')
+        flash('Default categories created!', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f"An error occurred while creating default categories: {str(e)}")
-        flash('An error occurred while creating default categories.', 'error')
+        flash('Something went wrong. Please try again.', 'error')
     return redirect(url_for('settings.index'))
 
 @settings_bp.route('/create-default-tags', methods=['POST'])
 def create_default_tags_route():
     try:
         create_default_tags()
-        flash('Default tags created successfully.', 'success')
+        flash('Default tags created!', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f"An error occurred while creating default tags: {str(e)}")
-        flash('An error occurred while creating default tags.', 'error')
+        flash('Something went wrong. Please try again.', 'error')
     return redirect(url_for('settings.index'))
 
 @settings_bp.route('/reset-database', methods=['POST'])
@@ -125,12 +125,12 @@ def reset_database():
             
         db.session.commit()
         
-        flash('Database data cleared successfully.', 'success')
+        flash('All data cleared.', 'success')
         
     except Exception as e:
         db.session.rollback()
         error_msg = f"An error occurred while clearing database data: {str(e)}"
-        flash('Error clearing database data.', 'error')
+        flash('Something went wrong while clearing data.', 'error')
         logger.error(error_msg)
     
     return redirect(url_for('settings.index'))

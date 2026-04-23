@@ -59,7 +59,7 @@ class TestAddTagRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Tag added successfully' in response.data
+        assert b'Tag added!' in response.data
 
         with app.app_context():
             tag = Tag.query.filter_by(name='New Tag').first()
@@ -83,7 +83,7 @@ class TestAddTagRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Tag added successfully' in response.data
+        assert b'Tag added!' in response.data
 
     def test_add_tag_redirects_to_index(self, auth_client, app, db):
         """POST /tags/add redirects to tag index after creation."""
@@ -114,7 +114,7 @@ class TestEditTagRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Tag updated successfully' in response.data
+        assert b'Tag updated!' in response.data
 
         with app.app_context():
             tag = Tag.query.get(sample_tag.id)
@@ -144,7 +144,7 @@ class TestEditTagRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Tag updated successfully' in response.data
+        assert b'Tag updated!' in response.data
 
     def test_edit_nonexistent_tag(self, auth_client):
         """GET /tags/edit/99999 for nonexistent ID redirects (404 handler)."""
@@ -173,7 +173,7 @@ class TestDeleteTagRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Tag deleted successfully' in response.data
+        assert b'Tag removed' in response.data
 
         with app.app_context():
             tag = Tag.query.get(tag_id)
@@ -186,7 +186,7 @@ class TestDeleteTagRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'associated transactions' in response.data
+        assert b'has linked transactions' in response.data
 
         # Tag should still exist
         with app.app_context():

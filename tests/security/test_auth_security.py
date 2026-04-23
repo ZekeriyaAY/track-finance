@@ -228,7 +228,7 @@ class TestLoginBehavior:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Invalid username or password' in response.data
+        assert b'Incorrect username or password' in response.data
 
     def test_nonexistent_user_rejected(self, client, admin_user):
         """Login with non-existent username shows error."""
@@ -239,7 +239,7 @@ class TestLoginBehavior:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Invalid username or password' in response.data
+        assert b'Incorrect username or password' in response.data
 
     def test_empty_credentials_rejected(self, client, admin_user):
         """Login with empty username and password shows error."""
@@ -250,7 +250,7 @@ class TestLoginBehavior:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Invalid username or password' in response.data
+        assert b'Incorrect username or password' in response.data
 
     def test_authenticated_user_redirected_from_login(self, auth_client):
         """Already authenticated user visiting login page gets redirected."""

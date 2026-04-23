@@ -12,9 +12,9 @@
 
 ## UX & Message Improvements
 
-- [ ] **Friendly empty state messages** — Messages shown when tables have no data, like "No transactions found yet", should be made friendlier, more personable (casual but not slangy), and more user-friendly. Example: "It's quiet here so far — get started by adding your first transaction!"
+- [x] **Friendly empty state messages** — Updated empty states in cashflow, category, tag, and categorization rule pages to be warmer and more inviting.
 
-- [ ] **Friendly toast/flash messages** — Backend flash messages (in Turkish) should be made friendlier. Examples defined in the Design System: "Başarıyla eklendi" → "Eklendi, güzel!", "Bir hata oluştu" → "Bir şeyler ters gitti, tekrar dener misin?", "Silindi" → "Kaldırıldı."
+- [x] **Friendly toast/flash messages** — Rewrote all flash messages across 6 route files to be concise and friendly (e.g. "Transaction added!", "Category removed.", "Something went wrong. Please try again.").
 
 - [ ] **Recurring transaction templates** — A template system for frequently recurring transactions (rent, salary, subscriptions). When a template is selected, the form should auto-fill. `CashflowTemplate` model + management UI on the Settings or Cashflow page.
 

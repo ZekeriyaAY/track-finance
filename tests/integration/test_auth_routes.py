@@ -52,7 +52,7 @@ class TestLoginRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Invalid username or password' in response.data
+        assert b'Incorrect username or password' in response.data
 
     def test_login_invalid_username(self, client, admin_user):
         """POST /auth/login with nonexistent username shows error flash."""
@@ -63,7 +63,7 @@ class TestLoginRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Invalid username or password' in response.data
+        assert b'Incorrect username or password' in response.data
 
     def test_login_empty_fields(self, client, admin_user):
         """POST /auth/login with empty fields shows error flash."""
@@ -74,7 +74,7 @@ class TestLoginRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Invalid username or password' in response.data
+        assert b'Incorrect username or password' in response.data
 
     def test_login_already_authenticated_redirects(self, auth_client):
         """GET /auth/login when already logged in redirects to cashflow index."""
@@ -118,7 +118,7 @@ class TestLogoutRoute:
         """GET /auth/logout shows logout success flash."""
         response = auth_client.get('/auth/logout', follow_redirects=True)
         assert response.status_code == 200
-        assert b'You have been logged out' in response.data
+        assert b'Logged out. See you next time!' in response.data
 
     def test_logout_prevents_access_after(self, auth_client):
         """After logout, accessing protected pages redirects to login."""
@@ -163,7 +163,7 @@ class TestChangePasswordRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Password changed successfully' in response.data
+        assert b'Password changed!' in response.data
 
         # Verify the new password works
         with app.app_context():
@@ -180,7 +180,7 @@ class TestChangePasswordRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Current password is incorrect' in response.data
+        assert b"Current password doesn" in response.data
 
     def test_change_password_too_short(self, auth_client):
         """POST /auth/change-password with short new password shows error."""
@@ -192,7 +192,7 @@ class TestChangePasswordRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'at least 6 characters' in response.data
+        assert b'Password must be at least 6 characters' in response.data
 
     def test_change_password_mismatch(self, auth_client):
         """POST /auth/change-password with non-matching passwords shows error."""
@@ -204,7 +204,7 @@ class TestChangePasswordRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'do not match' in response.data
+        assert b"Passwords don" in response.data
 
     def test_change_password_exactly_6_chars(self, auth_client):
         """POST /auth/change-password with exactly 6 character password succeeds."""
@@ -216,7 +216,7 @@ class TestChangePasswordRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Password changed successfully' in response.data
+        assert b'Password changed!' in response.data
 
 
 class TestChangeUsernameRoute:
@@ -231,7 +231,7 @@ class TestChangeUsernameRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Username changed successfully' in response.data
+        assert b'Username changed!' in response.data
 
         # Verify the username was updated in the database
         with app.app_context():
@@ -247,7 +247,7 @@ class TestChangeUsernameRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Password is incorrect' in response.data
+        assert b'Incorrect password' in response.data
 
     def test_change_username_too_short(self, auth_client):
         """POST /auth/change-username with short username shows error."""
@@ -269,7 +269,7 @@ class TestChangeUsernameRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'same as current' in response.data
+        assert b'already your username' in response.data
 
     def test_change_username_exactly_3_chars(self, auth_client):
         """POST /auth/change-username with exactly 3 character username succeeds."""
@@ -280,7 +280,7 @@ class TestChangeUsernameRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Username changed successfully' in response.data
+        assert b'Username changed!' in response.data
 
 
 class TestAuthRequirement:

@@ -54,7 +54,7 @@ class TestAddCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Category added successfully' in response.data
+        assert b'Category added!' in response.data
 
         with app.app_context():
             cat = Category.query.filter_by(name='New Parent Category').first()
@@ -70,7 +70,7 @@ class TestAddCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Category added successfully' in response.data
+        assert b'Category added!' in response.data
 
         with app.app_context():
             sub = Category.query.filter_by(name='New Subcategory').first()
@@ -123,7 +123,7 @@ class TestAddCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Category added successfully' in response.data
+        assert b'Category added!' in response.data
 
 
 class TestEditCategoryRoute:
@@ -145,7 +145,7 @@ class TestEditCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Category updated successfully' in response.data
+        assert b'Category updated!' in response.data
 
         with app.app_context():
             cat = Category.query.get(sample_category.id)
@@ -177,7 +177,7 @@ class TestEditCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Category updated successfully' in response.data
+        assert b'Category updated!' in response.data
 
     def test_edit_nonexistent_category(self, auth_client):
         """GET /categories/edit/99999 for nonexistent ID redirects (404 handler)."""
@@ -193,7 +193,7 @@ class TestEditCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Category updated successfully' in response.data
+        assert b'Category updated!' in response.data
 
         with app.app_context():
             sub = Category.query.get(sample_subcategory.id)
@@ -211,7 +211,7 @@ class TestDeleteCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Category deleted successfully' in response.data
+        assert b'Category removed' in response.data
 
         with app.app_context():
             cat = Category.query.get(cat_id)
@@ -224,7 +224,7 @@ class TestDeleteCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'has subcategories' in response.data
+        assert b'Remove subcategories first' in response.data
 
     def test_delete_category_with_transactions(self, auth_client, sample_transaction, sample_category):
         """POST /categories/delete/<id> with transactions shows protection error."""
@@ -233,7 +233,7 @@ class TestDeleteCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'associated transactions' in response.data
+        assert b'has linked transactions' in response.data
 
     def test_delete_nonexistent_category(self, auth_client):
         """POST /categories/delete/99999 for nonexistent ID redirects (404 handler)."""
@@ -251,7 +251,7 @@ class TestDeleteCategoryRoute:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Category deleted successfully' in response.data
+        assert b'Category removed' in response.data
 
         with app.app_context():
             sub = Category.query.get(sub_id)

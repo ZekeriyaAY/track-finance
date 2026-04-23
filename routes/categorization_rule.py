@@ -55,11 +55,11 @@ def add_rule():
             )
             db.session.add(rule)
             db.session.commit()
-            flash('Rule added successfully!', 'success')
+            flash('Rule added!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error adding rule: {str(e)}')
-            flash('An error occurred while adding the rule.', 'error')
+            flash('Something went wrong. Please try again.', 'error')
         return redirect(url_for('categorization_rule.index'))
 
     categories = Category.query.all()
@@ -95,11 +95,11 @@ def edit_rule(id):
             rule.is_active = is_active
             rule.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
             db.session.commit()
-            flash('Rule updated successfully!', 'success')
+            flash('Rule updated!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error updating rule: {str(e)}')
-            flash('An error occurred while updating the rule.', 'error')
+            flash('Something went wrong. Please try again.', 'error')
         return redirect(url_for('categorization_rule.index'))
 
     categories = Category.query.all()
@@ -113,11 +113,11 @@ def delete_rule(id):
     try:
         db.session.delete(rule)
         db.session.commit()
-        flash('Rule deleted successfully!', 'success')
+        flash('Rule removed.', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f'Error deleting rule: {str(e)}')
-        flash('An error occurred while deleting the rule.', 'error')
+        flash('Something went wrong. Please try again.', 'error')
     return redirect(url_for('categorization_rule.index'))
 
 

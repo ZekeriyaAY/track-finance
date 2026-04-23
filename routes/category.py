@@ -19,18 +19,18 @@ def add_category():
         parent_id = request.form['parent_id'] if request.form['parent_id'] else None
         
         if Category.query.filter_by(name=name, parent_id=parent_id).first():
-            flash('This category already exists!', 'error')
+            flash('A category with that name already exists.', 'error')
             return redirect(url_for('category.add_category'))
         
         try:
             category = Category(name=name, parent_id=parent_id)
             db.session.add(category)
             db.session.commit()
-            flash('Category added successfully!', 'success')
+            flash('Category added!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error adding category: {str(e)}')
-            flash('An error occurred while adding the category.', 'error')
+            flash('Something went wrong. Please try again.', 'error')
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
@@ -45,18 +45,18 @@ def edit_category(id):
 
         existing = Category.query.filter_by(name=name, parent_id=parent_id).first()
         if existing and existing.id != id:
-            flash('This category already exists!', 'error')
+            flash('A category with that name already exists.', 'error')
             return redirect(url_for('category.edit_category', id=id))
         
         try:
             category.name = name
             category.parent_id = parent_id
             db.session.commit()
-            flash('Category updated successfully!', 'success')
+            flash('Category updated!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error updating category: {str(e)}')
-            flash('An error occurred while updating the category.', 'error')
+            flash('Something went wrong. Please try again.', 'error')
         return redirect(url_for('category.index'))
     
     categories = Category.query.filter_by(parent_id=None).all()
@@ -66,18 +66,18 @@ def edit_category(id):
 def delete_category(id):
     category = db.get_or_404(Category, id)
     if category.subcategories:
-        flash('This category has subcategories. You must delete them first!', 'error')
+        flash('Remove subcategories first before deleting this category.', 'error')
         return redirect(url_for('category.index'))
     if category.transactions:
-        flash('This category has associated transactions and cannot be deleted.', 'error')
+        flash("Can't delete — this category has linked transactions.", 'error')
         return redirect(url_for('category.index'))
     
     try:
         db.session.delete(category)
         db.session.commit()
-        flash('Category deleted successfully!', 'success')
+        flash('Category removed.', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f'Error deleting category: {str(e)}')
-        flash('An error occurred while deleting the category.', 'error')
+        flash('Something went wrong. Please try again.', 'error')
     return redirect(url_for('category.index')) 

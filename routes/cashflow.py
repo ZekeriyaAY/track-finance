@@ -293,7 +293,7 @@ def add_cashflow():
             amount = float(request.form['amount'])
             category_id = int(request.form['category_id'])
         except (ValueError, KeyError):
-            flash('Invalid input. Please check date, amount and category.', 'danger')
+            flash('Please check date, amount, and category.', 'danger')
             return redirect(url_for('cashflow.add_cashflow'))
 
         type = request.form['type']
@@ -316,11 +316,11 @@ def add_cashflow():
                 transaction.tags = tags
             db.session.add(transaction)
             db.session.commit()
-            flash('Transaction added successfully!', 'success')
+            flash('Transaction added!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error adding transaction: {str(e)}')
-            flash('An error occurred while adding the transaction.', 'error')
+            flash('Something went wrong. Please try again.', 'error')
         return redirect(url_for('cashflow.index'))
 
     categories = Category.query.filter_by(parent_id=None).all()
@@ -342,11 +342,11 @@ def edit_cashflow(id):
             tag_ids = request.form.getlist('tags')
             transaction.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
             db.session.commit()
-            flash('Transaction updated successfully!', 'success')
+            flash('Changes saved!', 'success')
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error updating transaction: {str(e)}')
-            flash('An error occurred while updating the transaction.', 'error')
+            flash('Something went wrong. Please try again.', 'error')
         return redirect(url_for('cashflow.index'))
 
     categories = Category.query.filter_by(parent_id=None).all()
@@ -359,11 +359,11 @@ def delete_cashflow(id):
     try:
         db.session.delete(transaction)
         db.session.commit()
-        flash('Transaction deleted successfully!', 'success')
+        flash('Transaction removed.', 'success')
     except Exception as e:
         db.session.rollback()
         logger.error(f'Error deleting transaction: {str(e)}')
-        flash('An error occurred while deleting the transaction.', 'error')
+        flash('Something went wrong. Please try again.', 'error')
     return redirect(url_for('cashflow.index'))
 
 @cashflow_bp.route('/import', methods=['GET', 'POST'])
@@ -487,7 +487,7 @@ def import_excel():
         flash(f'Excel import error: {str(e)}', 'error')
     except Exception as e:
         logger.error(f'Import error: {str(e)}', exc_info=True)
-        flash('An unexpected error occurred.', 'error')
+        flash('Something unexpected happened. Please try again.', 'error')
     
     return render_template('cashflow/import.html')
 
@@ -524,7 +524,7 @@ def bulk_edit():
     except Exception as e:
         db.session.rollback()
         logger.error(f'Bulk edit error: {str(e)}')
-        flash('An error occurred during bulk edit.', 'error')
+        flash('Something went wrong during bulk edit.', 'error')
 
     # Preserve filter params
     redirect_params = {}

@@ -16,7 +16,7 @@ class TestCategorizationRuleIndex:
     def test_index_empty(self, auth_client):
         response = auth_client.get('/rules/')
         assert response.status_code == 200
-        assert b'No rules defined yet' in response.data
+        assert b'No rules yet' in response.data
 
     def test_index_shows_rules(self, auth_client, sample_rule):
         response = auth_client.get('/rules/')
@@ -60,7 +60,7 @@ class TestCategorizationRuleAdd:
             'is_active': '1',
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Rule added successfully' in response.data
+        assert b'Rule added!' in response.data
 
         with auth_client.application.app_context():
             rule = CategorizationRule.query.filter_by(name='New Rule').first()
@@ -173,7 +173,7 @@ class TestCategorizationRuleEdit:
             'is_active': '1',
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Rule updated successfully' in response.data
+        assert b'Rule updated!' in response.data
 
         with auth_client.application.app_context():
             rule = db.session.get(CategorizationRule, sample_rule.id)
@@ -196,7 +196,7 @@ class TestCategorizationRuleDelete:
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
-        assert b'Rule deleted successfully' in response.data
+        assert b'Rule removed' in response.data
 
         with auth_client.application.app_context():
             assert db.session.get(CategorizationRule, sample_rule.id) is None
