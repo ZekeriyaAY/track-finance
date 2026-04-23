@@ -39,7 +39,7 @@
       <h2 class="text-h2">Default Data</h2>
       <p class="text-[var(--text-muted)] text-sm">Existing data will not be recreated, only missing data will be added.</p>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--primary-muted)] flex flex-col">
           <h3 class="text-h3 text-primary mb-2">Default Categories</h3>
           <p class="text-[var(--text-muted)] text-sm mb-4">Creates income and expense categories.</p>
@@ -67,20 +67,6 @@
             </form>
           </div>
         </div>
-
-        <div class="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--primary-muted)] flex flex-col">
-          <h3 class="text-h3 text-primary mb-2">Default Investment Types</h3>
-          <p class="text-[var(--text-muted)] text-sm mb-4">Creates default investment types to categorize investments.</p>
-          <div class="mt-auto">
-            <form action="{{ url_for('settings.create_default_investment_types_route') }}" method="POST" class="inline">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button type="submit" class="btn btn-primary btn-sm">
-                <i data-lucide="line-chart" class="w-4 h-4"></i>
-                Create Investment Types
-              </button>
-            </form>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -93,7 +79,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--primary-muted)] flex flex-col">
           <h3 class="text-h3 text-primary mb-2">Dummy Data</h3>
-          <p class="text-[var(--text-muted)] text-sm mb-4">Creates default categories, tags, investment types and sample transactions.</p>
+          <p class="text-[var(--text-muted)] text-sm mb-4">Creates default categories, tags, and sample transactions.</p>
           <div class="mt-auto">
             <form action="{{ url_for('settings.create_dummy_data_route') }}" method="POST" class="inline">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

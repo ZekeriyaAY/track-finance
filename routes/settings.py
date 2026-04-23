@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from models import db
 from models.settings import Settings
-from utils.data_utils import create_dummy_data, create_default_categories, create_default_tags, create_default_investment_types
+from utils.data_utils import create_dummy_data, create_default_categories, create_default_tags
 import logging
 from sqlalchemy import text
 
@@ -72,17 +72,6 @@ def create_default_tags_route():
         flash('An error occurred while creating default tags.', 'error')
     return redirect(url_for('settings.index'))
 
-@settings_bp.route('/create-default-investment-types', methods=['POST'])
-def create_default_investment_types_route():
-    try:
-        create_default_investment_types()
-        flash('Default investment types created successfully.', 'success')
-    except Exception as e:
-        db.session.rollback()
-        logger.error(f"An error occurred while creating default investment types: {str(e)}")
-        flash('An error occurred while creating default investment types.', 'error')
-    return redirect(url_for('settings.index'))
-
 @settings_bp.route('/reset-database', methods=['POST'])
 def reset_database():
     try:
@@ -91,9 +80,7 @@ def reset_database():
         
         statements = [
             "DELETE FROM cashflow_transaction_tags",
-            "DELETE FROM investment_transaction",
             "DELETE FROM cashflow_transaction",
-            "DELETE FROM investment_type",
             "DELETE FROM tag",
             "DELETE FROM category"
         ]
@@ -105,9 +92,7 @@ def reset_database():
         try:
             # PostgreSQL: Reset sequences for auto-increment columns
             sequences = [
-                "ALTER SEQUENCE investment_transaction_id_seq RESTART WITH 1",
                 "ALTER SEQUENCE cashflow_transaction_id_seq RESTART WITH 1",
-                "ALTER SEQUENCE investment_type_id_seq RESTART WITH 1",
                 "ALTER SEQUENCE tag_id_seq RESTART WITH 1",
                 "ALTER SEQUENCE category_id_seq RESTART WITH 1"
             ]

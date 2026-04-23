@@ -158,11 +158,6 @@ class TestCSRFProtectionMissingToken:
         response = auth_client.post('/settings/create-default-tags')
         assert response.status_code == 400
 
-    def test_create_default_investment_types_requires_csrf(self, auth_client):
-        """POST /settings/create-default-investment-types without CSRF token returns 400."""
-        response = auth_client.post('/settings/create-default-investment-types')
-        assert response.status_code == 400
-
     def test_reset_database_requires_csrf(self, auth_client):
         """POST /settings/reset-database without CSRF token returns 400."""
         response = auth_client.post('/settings/reset-database')

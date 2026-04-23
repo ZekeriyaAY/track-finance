@@ -41,7 +41,6 @@ class TestUnauthenticatedAccessBlocked:
         '/settings/create-dummy-data',
         '/settings/create-default-categories',
         '/settings/create-default-tags',
-        '/settings/create-default-investment-types',
         '/settings/reset-database',
     ])
     def test_post_routes_redirect_to_login(self, client, admin_user, url):

@@ -4,7 +4,6 @@ from models import db
 from models.category import Category
 from models.tag import Tag
 from models.cashflow import CashflowTransaction
-from models.investment import InvestmentType, InvestmentTransaction
 
 def create_default_categories():
     """Creates default income and expense categories."""
@@ -37,80 +36,6 @@ def create_default_categories():
                     subcategory = Category(name=subcategory_name, parent_id=category.id)
                     db.session.add(subcategory)
     
-    db.session.commit()
-
-def create_default_investment_types():
-    """Creates default investment types."""
-    main_types = [
-        {
-            'name': 'Securities',
-            'code': 'securities',
-            'icon': 'fas fa-chart-line',
-            'color': '#3B82F6',
-            'children': [
-                {'name': 'Stocks', 'code': 'stocks', 'icon': 'fas fa-chart-line', 'color': '#3B82F6'},
-                {'name': 'ETF', 'code': 'etf', 'icon': 'fas fa-chart-bar', 'color': '#8B5CF6'}
-            ]
-        },
-        {
-            'name': 'Crypto',
-            'code': 'crypto',
-            'icon': 'fab fa-bitcoin',
-            'color': '#F59E0B',
-            'children': [
-                {'name': 'Bitcoin', 'code': 'btc', 'icon': 'fab fa-bitcoin', 'color': '#F59E0B'},
-                {'name': 'Ethereum', 'code': 'eth', 'icon': 'fab fa-ethereum', 'color': '#6366F1'}
-            ]
-        },
-        {
-            'name': 'Metals',
-            'code': 'metals',
-            'icon': 'fas fa-coins',
-            'color': '#FCD34D',
-            'children': [
-                {'name': 'Gold', 'code': 'gold', 'icon': 'fas fa-coins', 'color': '#FCD34D'},
-                {'name': 'Silver', 'code': 'silver', 'icon': 'fas fa-medal', 'color': '#9CA3AF'}
-            ]
-        },
-        {
-            'name': 'Currency',
-            'code': 'currency',
-            'icon': 'fas fa-dollar-sign',
-            'color': '#10B981',
-            'children': [
-                {'name': 'USD', 'code': 'usd', 'icon': 'fas fa-dollar-sign', 'color': '#10B981'},
-                {'name': 'EUR', 'code': 'eur', 'icon': 'fas fa-euro-sign', 'color': '#3B82F6'}
-            ]
-        },
-        {
-            'name': 'Other',
-            'code': 'other',
-            'icon': 'fas fa-ellipsis-h',
-            'color': '#6B7280',
-            'children': [
-                {'name': 'Real Estate', 'code': 'real_estate', 'icon': 'fas fa-home', 'color': '#EC4899'},
-                {'name': 'Bonds', 'code': 'bonds', 'icon': 'fas fa-file-contract', 'color': '#059669'},
-                {'name': 'Other', 'code': 'misc', 'icon': 'fas fa-question', 'color': '#6B7280'}
-            ]
-        }
-    ]
-
-    # Create main types and subtypes
-    for main_type in main_types:
-        children = main_type.pop('children', [])
-        
-        # Create main type
-        if not InvestmentType.query.filter_by(code=main_type['code']).first():
-            parent_type = InvestmentType(**main_type)
-            db.session.add(parent_type)
-            db.session.flush()  # Flush to get ID
-            
-            # Create subtypes
-            for child in children:
-                if not InvestmentType.query.filter_by(code=child['code']).first():
-                    child_type = InvestmentType(**child, parent_id=parent_type.id)
-                    db.session.add(child_type)
-
     db.session.commit()
 
 def create_default_tags():
@@ -185,51 +110,14 @@ def create_dummy_transactions(start_date, end_date):
         
         current_date += timedelta(days=1)
 
-def create_dummy_investments(start_date, end_date):
-    """Creates sample investment transactions within the specified date range."""
-    # Get investment types
-    investment_types = InvestmentType.query.all()
-    
-    current_date = start_date
-    while current_date <= end_date:
-        # Create 1-2 investment transactions on the 1st of each month
-        if current_date.day == 1:
-            num_investments = random.randint(1, 2)
-            for _ in range(num_investments):
-                # Choose a random investment type
-                investment_type = random.choice(investment_types)
-                
-                # Create investment quantity and prices
-                quantity = round(random.uniform(1, 10), 2)
-                price = round(random.uniform(100, 1000), 2)
-                type = random.choice(['buy', 'sell'])
-                
-                # Create the investment transaction
-                transaction = InvestmentTransaction(
-                    investment_type_id=investment_type.id,
-                    transaction_date=current_date,
-                    transaction_type=type,
-                    price=price,
-                    quantity=quantity,
-                    description=f'{investment_type.name} {type} transaction'
-                )
-                
-                db.session.add(transaction)
-        
-        current_date += timedelta(days=1)
-    
-    db.session.commit()
-
 def create_dummy_data():
-    """Creates default categories, tags, investment types, and dummy transactions."""
+    """Creates default categories, tags, and dummy transactions."""
     create_default_categories()
     create_default_tags()
-    create_default_investment_types()
-    
+
     start_date = datetime.now() - timedelta(days=90)
     end_date = datetime.now()
-    
+
     create_dummy_transactions(start_date, end_date)
-    create_dummy_investments(start_date, end_date)
-    
-    db.session.commit() 
+
+    db.session.commit()

@@ -12,7 +12,6 @@ from models.user import User
 from models.category import Category
 from models.tag import Tag
 from models.cashflow import CashflowTransaction
-from models.investment import InvestmentType, InvestmentTransaction
 from models.settings import Settings
 from models.categorization_rule import CategorizationRule
 
@@ -144,36 +143,6 @@ def sample_transaction(db, sample_category, sample_tag):
     db.session.add(txn)
     db.session.commit()
     return txn
-
-
-@pytest.fixture()
-def sample_investment_type(db):
-    """Create a sample investment type."""
-    inv_type = InvestmentType(
-        name='Test Stock',
-        code='test_stock',
-        icon='fas fa-chart-line',
-        color='#3B82F6',
-    )
-    db.session.add(inv_type)
-    db.session.commit()
-    return inv_type
-
-
-@pytest.fixture()
-def sample_investment(db, sample_investment_type):
-    """Create a sample investment transaction."""
-    inv = InvestmentTransaction(
-        investment_type_id=sample_investment_type.id,
-        transaction_date=datetime(2024, 1, 15),
-        transaction_type='buy',
-        price=150.0,
-        quantity=10.0,
-        description='Test investment',
-    )
-    db.session.add(inv)
-    db.session.commit()
-    return inv
 
 
 @pytest.fixture()

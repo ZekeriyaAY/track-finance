@@ -4,7 +4,6 @@ from tests.conftest import get_csrf_token
 from models.settings import Settings
 from models.category import Category
 from models.tag import Tag
-from models.investment import InvestmentType, InvestmentTransaction
 from models.cashflow import CashflowTransaction
 
 
@@ -160,54 +159,11 @@ class TestCreateDefaultTagsRoute:
         assert '/settings/' in response.headers.get('Location', '')
 
 
-class TestCreateDefaultInvestmentTypesRoute:
-    """Tests for POST /settings/create-default-investment-types."""
-
-    def test_create_default_investment_types(self, auth_client, app, db):
-        """POST /settings/create-default-investment-types creates investment types."""
-        csrf = get_csrf_token(auth_client, '/settings/')
-        response = auth_client.post('/settings/create-default-investment-types', data={
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-        assert response.status_code == 200
-        assert b'Default investment types created successfully' in response.data
-
-        with app.app_context():
-            count = InvestmentType.query.count()
-            assert count > 0
-
-    def test_create_default_investment_types_redirects(self, auth_client):
-        """POST /settings/create-default-investment-types redirects to settings index."""
-        csrf = get_csrf_token(auth_client, '/settings/')
-        response = auth_client.post('/settings/create-default-investment-types', data={
-            'csrf_token': csrf,
-        }, follow_redirects=False)
-        assert response.status_code == 302
-        assert '/settings/' in response.headers.get('Location', '')
-
-
 class TestCreateDummyDataRoute:
     """Tests for POST /settings/create-dummy-data."""
 
     def test_create_dummy_data(self, auth_client, app, db):
         """POST /settings/create-dummy-data creates dummy transactions."""
-        # First create default categories, tags, and investment types
-        # because dummy data depends on them
-        csrf = get_csrf_token(auth_client, '/settings/')
-        auth_client.post('/settings/create-default-categories', data={
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-
-        csrf = get_csrf_token(auth_client, '/settings/')
-        auth_client.post('/settings/create-default-tags', data={
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-
-        csrf = get_csrf_token(auth_client, '/settings/')
-        auth_client.post('/settings/create-default-investment-types', data={
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-
         csrf = get_csrf_token(auth_client, '/settings/')
         response = auth_client.post('/settings/create-dummy-data', data={
             'csrf_token': csrf,
@@ -232,7 +188,7 @@ class TestCreateDummyDataRoute:
 class TestResetDatabaseRoute:
     """Tests for POST /settings/reset-database."""
 
-    def test_reset_database_clears_data(self, auth_client, app, db, sample_transaction, sample_investment):
+    def test_reset_database_clears_data(self, auth_client, app, db, sample_transaction):
         """POST /settings/reset-database removes all data from tables."""
         # Verify data exists first
         with app.app_context():
@@ -250,8 +206,6 @@ class TestResetDatabaseRoute:
             assert CashflowTransaction.query.count() == 0
             assert Category.query.count() == 0
             assert Tag.query.count() == 0
-            assert InvestmentTransaction.query.count() == 0
-            assert InvestmentType.query.count() == 0
 
     def test_reset_database_handles_empty_db(self, auth_client, app, db):
         """POST /settings/reset-database on empty database succeeds gracefully."""
@@ -333,15 +287,3 @@ class TestSettingsSeedDataIdempotency:
         }, follow_redirects=True)
         assert response.status_code == 200
 
-    def test_create_default_investment_types_twice(self, auth_client, app, db):
-        """Creating default investment types twice does not cause errors."""
-        csrf = get_csrf_token(auth_client, '/settings/')
-        auth_client.post('/settings/create-default-investment-types', data={
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-
-        csrf = get_csrf_token(auth_client, '/settings/')
-        response = auth_client.post('/settings/create-default-investment-types', data={
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-        assert response.status_code == 200

@@ -28,10 +28,9 @@ app.py (factory: create_app)
 **Key architectural decisions:**
 - Application factory pattern (`create_app()` in `app.py`)
 - Blueprint-per-domain with `url_prefix` (cashflow, category, tag, settings, auth, categorization_rule)
-- Investment routes/templates removed (models kept for future use)
 - Server-side rendering only — no SPA, no frontend build step, no npm
 - All JS is inline in templates (no separate .js files)
-- Hierarchical models via self-referential `parent_id` (Category, InvestmentType)
+- Hierarchical models via self-referential `parent_id` (Category)
 - Excel import uses bank-specific configs for parsing (`utils/bank_configs.py`)
 
 ## Code Conventions
@@ -104,8 +103,6 @@ User (id, username, password_hash)
 Category (id, name, parent_id FK→self) → has many CashflowTransaction
 Tag (id, name) ←→ CashflowTransaction (M2M via cashflow_transaction_tags)
 CashflowTransaction (id, date, type[income/expense], amount, description, category_id, source)
-InvestmentType (id, name, code, icon, color, parent_id FK→self) → has many InvestmentTransaction
-InvestmentTransaction (id, investment_type_id, transaction_date, transaction_type[buy/sell], price, quantity, total_amount, description)
 CategorizationRule (id, name, priority, is_active, field, operator, value, category_id, type_override) ←→ Tag (M2M)
 Settings (id, key, value)
 ```

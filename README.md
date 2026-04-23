@@ -1,6 +1,6 @@
 # Where's My Money? (track-finance)
 
-A self-hosted personal finance management web application built with Flask and PostgreSQL. Track your income and expenses, categorize transactions, manage investments, import bank statements from Excel/CSV files, and visualize your financial data through interactive dashboards -- all within a dark-themed, responsive UI.
+A self-hosted personal finance management web application built with Flask and PostgreSQL. Track your income and expenses, categorize transactions, import bank statements from Excel/CSV files, and visualize your financial data through interactive dashboards -- all within a dark-themed, responsive UI.
 
 Designed as a single-user, Docker-deployed application with integrated database administration via pgAdmin.
 
@@ -9,12 +9,11 @@ Designed as a single-user, Docker-deployed application with integrated database 
 - **Dashboard & Analytics** -- Interactive dashboard with KPI cards (income, expenses, net savings, transaction count), percentage change vs. previous period, and five Chart.js visualizations: monthly income vs. expense bars, expense-by-category doughnut with drill-down into subcategories, daily trend lines with 7-day moving averages, monthly net savings, and top 10 expense categories with drill-down.
 - **Cash Flow Management** -- Full CRUD for income and expense transactions with filtering by category, tag, type, date range, and description search. Bulk edit support for category and tag reassignment across multiple transactions.
 - **Hierarchical Categories & Tags** -- Self-referential parent/child category tree and flat tags with many-to-many transaction association. Transaction counts tracked per category and tag.
-- **Investment Tracking** -- Investment models exist for buy/sell transactions (stocks, ETFs, crypto, metals, currencies) but UI pages are currently disabled. Models and migrations are preserved for future use.
 - **Excel/CSV Import** -- Import bank statements from Yapi Kredi and Kuveyt Turk with automatic header detection, Turkish locale amount parsing, and column mapping. Supports `.xlsx`, `.xls`, and `.csv` formats.
 - **Dark Theme** -- Fully dark UI built with Tailwind CSS, custom color palette, and responsive design across desktop and mobile.
 - **PWA Support** -- Web app manifest with multiple icon sizes for home screen installation.
 - **Authentication** -- Single-user login with Flask-Login, Werkzeug password hashing, remember-me sessions (7 days), and automatic admin user creation on first run.
-- **Seed Data** -- One-click setup for default categories, tags, and investment types from the settings page, plus a dummy data generator for testing.
+- **Seed Data** -- One-click setup for default categories and tags from the settings page, plus a dummy data generator for testing.
 - **Security** -- CSRF protection on all forms, security headers (X-Frame-Options, HSTS in production, etc.), and production enforcement of a secure SECRET_KEY.
 
 ## Tech Stack
@@ -52,15 +51,12 @@ track-finance/
     category.py                 # Hierarchical categories (self-referential)
     tag.py                      # Transaction tags (many-to-many)
     cashflow.py                 # Cash flow transactions + junction table
-    investment.py               # Investment types + transactions
     settings.py                 # Key-value settings store
   routes/
     auth.py                     # Login, logout, account settings
     cashflow.py                 # Dashboard, transactions, import, bulk edit
     category.py                 # Category CRUD
     tag.py                      # Tag CRUD
-    investment.py               # Investment transaction CRUD
-    investment_type.py          # Investment type CRUD
     settings.py                 # App settings, seed data, DB reset
   utils/
     data_utils.py               # Seed data and dummy data generators
