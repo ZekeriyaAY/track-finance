@@ -36,11 +36,11 @@
               <div class="inline-flex items-center gap-2">
                 <span class="badge badge-positive">
                   <i data-lucide="plus" class="w-3 h-3"></i>
-                  {{ tag.get_income_count() }}
+                  {{ tag_counts.get(tag.id, {}).get('income', 0) }}
                 </span>
                 <span class="badge badge-negative">
                   <i data-lucide="minus" class="w-3 h-3"></i>
-                  {{ tag.get_expense_count() }}
+                  {{ tag_counts.get(tag.id, {}).get('expense', 0) }}
                 </span>
               </div>
             </td>

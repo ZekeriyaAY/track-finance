@@ -32,7 +32,7 @@
 
 - [x] **Pagination for transaction lists** — Cashflow index uses `.paginate()` with 25 per page. Summary totals reflect all filtered results. Pagination nav preserves filter params. Investment routes were removed.
 
-- [ ] **N+1 query optimization** — `models/category.py` `get_income_count()` and `get_expense_count()` methods execute a separate DB query for each category row. The same issue exists in `models/tag.py`. Solution: instead of Python-level loops, use a single aggregation query (SQLAlchemy `func.count()` + `group_by()`) to fetch all counts in one query.
+- [x] **N+1 query optimization** — Category and tag index pages now use a single aggregation query (`GROUP BY category_id/tag_id, type`) instead of per-row model methods. Parent category counts include subcategory totals. Model methods kept for backward compatibility.
 
 - [ ] **Add database indexes** — Indexes are missing on frequently filtered columns. Needed: `cashflow_transaction.date`, `cashflow_transaction.category_id`, `cashflow_transaction.type`, `settings.key`, `categorization_rule.is_active` + `categorization_rule.priority`. To be added via Alembic migration.
 

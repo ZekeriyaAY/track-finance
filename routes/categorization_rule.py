@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from sqlalchemy.orm import joinedload
 from models import db
 from models.categorization_rule import CategorizationRule
 from models.category import Category
@@ -14,7 +15,10 @@ VALID_OPERATORS = ['contains', 'equals', 'starts_with', 'ends_with']
 
 @categorization_rule_bp.route('/')
 def index():
-    rules = CategorizationRule.query.order_by(CategorizationRule.priority.asc()).all()
+    rules = CategorizationRule.query.order_by(CategorizationRule.priority.asc()).options(
+        joinedload(CategorizationRule.tags),
+        joinedload(CategorizationRule.category),
+    ).all()
     return render_template('categorization_rule/index.html', rules=rules)
 
 

@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from sqlalchemy import func, exists
 from models import db
 from models.category import Category
+from models.cashflow import CashflowTransaction
 import logging
 
 logger = logging.getLogger(__name__)
@@ -10,7 +12,34 @@ category_bp = Blueprint('category', __name__, url_prefix='/categories')
 @category_bp.route('/')
 def index():
     categories = Category.query.filter_by(parent_id=None).all()
-    return render_template('category/index.html', categories=categories)
+
+    # Single aggregation query for all category counts (replaces N+1 model methods)
+    raw_counts = db.session.query(
+        CashflowTransaction.category_id,
+        CashflowTransaction.type,
+        func.count(CashflowTransaction.id)
+    ).group_by(CashflowTransaction.category_id, CashflowTransaction.type).all()
+
+    per_cat = {}
+    for cat_id, txn_type, count in raw_counts:
+        if cat_id not in per_cat:
+            per_cat[cat_id] = {'income': 0, 'expense': 0}
+        per_cat[cat_id][txn_type] = count
+
+    # Build final counts: parent totals include subcategory totals
+    category_counts = {}
+    for parent in categories:
+        parent_income = per_cat.get(parent.id, {}).get('income', 0)
+        parent_expense = per_cat.get(parent.id, {}).get('expense', 0)
+        for sub in parent.subcategories:
+            sub_income = per_cat.get(sub.id, {}).get('income', 0)
+            sub_expense = per_cat.get(sub.id, {}).get('expense', 0)
+            category_counts[sub.id] = {'income': sub_income, 'expense': sub_expense}
+            parent_income += sub_income
+            parent_expense += sub_expense
+        category_counts[parent.id] = {'income': parent_income, 'expense': parent_expense}
+
+    return render_template('category/index.html', categories=categories, category_counts=category_counts)
 
 @category_bp.route('/add', methods=['GET', 'POST'])
 def add_category():
@@ -65,10 +94,10 @@ def edit_category(id):
 @category_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_category(id):
     category = db.get_or_404(Category, id)
-    if category.subcategories:
+    if db.session.query(exists().where(Category.parent_id == id)).scalar():
         flash('Remove subcategories first before deleting this category.', 'error')
         return redirect(url_for('category.index'))
-    if category.transactions:
+    if db.session.query(exists().where(CashflowTransaction.category_id == id)).scalar():
         flash("Can't delete — this category has linked transactions.", 'error')
         return redirect(url_for('category.index'))
     

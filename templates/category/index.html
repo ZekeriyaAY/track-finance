@@ -36,11 +36,11 @@
                 <div class="inline-flex items-center gap-2">
                   <span class="badge badge-positive">
                     <i data-lucide="plus" class="w-3 h-3"></i>
-                    {{ category.get_income_count() }}
+                    {{ category_counts.get(category.id, {}).get('income', 0) }}
                   </span>
                   <span class="badge badge-negative">
                     <i data-lucide="minus" class="w-3 h-3"></i>
-                    {{ category.get_expense_count() }}
+                    {{ category_counts.get(category.id, {}).get('expense', 0) }}
                   </span>
                 </div>
               </td>
@@ -71,11 +71,11 @@
                     <div class="inline-flex items-center gap-2">
                       <span class="badge badge-positive">
                         <i data-lucide="plus" class="w-3 h-3"></i>
-                        {{ subcategory.get_income_count() }}
+                        {{ category_counts.get(subcategory.id, {}).get('income', 0) }}
                       </span>
                       <span class="badge badge-negative">
                         <i data-lucide="minus" class="w-3 h-3"></i>
-                        {{ subcategory.get_expense_count() }}
+                        {{ category_counts.get(subcategory.id, {}).get('expense', 0) }}
                       </span>
                     </div>
                   </td>

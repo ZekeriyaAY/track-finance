@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
-from sqlalchemy import func, extract
+from sqlalchemy import func, extract, case
+from sqlalchemy.orm import joinedload
 from models import db
 from models.cashflow import CashflowTransaction
 from models.category import Category
@@ -132,7 +133,9 @@ def dashboard():
     monthly_net = [monthly_map[m]['income'] - monthly_map[m]['expense'] for m in sorted_months]
 
     # Category expense breakdown (parent view - aggregates child categories)
-    parent_categories = Category.query.filter_by(parent_id=None).all()
+    parent_categories = Category.query.filter_by(parent_id=None).options(
+        joinedload(Category.subcategories)
+    ).all()
     category_result = []
     for parent in parent_categories:
         category_ids = [parent.id] + [c.id for c in parent.subcategories]
@@ -271,23 +274,26 @@ def index():
         except ValueError:
             pass
 
-    # Summary totals from full filtered query (before pagination)
-    total_income = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
-        CashflowTransaction.id.in_(query.with_entities(CashflowTransaction.id)),
-        CashflowTransaction.type == 'income'
-    ).scalar()
-    total_expense = db.session.query(func.coalesce(func.sum(CashflowTransaction.amount), 0)).filter(
-        CashflowTransaction.id.in_(query.with_entities(CashflowTransaction.id)),
-        CashflowTransaction.type == 'expense'
-    ).scalar()
+    # Summary totals from full filtered query in a single pass
+    filtered_ids = query.with_entities(CashflowTransaction.id)
+    totals = db.session.query(
+        func.coalesce(func.sum(case((CashflowTransaction.type == 'income', CashflowTransaction.amount), else_=0)), 0),
+        func.coalesce(func.sum(case((CashflowTransaction.type == 'expense', CashflowTransaction.amount), else_=0)), 0),
+    ).filter(CashflowTransaction.id.in_(filtered_ids)).one()
+    total_income, total_expense = totals
 
-    # Paginate
-    pagination = query.order_by(CashflowTransaction.date.desc()).paginate(
+    # Paginate with eager loading (avoid N+1 for category/parent/tags)
+    pagination = query.order_by(CashflowTransaction.date.desc()).options(
+        joinedload(CashflowTransaction.category).joinedload(Category.parent),
+        joinedload(CashflowTransaction.tags),
+    ).paginate(
         page=page, per_page=CASHFLOW_PER_PAGE, error_out=False
     )
 
     # Get all categories and tags for filter dropdowns
-    categories = Category.query.filter_by(parent_id=None).all()
+    categories = Category.query.filter_by(parent_id=None).options(
+        joinedload(Category.subcategories)
+    ).all()
     tags = Tag.query.all()
 
     return render_template('cashflow/index.html',
@@ -584,7 +590,9 @@ def category_data_api():
 
     if view_mode == 'parent':
         # Parent categories with aggregated child totals
-        parent_categories = Category.query.filter_by(parent_id=None).all()
+        parent_categories = Category.query.filter_by(parent_id=None).options(
+            joinedload(Category.subcategories)
+        ).all()
         result = []
         for parent in parent_categories:
             cat_ids = [parent.id] + [c.id for c in parent.subcategories]
