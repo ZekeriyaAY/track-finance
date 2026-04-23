@@ -1,11 +1,12 @@
 ---
 title: Tag Component
 created: 2026-04-23
-updated: 2026-04-23
+updated: 2026-04-24
 status: draft
 sources:
   - routes/tag.py
   - models/tag.py
+  - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
 ---
 
 # Tag Component
@@ -32,7 +33,7 @@ Standard CRUD following [[route-handler]] pattern.
 
 ### Delete Protection
 
-Blocks deletion if `tag.transactions` exists ("has associated transactions").
+Blocks deletion using `EXISTS` subquery (not full relationship loading) if tag has associated transactions.
 
 ### Duplicate Prevention
 
@@ -44,9 +45,12 @@ On add/edit: checks `Tag.query.filter_by(name=name)` — unique name enforced.
 - Used in multi-select on cashflow transaction forms
 - Auto-created during Excel import (bank name becomes a tag)
 - Applied via categorization rules during import
+- Transaction counts pre-computed via GROUP BY in route — see [[pre-computed-counts]]
 
 ## Related
 
 - [[cashflow]]
 - [[categorization-rule]]
 - [[route-handler]]
+- [[pre-computed-counts]]
+- [[2026-04-23-major-cleanup]]

@@ -1,18 +1,19 @@
 ---
 title: Cashflow Component
 created: 2026-04-23
-updated: 2026-04-23
+updated: 2026-04-24
 status: draft
 sources:
   - routes/cashflow.py
   - models/cashflow.py
   - templates/cashflow/
   - commit:37a41c9
+  - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
 ---
 
 # Cashflow Component
 
-The core component of track-finance. Handles income/expense transactions — CRUD, dashboard analytics, Excel/CSV import, bank sync, and bulk editing.
+The core component of track-finance. Handles income/expense transactions — CRUD, dashboard analytics, Excel/CSV import, pagination, and bulk editing.
 
 ## Files
 
@@ -21,17 +22,16 @@ The core component of track-finance. Handles income/expense transactions — CRU
 | Route | `routes/cashflow.py` — Blueprint `cashflow_bp`, prefix `/cashflow` |
 | Model | `models/cashflow.py` — `CashflowTransaction` + `cashflow_transaction_tags` M2M table |
 | Templates | `templates/cashflow/dashboard.html`, `index.html`, `form.html`, `import.html` |
-| Utils | `utils/excel_processor.py`, `utils/bank_sync/` |
+| Utils | `utils/excel_processor.py` |
 
 ## Model: CashflowTransaction
 
 - **amount:** `Numeric(12, 2)` — never Float
 - **type:** `String(10)` — enum `income` or `expense`
-- **source:** `String(20)` — `manual`, `excel_import`, or `bank_sync`
+- **source:** `String(20)` — `manual` or `excel_import`
 - **category_id:** FK to `Category` (required)
 - **tags:** M2M via `cashflow_transaction_tags` association table
-- **external_transaction_id:** Indexed, used for deduplication with `bank_connection_id` (unique constraint `uq_external_txn_bank`)
-- **bank_connection_id:** FK to `BankConnection` (nullable, only for synced transactions)
+- **Indexes:** `date`, `category_id`, `type`, `source` (added for query performance)
 
 ## Routes
 
@@ -44,7 +44,7 @@ Dashboard with KPIs and charts. Features:
 - Category breakdown aggregates child categories under parent
 
 ### `GET /cashflow/`
-Transaction list with filters: category (includes subcategories), tag, type, date range, text search on description. Ordered by date descending.
+Transaction list with filters: category (includes subcategories), tag, type, date range, text search on description. Ordered by date descending. **Paginated** at 25 per page — see [[pagination]]. Uses `joinedload()` for category, parent, and tags to avoid N+1 queries — see [[pre-computed-counts]].
 
 ### `GET/POST /cashflow/add`
 Add new transaction. Form fields: date, amount, type (income/expense), category, tags (multi-select), description.
@@ -63,9 +63,6 @@ Excel/CSV import. Supports `.xlsx`, `.xls`, `.csv` via `werkzeug.utils.secure_fi
 4. Applies active `CategorizationRule`s (first match wins by priority)
 5. Saves transactions with `source='excel_import'`
 
-### `POST /cashflow/sync`
-Syncs all active `BankConnection`s. Calls `sync_bank_connection()` per connection. Reports new/skipped/error counts.
-
 ### `POST /cashflow/bulk-edit`
 Bulk update category and/or tags for multiple transactions. Tag mode: `replace` or `add`. Preserves filter params on redirect.
 
@@ -79,11 +76,18 @@ JSON API for category chart drill-down. Modes: `parent` (aggregated), `children_
 - Daily trend fills gaps (no missing days in x-axis)
 - Import uses `db.session.flush()` to get IDs for auto-created category/tag before committing
 - Bulk edit preserves current filter state via hidden form fields
+- Bulk edit floating bar uses `pointer-events-none` when hidden to avoid blocking pagination — [[bulk-edit-pointer-events]]
+- Currency symbol injected globally via [[context-processor]]
+- Summary bar merges count + pagination + income/expense/net into single footer row
 
 ## Related
 
 - [[category]]
 - [[tag]]
-- [[bank-sync]]
 - [[categorization-rule]]
 - [[route-handler]]
+- [[pagination]]
+- [[pre-computed-counts]]
+- [[context-processor]]
+- [[bulk-edit-pointer-events]]
+- [[2026-04-23-major-cleanup]]

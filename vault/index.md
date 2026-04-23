@@ -5,22 +5,19 @@
 
 ## Components
 
-- [[cashflow]] — Core component: transactions CRUD, dashboard analytics, Excel import, bank sync, bulk edit
+- [[cashflow]] — Core component: transactions CRUD, dashboard analytics, Excel import, pagination, bulk edit
 - [[category]] — Hierarchical transaction categories with parent/child relationships
 - [[tag]] — Flat labels for cross-cutting transaction classification (M2M)
-- [[investment]] — Buy/sell investment transactions (planned for UI removal)
-- [[investment-type]] — Hierarchical investment type classification
 - [[categorization-rule]] — Automatic categorization rules for imported transactions
 - [[auth]] — Single-user authentication via Flask-Login
-- [[settings]] — App settings, seed data, bank connections, database reset
-- [[bank-sync]] — Bank API integration with adapter pattern (planned for removal)
+- [[settings]] — App settings (currency, pgadmin URL), seed data, database reset
 
 ## Architecture
 
 - [[stack]] — Tech stack: Python/Flask/SQLAlchemy/PostgreSQL, Jinja2/Tailwind/Chart.js
 - [[factory-pattern]] — Application factory pattern in app.py
 - [[blueprint-pattern]] — One Flask Blueprint per domain
-- [[database-schema]] — PostgreSQL schema, constraints, conventions
+- [[database-schema]] — PostgreSQL schema, constraints, indexes
 - [[design-system]] — Dark theme colors, typography, CSS components
 - [[testing-strategy]] — pytest in Docker, test structure, enforcement
 - [[docker-setup]] — Docker Compose services, make commands, env vars
@@ -31,17 +28,23 @@
 - [[2026-01-15-dark-theme-only]] — Single dark theme, no light mode
 - [[2026-01-15-numeric-for-money]] — Numeric(12,2) for all money fields, never Float
 - [[2026-01-15-single-user]] — Single user only, no multi-tenancy
+- [[2026-04-23-remove-bank-sync-investment]] — Removed bank sync API and investment module entirely
 
 ## Patterns
 
 - [[route-handler]] — Standard Flask route handler pattern (GET/POST, try/except/rollback, PRG)
 - [[model-definition]] — SQLAlchemy model conventions (imports, types, timestamps)
 - [[hierarchical-data]] — Self-referential FK pattern for parent/child models
-- [[adapter-registry]] — Decorator-based adapter registry for bank sync
 - [[template-structure]] — Jinja2 template hierarchy and conventions
 - [[test-conventions]] — Test file organization, markers, fixtures, patterns
+- [[pre-computed-counts]] — GROUP BY counts in routes instead of N+1 model properties
+- [[context-processor]] — Flask context processor for global template variables
+- [[pagination]] — Server-side pagination with merged summary footer
 
 ## Bugs
+
+- [[bulk-edit-pointer-events]] — Bulk edit bar blocking pagination clicks (resolved)
+- [[toast-visibility]] — Toast notifications nearly transparent (open)
 
 ## Roadmap
 
@@ -50,3 +53,11 @@
 ## Syntheses
 
 ## Sources
+
+- [[2026-04-23-major-cleanup]] — Large cleanup: removed bank sync/investment, added pagination, fixed N+1, UI improvements
+
+## Archived
+
+- [[investment]] — Investment transaction tracking (removed 2026-04-24)
+- [[investment-type]] — Hierarchical investment classification (removed 2026-04-24)
+- [[adapter-registry]] — Bank sync adapter registry pattern (removed 2026-04-24)

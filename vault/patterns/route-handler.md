@@ -1,12 +1,13 @@
 ---
 title: Route Handler Pattern
 created: 2026-04-23
-updated: 2026-04-23
+updated: 2026-04-24
 status: draft
 sources:
   - CLAUDE.md
   - routes/cashflow.py
   - routes/category.py
+  - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
 ---
 
 # Route Handler Pattern
@@ -98,7 +99,7 @@ def delete_resource(id):
     return redirect(url_for('blueprint.index'))
 ```
 
-**Delete protection:** For models with children (Category, InvestmentType), check for child records/transactions before allowing deletion.
+**Delete protection:** For models with children (Category), check for child records/transactions before allowing deletion. Use `EXISTS` subqueries for delete checks (not full relationship loading) — see [[pre-computed-counts]].
 
 ## Filter/List Pattern
 
@@ -113,9 +114,16 @@ def index():
     return render_template('feature/index.html', items=items)
 ```
 
+## Pagination Pattern
+
+For list views with many records, use `.paginate()` instead of `.all()` — see [[pagination]].
+
 ## Related
 
 - [[cashflow]]
 - [[model-definition]]
 - [[template-structure]]
 - [[2026-01-15-no-spa]]
+- [[pagination]]
+- [[pre-computed-counts]]
+- [[2026-04-23-major-cleanup]]

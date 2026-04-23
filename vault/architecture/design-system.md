@@ -1,12 +1,13 @@
 ---
 title: Design System
 created: 2026-04-23
-updated: 2026-04-23
+updated: 2026-04-24
 status: draft
 sources:
   - docs/DESIGN_SYSTEM.md
   - CLAUDE.md
   - static/css/style.css
+  - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
 ---
 
 # Design System
@@ -35,15 +36,24 @@ CSS component classes (not Tailwind utilities): `.btn-primary`, `.btn-secondary`
 ## Icons
 
 - **Primary:** Lucide Icons via `<i data-lucide="icon-name"></i>`
-- **Legacy:** Font Awesome only for `InvestmentType` custom icons
+- Font Awesome dependency removed (was only used for investment type icons, now archived)
 
 ## Layout
 
+- Full-width content (no `max-w-7xl` constraint) — changed in commit `37b6d71`
 - Sidebar navigation: collapsed 64px, expanded 240px overlay
 - Spacing via Tailwind utilities
 - Mobile-responsive with `md:`, `lg:` breakpoints
+- Counter animations support `data-suffix` attribute for currency symbols
+
+## Known Issues
+
+- Toast notifications are nearly transparent and hard to read — [[toast-visibility]]
 
 ## Related
 
 - [[template-structure]]
 - [[2026-01-15-no-spa]]
+- [[context-processor]]
+- [[toast-visibility]]
+- [[2026-04-23-major-cleanup]]

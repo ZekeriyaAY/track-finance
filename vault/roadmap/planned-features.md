@@ -1,27 +1,37 @@
 ---
 title: Planned Features & Technical Debt
 created: 2026-04-23
-updated: 2026-04-23
+updated: 2026-04-24
 status: draft
 sources:
   - docs/PLAN.md
+  - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
 ---
 
 # Planned Features & Technical Debt
 
 Tracked in `docs/PLAN.md`. Grouped by category.
 
-## Existing Feature Changes
+## Completed (Session 2026-04-23)
 
-- **Remove bank integrations** — Clean up Settings bank connections section, Cashflow sync button, `utils/bank_sync/` code
-- **Remove investment pages** — Disable UI access (keep models/migrations)
-- **Dynamic currency selection** — Replace static `₺` with user-selected currency on Settings page
-- **Full-width page layout** — Remove `max-w-7xl` constraint, use full width with sidebar
+The following items were completed in [[2026-04-23-major-cleanup]]:
+- ~~Remove bank integrations~~ → [[2026-04-23-remove-bank-sync-investment]]
+- ~~Remove investment pages~~ → fully removed (models, routes, templates, migrations)
+- ~~Dynamic currency selection~~ → [[context-processor]]
+- ~~Full-width page layout~~ → removed `max-w-7xl`
+- ~~Friendly empty state messages~~ → rewrote across 4 templates
+- ~~Friendly toast/flash messages~~ → updated across 6 route files
+- ~~Pagination~~ → [[pagination]]
+- ~~N+1 query optimization~~ → [[pre-computed-counts]]
+- ~~Database indexes~~ → added on frequently queried columns
+- ~~Legacy Query.get() cleanup~~ → replaced 14 occurrences with `db.session.get()`
 
-## UX Improvements
+## Open Bug
 
-- **Friendly empty state messages** — Casual, personable empty table messages
-- **Friendly toast/flash messages** — More human flash messages
+- **Toast notification visibility** — Toast messages are nearly transparent and hard to read — [[toast-visibility]]
+
+## Remaining UX Improvements
+
 - **Recurring transaction templates** — `CashflowTemplate` model for auto-fill
 - **Filter panel as drawer on mobile** — Bottom-sheet filter UI
 
@@ -31,12 +41,8 @@ Tracked in `docs/PLAN.md`. Grouped by category.
 - **Weekly view** — Weekly trend option alongside monthly/daily
 - **Budget/limit alerts** — `CategoryBudget` model with threshold warnings
 
-## Performance & Technical Debt
+## Remaining Performance & Technical Debt
 
-- **Pagination** — Replace `.all()` with `.paginate()` for transaction lists
-- **N+1 query optimization** — Replace Python loops with `func.count() + group_by()`
-- **Database indexes** — Add indexes on `date`, `category_id`, `type`, `settings.key`
-- **Legacy Query.get() cleanup** — 22 test warnings, update to `db.session.get()`
 - **Docker container timezone** — Set `TZ=Europe/Istanbul` or make date comparisons timezone-aware
 
 ## Data Management
@@ -55,5 +61,5 @@ Tracked in `docs/PLAN.md`. Grouped by category.
 
 - [[cashflow]]
 - [[settings]]
-- [[investment]]
-- [[bank-sync]]
+- [[2026-04-23-major-cleanup]]
+- [[toast-visibility]]

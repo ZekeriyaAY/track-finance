@@ -1,11 +1,12 @@
 ---
 title: Categorization Rule Component
 created: 2026-04-23
-updated: 2026-04-23
+updated: 2026-04-24
 status: draft
 sources:
   - routes/categorization_rule.py
   - models/categorization_rule.py
+  - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
 ---
 
 # Categorization Rule Component
@@ -54,9 +55,15 @@ JSON endpoint for drag-and-drop reordering. Receives `rule_ids[]` array, sets `p
 - Operator validation against `VALID_OPERATORS` constant
 - No delete protection — rules can be freely deleted
 
+## Performance
+
+Index page uses `joinedload()` for category and tags to avoid N+1 queries — see [[pre-computed-counts]].
+
 ## Related
 
 - [[cashflow]]
 - [[category]]
 - [[tag]]
 - [[route-handler]]
+- [[pre-computed-counts]]
+- [[2026-04-23-major-cleanup]]
