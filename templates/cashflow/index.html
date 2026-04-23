@@ -151,16 +151,48 @@
       </table>
       </div>
 
-      <!-- Summary -->
-      <div class="card-footer flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-sm">
-        <span class="text-[var(--text-muted)]">
+      <!-- Summary & Pagination -->
+      <div class="card-footer flex flex-col lg:flex-row lg:justify-between lg:items-center gap-3 text-sm">
+        <span class="text-[var(--text-muted)] shrink-0">
           {% if pagination.pages > 1 %}
           Showing <span class="text-[var(--text-primary)] font-medium">{{ ((pagination.page - 1) * pagination.per_page) + 1 }}–{{ [pagination.page * pagination.per_page, pagination.total] | min }}</span> of <span class="text-[var(--text-primary)] font-medium">{{ pagination.total }}</span>
           {% else %}
           Showing <span class="text-[var(--text-primary)] font-medium">{{ pagination.total }}</span> transaction(s)
           {% endif %}
         </span>
-        <div class="flex flex-wrap gap-3 sm:gap-6">
+
+        {% if pagination.pages > 1 %}
+        <nav class="flex items-center gap-0.5 shrink-0">
+          {% if pagination.has_prev %}
+          <a href="{{ url_for('cashflow.index', page=pagination.prev_num, category_id=selected_category, tag_id=selected_tag, type=selected_type, date_from=selected_date_from, date_to=selected_date_to, search=selected_search) }}"
+             class="inline-flex items-center justify-center min-w-[36px] h-9 px-2 rounded-md text-[var(--text-secondary)] hover:bg-[var(--bg-overlay)] transition-colors">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+          </a>
+          {% endif %}
+
+          {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+            {% if p %}
+              {% if p == pagination.page %}
+              <span class="inline-flex items-center justify-center min-w-[36px] h-9 px-2 rounded-md text-sm font-medium bg-[var(--primary)] text-white">{{ p }}</span>
+              {% else %}
+              <a href="{{ url_for('cashflow.index', page=p, category_id=selected_category, tag_id=selected_tag, type=selected_type, date_from=selected_date_from, date_to=selected_date_to, search=selected_search) }}"
+                 class="inline-flex items-center justify-center min-w-[36px] h-9 px-2 rounded-md text-sm text-[var(--text-secondary)] hover:bg-[var(--bg-overlay)] transition-colors">{{ p }}</a>
+              {% endif %}
+            {% else %}
+              <span class="inline-flex items-center justify-center min-w-[24px] h-9 text-[var(--text-muted)]">...</span>
+            {% endif %}
+          {% endfor %}
+
+          {% if pagination.has_next %}
+          <a href="{{ url_for('cashflow.index', page=pagination.next_num, category_id=selected_category, tag_id=selected_tag, type=selected_type, date_from=selected_date_from, date_to=selected_date_to, search=selected_search) }}"
+             class="inline-flex items-center justify-center min-w-[36px] h-9 px-2 rounded-md text-[var(--text-secondary)] hover:bg-[var(--bg-overlay)] transition-colors">
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </a>
+          {% endif %}
+        </nav>
+        {% endif %}
+
+        <div class="flex flex-wrap gap-3 sm:gap-6 shrink-0">
           <span class="amount amount-positive">
             <i data-lucide="trending-up" class="w-3.5 h-3.5 inline-block align-text-bottom mr-1"></i>
             Income: {{ "%.2f"|format(total_income) }} {{ currency_symbol }}
@@ -174,40 +206,6 @@
           </span>
         </div>
       </div>
-
-      <!-- Pagination -->
-      {% if pagination.pages > 1 %}
-      <div class="card-footer flex justify-center">
-        <nav class="flex items-center gap-1">
-          {% if pagination.has_prev %}
-          <a href="{{ url_for('cashflow.index', page=pagination.prev_num, category_id=selected_category, tag_id=selected_tag, type=selected_type, date_from=selected_date_from, date_to=selected_date_to, search=selected_search) }}"
-             class="btn btn-ghost btn-sm">
-            <i data-lucide="chevron-left" class="w-4 h-4"></i>
-          </a>
-          {% endif %}
-
-          {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
-            {% if p %}
-              {% if p == pagination.page %}
-              <span class="btn btn-primary btn-sm min-w-[36px] justify-center">{{ p }}</span>
-              {% else %}
-              <a href="{{ url_for('cashflow.index', page=p, category_id=selected_category, tag_id=selected_tag, type=selected_type, date_from=selected_date_from, date_to=selected_date_to, search=selected_search) }}"
-                 class="btn btn-ghost btn-sm min-w-[36px] justify-center">{{ p }}</a>
-              {% endif %}
-            {% else %}
-              <span class="text-[var(--text-muted)] px-1">...</span>
-            {% endif %}
-          {% endfor %}
-
-          {% if pagination.has_next %}
-          <a href="{{ url_for('cashflow.index', page=pagination.next_num, category_id=selected_category, tag_id=selected_tag, type=selected_type, date_from=selected_date_from, date_to=selected_date_to, search=selected_search) }}"
-             class="btn btn-ghost btn-sm">
-            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-          </a>
-          {% endif %}
-        </nav>
-      </div>
-      {% endif %}
     {% else %}
       <div class="empty-state">
         <i data-lucide="arrow-left-right" class="empty-state-icon"></i>
