@@ -228,7 +228,7 @@
 <!-- Bulk Edit Floating Bar -->
 {% if transactions %}
 <div class="fixed bottom-5 left-0 right-0 flex justify-center z-50 pointer-events-none">
-  <div id="bulk-bar" class="pointer-events-auto opacity-0 translate-y-4 scale-95 transition-all duration-200">
+  <div id="bulk-bar" class="pointer-events-none opacity-0 translate-y-4 scale-95 transition-all duration-200">
     <form method="POST" action="{{ url_for('cashflow.bulk_edit') }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div id="bulk-ids"></div>
@@ -321,9 +321,11 @@
     bulkCount.textContent = count;
 
     if (count > 0) {
-      bulkBar.classList.remove('opacity-0', 'translate-y-4', 'scale-95');
+      bulkBar.classList.remove('opacity-0', 'translate-y-4', 'scale-95', 'pointer-events-none');
+      bulkBar.classList.add('pointer-events-auto');
     } else {
-      bulkBar.classList.add('opacity-0', 'translate-y-4', 'scale-95');
+      bulkBar.classList.add('opacity-0', 'translate-y-4', 'scale-95', 'pointer-events-none');
+      bulkBar.classList.remove('pointer-events-auto');
       tagsPopover.classList.add('hidden');
     }
 
