@@ -135,8 +135,6 @@ def create_app(config_name=None):
     from routes.cashflow import cashflow_bp
     from routes.category import category_bp
     from routes.tag import tag_bp
-    from routes.investment import investment_bp
-    from routes.investment_type import investment_type_bp
     from routes.settings import settings_bp
     from routes.auth import auth_bp
     from routes.categorization_rule import categorization_rule_bp
@@ -146,8 +144,6 @@ def create_app(config_name=None):
     app.register_blueprint(cashflow_bp)
     app.register_blueprint(category_bp)
     app.register_blueprint(tag_bp)
-    app.register_blueprint(investment_bp)
-    app.register_blueprint(investment_type_bp)
     app.register_blueprint(settings_bp)
     app.register_blueprint(categorization_rule_bp)
     

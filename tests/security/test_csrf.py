@@ -9,7 +9,6 @@ from datetime import date, datetime
 from models.category import Category
 from models.tag import Tag
 from models.cashflow import CashflowTransaction
-from models.investment import InvestmentType, InvestmentTransaction
 from models import db as _db
 
 
@@ -135,66 +134,6 @@ class TestCSRFProtectionMissingToken:
         response = auth_client.post(f'/tags/delete/{sample_tag.id}')
         assert response.status_code == 400
 
-    # ---- Investment endpoints ----
-
-    def test_investment_add_requires_csrf(self, auth_client, sample_investment_type):
-        """POST /investments/add without CSRF token returns 400."""
-        response = auth_client.post('/investments/add', data={
-            'investment_type_id': str(sample_investment_type.id),
-            'transaction_date': '2024-01-15',
-            'transaction_type': 'buy',
-            'price': '100.00',
-            'quantity': '5',
-            'description': 'Test',
-        })
-        assert response.status_code == 400
-
-    def test_investment_edit_requires_csrf(self, auth_client, sample_investment):
-        """POST /investments/edit/<id> without CSRF token returns 400."""
-        response = auth_client.post(f'/investments/edit/{sample_investment.id}', data={
-            'investment_type_id': str(sample_investment.investment_type_id),
-            'transaction_date': '2024-01-15',
-            'transaction_type': 'buy',
-            'price': '200.00',
-            'quantity': '10',
-            'description': 'Updated',
-        })
-        assert response.status_code == 400
-
-    def test_investment_delete_requires_csrf(self, auth_client, sample_investment):
-        """POST /investments/delete/<id> without CSRF token returns 400."""
-        response = auth_client.post(f'/investments/delete/{sample_investment.id}')
-        assert response.status_code == 400
-
-    # ---- Investment Type endpoints ----
-
-    def test_investment_type_add_requires_csrf(self, auth_client):
-        """POST /investment-types/add without CSRF token returns 400."""
-        response = auth_client.post('/investment-types/add', data={
-            'name': 'Gold',
-            'code': 'gold',
-            'icon': 'fas fa-coins',
-            'color': '#FFD700',
-            'parent_id': '',
-        })
-        assert response.status_code == 400
-
-    def test_investment_type_edit_requires_csrf(self, auth_client, sample_investment_type):
-        """POST /investment-types/edit/<id> without CSRF token returns 400."""
-        response = auth_client.post(f'/investment-types/edit/{sample_investment_type.id}', data={
-            'name': 'Renamed Type',
-            'code': 'renamed',
-            'icon': 'fas fa-coins',
-            'color': '#FFD700',
-            'parent_id': '',
-        })
-        assert response.status_code == 400
-
-    def test_investment_type_delete_requires_csrf(self, auth_client, sample_investment_type):
-        """POST /investment-types/delete/<id> without CSRF token returns 400."""
-        response = auth_client.post(f'/investment-types/delete/{sample_investment_type.id}')
-        assert response.status_code == 400
-
     # ---- Settings endpoints ----
 
     def test_update_pgadmin_url_requires_csrf(self, auth_client):
@@ -269,19 +208,6 @@ class TestCSRFProtectionInvalidToken:
             'category_id': str(sample_category.id),
             'description': 'Test',
             'csrf_token': 'wrong-token-123',
-        })
-        assert response.status_code == 400
-
-    def test_investment_add_rejects_invalid_csrf(self, auth_client, sample_investment_type):
-        """POST /investments/add with invalid CSRF token returns 400."""
-        response = auth_client.post('/investments/add', data={
-            'investment_type_id': str(sample_investment_type.id),
-            'transaction_date': '2024-01-15',
-            'transaction_type': 'buy',
-            'price': '100.00',
-            'quantity': '5',
-            'description': 'Test',
-            'csrf_token': 'bad-csrf-value',
         })
         assert response.status_code == 400
 

@@ -20,10 +20,6 @@
                 <span class="sidebar-link-icon"><i data-lucide="arrow-left-right" class="w-5 h-5"></i></span>
                 <span class="sidebar-link-text">Cash Flow</span>
             </a>
-            <a href="{{ url_for('investment.index') }}" class="sidebar-link {% if request.endpoint in ['investment.index', 'investment.add_investment', 'investment.edit_investment'] %}active{% endif %}" title="Investments">
-                <span class="sidebar-link-icon"><i data-lucide="line-chart" class="w-5 h-5"></i></span>
-                <span class="sidebar-link-text">Investments</span>
-            </a>
 
             <!-- Divider -->
             <div class="my-2 mx-2 border-t border-[rgba(255,255,255,0.04)]"></div>
@@ -35,10 +31,6 @@
             <a href="{{ url_for('tag.index') }}" class="sidebar-link {% if request.endpoint in ['tag.index', 'tag.add_tag', 'tag.edit_tag'] %}active{% endif %}" title="Tags">
                 <span class="sidebar-link-icon"><i data-lucide="tag" class="w-5 h-5"></i></span>
                 <span class="sidebar-link-text">Tags</span>
-            </a>
-            <a href="{{ url_for('investment_type.index') }}" class="sidebar-link {% if request.endpoint in ['investment_type.index', 'investment_type.add_investment_type', 'investment_type.edit_investment_type'] %}active{% endif %}" title="Investment Types">
-                <span class="sidebar-link-icon"><i data-lucide="coins" class="w-5 h-5"></i></span>
-                <span class="sidebar-link-text">Investment Types</span>
             </a>
             <a href="{{ url_for('categorization_rule.index') }}" class="sidebar-link {% if request.endpoint in ['categorization_rule.index', 'categorization_rule.add_rule', 'categorization_rule.edit_rule'] %}active{% endif %}" title="Import Rules">
                 <span class="sidebar-link-icon"><i data-lucide="wand-2" class="w-5 h-5"></i></span>

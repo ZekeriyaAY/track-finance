@@ -4,7 +4,7 @@
 
 - [x] **Remove bank integrations** — Removed: BankConnection model, utils/bank_sync/, Settings bank connections section, Cashflow sync button, related tests. Migration: `77a5c92582fe`.
 
-- [ ] **Remove investment pages** — Investment pages are not currently in active use. They should be removed from the sidebar, routes, and templates. Models and migrations can be kept; only UI access should be disabled.
+- [x] **Remove investment pages** — Removed: routes, templates, sidebar links, and related tests. Models and migrations kept for future use.
 
 - [ ] **Dynamic currency selection** — Instead of the currency being statically set to ₺, users should be able to choose their own currency. A currency option on the Settings page, and amount formatting and symbol display should be dynamic across all pages.
 

@@ -27,7 +27,8 @@ app.py (factory: create_app)
 
 **Key architectural decisions:**
 - Application factory pattern (`create_app()` in `app.py`)
-- Blueprint-per-domain with `url_prefix` (cashflow, category, tag, investment, investment_type, settings, auth, categorization_rule)
+- Blueprint-per-domain with `url_prefix` (cashflow, category, tag, settings, auth, categorization_rule)
+- Investment routes/templates removed (models kept for future use)
 - Server-side rendering only — no SPA, no frontend build step, no npm
 - All JS is inline in templates (no separate .js files)
 - Hierarchical models via self-referential `parent_id` (Category, InvestmentType)

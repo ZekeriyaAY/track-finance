@@ -8,7 +8,6 @@ from datetime import date, datetime
 from models.category import Category
 from models.tag import Tag
 from models.cashflow import CashflowTransaction
-from models.investment import InvestmentType, InvestmentTransaction
 from models import db as _db
 from tests.conftest import get_csrf_token
 
@@ -66,24 +65,6 @@ class TestXSSPrevention:
         response = auth_client.get('/cashflow/')
         html = response.data.decode()
         assert '<script>document.cookie</script>' not in html
-
-    def test_xss_in_investment_description_escaped(self, auth_client, sample_investment_type):
-        """XSS payload in investment description is escaped."""
-        csrf = get_csrf_token(auth_client, '/investments/add')
-        xss_payload = '"><script>alert(1)</script>'
-        auth_client.post('/investments/add', data={
-            'investment_type_id': str(sample_investment_type.id),
-            'transaction_date': '2024-06-15',
-            'transaction_type': 'buy',
-            'price': '100.00',
-            'quantity': '1',
-            'description': xss_payload,
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-
-        response = auth_client.get('/investments/')
-        html = response.data.decode()
-        assert '<script>alert(1)</script>' not in html
 
     def test_xss_in_search_parameter_escaped(self, auth_client, sample_category):
         """XSS in search query string is escaped in response."""
@@ -176,21 +157,6 @@ class TestInvalidTransactionType:
             'type': '',
             'category_id': str(sample_category.id),
             'description': 'Empty type test',
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-        assert response.status_code == 200
-        assert b'Invalid transaction type' in response.data
-
-    def test_invalid_investment_type_rejected(self, auth_client, sample_investment_type):
-        """Investment transaction with type not in (buy, sell) is rejected."""
-        csrf = get_csrf_token(auth_client, '/investments/add')
-        response = auth_client.post('/investments/add', data={
-            'investment_type_id': str(sample_investment_type.id),
-            'transaction_date': '2024-06-15',
-            'transaction_type': 'hold',  # Invalid type
-            'price': '100.00',
-            'quantity': '5',
-            'description': 'Invalid type test',
             'csrf_token': csrf,
         }, follow_redirects=True)
         assert response.status_code == 200
@@ -305,21 +271,6 @@ class TestOversizedInput:
             'amount': '100.00',
             'type': 'expense',
             'category_id': str(sample_category.id),
-            'description': long_desc,
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-        assert response.status_code == 200
-
-    def test_oversized_investment_description(self, auth_client, sample_investment_type):
-        """Very long investment description should be handled without crash."""
-        csrf = get_csrf_token(auth_client, '/investments/add')
-        long_desc = 'Y' * 50000
-        response = auth_client.post('/investments/add', data={
-            'investment_type_id': str(sample_investment_type.id),
-            'transaction_date': '2024-06-15',
-            'transaction_type': 'buy',
-            'price': '100.00',
-            'quantity': '1',
             'description': long_desc,
             'csrf_token': csrf,
         }, follow_redirects=True)

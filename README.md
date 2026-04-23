@@ -9,7 +9,7 @@ Designed as a single-user, Docker-deployed application with integrated database 
 - **Dashboard & Analytics** -- Interactive dashboard with KPI cards (income, expenses, net savings, transaction count), percentage change vs. previous period, and five Chart.js visualizations: monthly income vs. expense bars, expense-by-category doughnut with drill-down into subcategories, daily trend lines with 7-day moving averages, monthly net savings, and top 10 expense categories with drill-down.
 - **Cash Flow Management** -- Full CRUD for income and expense transactions with filtering by category, tag, type, date range, and description search. Bulk edit support for category and tag reassignment across multiple transactions.
 - **Hierarchical Categories & Tags** -- Self-referential parent/child category tree and flat tags with many-to-many transaction association. Transaction counts tracked per category and tag.
-- **Investment Tracking** -- Record buy/sell transactions for configurable investment types (stocks, ETFs, crypto, metals, currencies) organized in a parent/child hierarchy with custom icons and colors.
+- **Investment Tracking** -- Investment models exist for buy/sell transactions (stocks, ETFs, crypto, metals, currencies) but UI pages are currently disabled. Models and migrations are preserved for future use.
 - **Excel/CSV Import** -- Import bank statements from Yapi Kredi and Kuveyt Turk with automatic header detection, Turkish locale amount parsing, and column mapping. Supports `.xlsx`, `.xls`, and `.csv` formats.
 - **Dark Theme** -- Fully dark UI built with Tailwind CSS, custom color palette, and responsive design across desktop and mobile.
 - **PWA Support** -- Web app manifest with multiple icon sizes for home screen installation.

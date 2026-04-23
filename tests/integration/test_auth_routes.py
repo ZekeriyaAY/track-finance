@@ -293,8 +293,6 @@ class TestAuthRequirement:
             '/cashflow/dashboard',
             '/categories/',
             '/tags/',
-            '/investments/',
-            '/investment-types/',
             '/settings/',
         ]
         for url in protected_urls:
