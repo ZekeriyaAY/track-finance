@@ -1,12 +1,13 @@
 ---
 title: Auth Component
 created: 2026-04-23
-updated: 2026-04-23
+updated: 2026-04-24
 status: draft
 sources:
   - routes/auth.py
   - models/user.py
   - app.py
+  - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
 ---
 
 # Auth Component
@@ -38,6 +39,7 @@ Single-user authentication via Flask-Login. No registration — admin user auto-
 - Supports `remember` checkbox
 - Safe `next` redirect (validates starts with `/` and not `//`)
 - Logs success/failure with IP address
+- Friendly flash messages (updated in commit `c2e8e1c`)
 
 ### `GET /auth/logout`
 Requires login. Logs out and redirects to login page.
@@ -46,10 +48,10 @@ Requires login. Logs out and redirects to login page.
 Account settings page (password/username change forms).
 
 ### `POST /auth/change-password`
-Validates current password, minimum 6 chars, confirmation match.
+Validates current password, minimum 6 chars, confirmation match. Friendly feedback messages.
 
 ### `POST /auth/change-username`
-Requires password re-entry. Validates minimum 3 chars, not same as current.
+Requires password re-entry. Validates minimum 3 chars, not same as current. Friendly feedback messages.
 
 ## App-Level Auth Setup (app.py)
 
@@ -61,3 +63,4 @@ Requires password re-entry. Validates minimum 3 chars, not same as current.
 ## Related
 
 - [[route-handler]]
+- [[2026-04-23-major-cleanup]]

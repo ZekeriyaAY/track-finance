@@ -1,12 +1,12 @@
 ---
 title: Hierarchical Data Pattern
 created: 2026-04-23
-updated: 2026-04-23
+updated: 2026-04-24
 status: draft
 sources:
   - models/category.py
-  - models/investment.py
   - CLAUDE.md
+  - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
 ---
 
 # Hierarchical Data Pattern
@@ -26,7 +26,8 @@ class Category(db.Model):
 ## Used By
 
 - **Category** — `parent_id → category.id`, relationship: `subcategories` / `parent`
-- **InvestmentType** — `parent_id → investment_type.id`, relationship: `children` / `parent`
+
+> Previously also used by **InvestmentType**, which was fully removed — see [[2026-04-23-remove-bank-sync-investment]].
 
 ## Query Patterns
 
@@ -54,6 +55,6 @@ Check for children AND transactions before allowing deletion.
 ## Related
 
 - [[category]]
-- [[investment-type]]
 - [[model-definition]]
 - [[database-schema]]
+- [[2026-04-23-remove-bank-sync-investment]]

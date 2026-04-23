@@ -1,11 +1,12 @@
 ---
 title: Application Factory Pattern
 created: 2026-04-23
-updated: 2026-04-23
+updated: 2026-04-24
 status: draft
 sources:
   - app.py
   - CLAUDE.md
+  - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
 ---
 
 # Application Factory Pattern
@@ -21,9 +22,10 @@ The app uses Flask's application factory pattern via `create_app()` in `app.py`.
 3. **Logging**: Sets up `RotatingFileHandler` (10MB, 5 backups) + console handler
 4. **Extensions**: Initializes `db`, `Migrate`, `CSRFProtect`, `LoginManager`
 5. **Middleware**: `add_security_headers` (after_request), `log_request_info` (before_request), `require_login` (before_request)
-6. **Blueprints**: Registers all 8 blueprints
-7. **Admin user**: `ensure_admin_user` before_request creates default admin on first run (runs once)
-8. **Routes**: Root `/` redirects to dashboard, `/health` endpoint for load balancers
+6. **Blueprints**: Registers all 6 blueprints (see [[blueprint-pattern]])
+7. **Context processor**: Injects global settings (`currency_symbol`, `pgadmin_url`) into all templates — see [[context-processor]]
+8. **Admin user**: `ensure_admin_user` before_request creates default admin on first run (runs once)
+9. **Routes**: Root `/` redirects to dashboard, `/health` endpoint for load balancers
 
 ## Security Headers
 
@@ -43,3 +45,5 @@ Applied to every response:
 - [[blueprint-pattern]]
 - [[stack]]
 - [[auth]]
+- [[context-processor]]
+- [[2026-04-23-major-cleanup]]

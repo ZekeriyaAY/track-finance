@@ -131,7 +131,7 @@ Settings (id, key, value)
 - **Forms:** `.form-control` dark inputs with `bg-elevated` background
 - **Tables:** `.table` class with hover states, `.amount` for money formatting
 - **Flash messages:** Toast notifications — success (green), danger (red), warning (yellow), info (blue)
-- **Icons:** Lucide icons (primary), Font Awesome (legacy for investment type custom icons only)
+- **Icons:** Lucide icons via CDN
 - **Typography:** `.text-display`, `.text-h1`, `.text-h2`, `.text-h3`, `.text-body`, `.text-caption`
 - **Badges:** `.badge-positive`, `.badge-negative`, `.badge-warning`, `.badge-info`
 - **Empty states:** `.empty-state` component with icon + message + CTA
@@ -145,7 +145,7 @@ Settings (id, key, value)
 - CSRF token required in ALL POST forms: `<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">`
 - Mobile-responsive: use Tailwind responsive prefixes (`md:`, `lg:`)
 - No external JS files — all JavaScript inline in `<script>` tags within templates
-- Icons: use Lucide icons via `<i data-lucide="icon-name"></i>` (Font Awesome only for legacy investment type icons)
+- Icons: use Lucide icons via `<i data-lucide="icon-name"></i>`
 
 ## Testing (MANDATORY)
 
@@ -226,7 +226,7 @@ tests/
 - [ ] CSRF hidden input in all forms
 - [ ] Flash message display via base template
 - [ ] Consistent card/form layout matching existing pages
-- [ ] Lucide icons where appropriate (Font Awesome only for legacy investment type icons)
+- [ ] Lucide icons where appropriate
 
 ### Database Changes
 - [ ] Alembic migration generated and tested
