@@ -13,10 +13,10 @@
         <!-- Date Preset Buttons -->
         <div class="flex flex-wrap gap-2">
             <button type="button" data-preset="current-month" onclick="setDatePreset('current-month')" class="preset-btn btn btn-ghost btn-sm">
-                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> This Month
+                This Month
             </button>
             <button type="button" data-preset="last-month" onclick="setDatePreset('last-month')" class="preset-btn btn btn-ghost btn-sm">
-                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Last Month
+                Last Month
             </button>
             <button type="button" data-preset="last-30-days" onclick="setDatePreset('last-30-days')" class="preset-btn btn btn-ghost btn-sm">
                 30 Days
@@ -28,7 +28,7 @@
                 6 Months
             </button>
             <button type="button" data-preset="last-year" onclick="setDatePreset('last-year')" class="preset-btn btn btn-ghost btn-sm">
-                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 1 Year
+                1 Year
             </button>
         </div>
 
@@ -45,7 +45,7 @@
 
         <!-- Action Buttons -->
         <div class="flex gap-2">
-            <button type="submit" class="btn btn-secondary btn-sm">
+            <button type="submit" class="btn btn-primary btn-sm">
                 <i data-lucide="filter" class="w-4 h-4"></i> Filter
             </button>
             <a href="{{ url_for('cashflow.dashboard') }}" class="btn btn-ghost btn-sm">

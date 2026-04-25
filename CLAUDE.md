@@ -120,7 +120,7 @@ Settings (id, key, value)
 | `positive` | `#6dba8a` | Income amounts, success |
 | `negative` | `#d4616e` | Expense amounts, errors |
 | `text-primary` | `#e6edf3` | Headings, important text |
-| `text-secondary` | `#9ca3af` | Body text |
+| `text-secondary` | `#b0b8c4` | Body text |
 | `text-muted` | `#6b7280` | Labels, placeholders |
 | `border-default` | `rgba(255,255,255,0.08)` | Dividers, card borders |
 

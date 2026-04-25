@@ -44,7 +44,7 @@
 | Token | Hex | Usage |
 |-------|-----|-------|
 | `text-primary` | `#e6edf3` | Headings, important text |
-| `text-secondary` | `#9ca3af` | Body text |
+| `text-secondary` | `#b0b8c4` | Body text |
 | `text-muted` | `#6b7280` | Label, caption, placeholder |
 | `text-on-primary` | `#0d1117` | Text on primary button |
 
