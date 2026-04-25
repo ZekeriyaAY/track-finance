@@ -1,31 +1,18 @@
 services:
-  db:
-    container_name: trackfinance-db
-    image: postgres:15-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: track_finance_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
-      POSTGRES_DB: track_finance
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    # ports:
-    #   - "5432:5432" # Local access with pgAdmin
-    networks:
-      - network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U track_finance_user -d track_finance"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   app:
-    container_name: trackfinance-app
     image: ghcr.io/zekeriyaay/track-finance:latest
+    container_name: trackfinance-app
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
+    ports:
+      - "5001:5000"
+    volumes:
+      - app_logs:/app/logs
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
-      POSTGRES_HOST: db
+      POSTGRES_HOST: postgres
       SECRET_KEY: ${SECRET_KEY:-very-secret-key}
       FLASK_ENV: production
       # CSRF & Session settings for production without HTTPS
@@ -35,54 +22,62 @@ services:
       BEHIND_PROXY: ${BEHIND_PROXY:-False}
       # Set to 'https' if your reverse proxy handles SSL
       PREFERRED_URL_SCHEME: ${PREFERRED_URL_SCHEME:-http}
-    ports:
-      - "5001:5000"
-    volumes:
-      - app_logs:/app/logs
-    networks:
-      - network
     command: >
       sh -c "flask db upgrade && gunicorn -c gunicorn-conf.py app:app"
-    depends_on:
-      db:
-        condition: service_healthy
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: trackfinance-postgres
+    restart: unless-stopped
+    # ports:
+    #   - "5432:5432" # Local access with pgAdmin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: track_finance_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+      POSTGRES_DB: track_finance
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U track_finance_user -d track_finance"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   pgadmin-init:
-    container_name: trackfinance-pgadmin-init
     image: alpine:latest
+    container_name: trackfinance-pgadmin-init
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     command: >
       sh -c "
         mkdir -p /var/lib/pgadmin &&
-        echo '{\"Servers\":{\"1\":{\"Name\":\"Track Finance DB\",\"Group\":\"Servers\",\"Port\":5432,\"Username\":\"track_finance_user\",\"Host\":\"db\",\"SSLMode\":\"prefer\",\"MaintenanceDB\":\"track_finance\"}}}' > /var/lib/pgadmin/servers.json
+        echo '{\"Servers\":{\"1\":{\"Name\":\"Track Finance DB\",\"Group\":\"Servers\",\"Port\":5432,\"Username\":\"track_finance_user\",\"Host\":\"postgres\",\"SSLMode\":\"prefer\",\"MaintenanceDB\":\"track_finance\"}}}' > /var/lib/pgadmin/servers.json
       "
 
   pgadmin:
-    container_name: trackfinance-pgadmin
     image: dpage/pgadmin4
+    container_name: trackfinance-pgadmin
+    depends_on:
+      pgadmin-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
       PGADMIN_SERVER_JSON_FILE: "/var/lib/pgadmin/servers.json"
       PGADMIN_LOAD_SERVERS: "true"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    ports:
-      - "5050:80"
-    networks:
-      - network
-    depends_on:
-      pgadmin-init:
-        condition: service_completed_successfully
-      db:
-        condition: service_healthy
+
+networks:
+  default:
+    name: trackfinance_network
 
 volumes:
   postgres_data:
   pgadmin_data:
   app_logs:
-
-networks:
-  network:
