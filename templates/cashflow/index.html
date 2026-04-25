@@ -90,9 +90,6 @@
       <table class="table">
         <thead>
           <tr>
-            <th>
-              <input type="checkbox" id="select-all" class="rounded border-[var(--border-default)] text-primary focus:ring-[var(--primary-border)] cursor-pointer">
-            </th>
             <th>Date</th>
             <th class="text-right">Amount</th>
             <th>Category</th>
@@ -103,10 +100,7 @@
         </thead>
         <tbody>
           {% for transaction in transactions %}
-          <tr>
-            <td>
-              <input type="checkbox" class="row-checkbox rounded border-[var(--border-default)] text-primary focus:ring-[var(--primary-border)] cursor-pointer" value="{{ transaction.id }}">
-            </td>
+          <tr class="selectable-row" data-id="{{ transaction.id }}">
             <td class="whitespace-nowrap">{{ transaction.date.strftime('%d.%m.%Y') }}</td>
             <td class="col-amount whitespace-nowrap">
               <span class="amount {% if transaction.type == 'income' %}amount-positive{% else %}amount-negative{% endif %}">
@@ -243,6 +237,8 @@
         <span class="text-sm text-[var(--text-secondary)] whitespace-nowrap">
           <span id="bulk-count" class="text-primary font-semibold">0</span> selected
         </span>
+        <button type="button" id="select-all-btn" class="text-sm text-primary hover:underline cursor-pointer">Select All</button>
+        <button type="button" id="deselect-btn" class="text-sm text-[var(--text-muted)] hover:underline cursor-pointer">Deselect</button>
 
         <div class="w-px h-5 bg-[var(--border-default)]"></div>
 
@@ -304,19 +300,20 @@
 
 <script>
 (function() {
-  var selectAll = document.getElementById('select-all');
   var bulkBar = document.getElementById('bulk-bar');
   var bulkIds = document.getElementById('bulk-ids');
   var bulkCount = document.getElementById('bulk-count');
-  var checkboxes = document.querySelectorAll('.row-checkbox');
+  var rows = document.querySelectorAll('.selectable-row');
+  var selectAllBtn = document.getElementById('select-all-btn');
+  var deselectBtn = document.getElementById('deselect-btn');
   var tagsToggle = document.getElementById('tags-toggle');
   var tagsPopover = document.getElementById('tags-popover');
   var tagsLabel = document.getElementById('tags-label');
   var tagCheckboxes = document.querySelectorAll('.bulk-tag-cb');
 
   function updateBar() {
-    var checked = document.querySelectorAll('.row-checkbox:checked');
-    var count = checked.length;
+    var selected = document.querySelectorAll('.selectable-row.selected');
+    var count = selected.length;
 
     bulkCount.textContent = count;
 
@@ -330,16 +327,13 @@
     }
 
     bulkIds.replaceChildren();
-    checked.forEach(function(cb) {
+    selected.forEach(function(row) {
       var input = document.createElement('input');
       input.type = 'hidden';
       input.name = 'transaction_ids[]';
-      input.value = cb.value;
+      input.value = row.dataset.id;
       bulkIds.appendChild(input);
     });
-
-    selectAll.checked = count > 0 && count === checkboxes.length;
-    selectAll.indeterminate = count > 0 && count < checkboxes.length;
   }
 
   function updateTagsLabel() {
@@ -347,13 +341,24 @@
     tagsLabel.textContent = count > 0 ? count + ' tag' + (count > 1 ? 's' : '') : 'Tags (no change)';
   }
 
-  selectAll.addEventListener('change', function() {
-    checkboxes.forEach(function(cb) { cb.checked = selectAll.checked; });
+  // Row click to toggle selection — skip clicks on interactive elements
+  rows.forEach(function(row) {
+    row.addEventListener('click', function(e) {
+      if (e.target.closest('a, button, input, form, .row-actions')) return;
+      row.classList.toggle('selected');
+      updateBar();
+    });
+  });
+
+  // Select all / Deselect buttons in bulk bar
+  selectAllBtn.addEventListener('click', function() {
+    rows.forEach(function(row) { row.classList.add('selected'); });
     updateBar();
   });
 
-  checkboxes.forEach(function(cb) {
-    cb.addEventListener('change', updateBar);
+  deselectBtn.addEventListener('click', function() {
+    rows.forEach(function(row) { row.classList.remove('selected'); });
+    updateBar();
   });
 
   tagsToggle.addEventListener('click', function() {

@@ -370,6 +370,25 @@ textarea:focus {
     background-color: var(--bg-overlay);
 }
 
+/* Selected row styling */
+.table tbody tr.selected {
+    background-color: var(--primary-muted);
+    border-left: 3px solid var(--primary);
+}
+
+.table tbody tr.selected td:first-child {
+    padding-left: calc(1rem - 3px);
+}
+
+.table tbody tr.selected .col-amount {
+    background-color: transparent;
+}
+
+/* Selectable rows — pointer cursor */
+.table tbody tr.selectable-row {
+    cursor: pointer;
+}
+
 /* Row actions — hidden by default, visible on hover */
 .table .row-actions {
     opacity: 0;
