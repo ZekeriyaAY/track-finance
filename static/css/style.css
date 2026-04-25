@@ -569,22 +569,18 @@ textarea.form-control {
 }
 
 .toast-success {
-    background-color: var(--positive-muted);
     border-left-color: var(--positive);
 }
 
 .toast-error {
-    background-color: var(--negative-muted);
     border-left-color: var(--negative);
 }
 
 .toast-warning {
-    background-color: var(--warning-muted);
     border-left-color: var(--warning);
 }
 
 .toast-info {
-    background-color: var(--info-muted);
     border-left-color: var(--info);
 }
 
@@ -890,6 +886,10 @@ textarea.form-control {
 
     .sidebar.mobile-open .sidebar-link-text {
         opacity: 1;
+    }
+
+    .toast-container {
+        top: 4.5rem;
     }
 
     .main-content {
