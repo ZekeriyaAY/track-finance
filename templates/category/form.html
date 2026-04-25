@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}{{ 'Edit Category' if category else 'Add New Category' }}{% endblock %}
+{% block title %}{{ 'Edit Category' if category else 'Add Category' }}{% endblock %}
 
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
-    <h1 class="text-h1">{{ 'Edit Category' if category else 'Add New Category' }}</h1>
+    <h1 class="text-h1">{{ 'Edit Category' if category else 'Add Category' }}</h1>
     <a href="{{ url_for('category.index') }}" class="btn btn-ghost btn-sm">
       <i data-lucide="arrow-left" class="w-4 h-4"></i>
       Go Back

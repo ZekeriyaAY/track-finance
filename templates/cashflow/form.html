@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}{{ 'Edit Transaction' if transaction else 'New Transaction' }}{% endblock %}
+{% block title %}{{ 'Edit Transaction' if transaction else 'Add Transaction' }}{% endblock %}
 
 {% block content %}
 <div class="flex flex-col gap-6">
   <div class="flex justify-between items-center mb-4">
-    <h1 class="text-h1">{{ 'Edit Transaction' if transaction else 'Add New Transaction' }}</h1>
+    <h1 class="text-h1">{{ 'Edit Transaction' if transaction else 'Add Transaction' }}</h1>
     <a href="{{ url_for('cashflow.index') }}" class="btn btn-ghost btn-sm">
       <i data-lucide="arrow-left" class="w-4 h-4"></i>
       Go Back
