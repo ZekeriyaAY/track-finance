@@ -217,13 +217,13 @@ function setDatePreset(preset) {
             dateFromVal.setDate(today.getDate() - 30);
             break;
         case 'last-3-months':
-            dateFromVal = new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
+            dateFromVal = new Date(today.getFullYear(), today.getMonth() - 3, 1);
             break;
         case 'last-6-months':
-            dateFromVal = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+            dateFromVal = new Date(today.getFullYear(), today.getMonth() - 6, 1);
             break;
         case 'last-year':
-            dateFromVal = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+            dateFromVal = new Date(today.getFullYear() - 1, today.getMonth(), 1);
             break;
     }
 
@@ -251,15 +251,15 @@ function highlightActivePreset() {
             to: t
         },
         'last-3-months': {
-            from: formatDate(new Date(today.getFullYear(), today.getMonth() - 3, today.getDate())),
+            from: formatDate(new Date(today.getFullYear(), today.getMonth() - 3, 1)),
             to: t
         },
         'last-6-months': {
-            from: formatDate(new Date(today.getFullYear(), today.getMonth() - 6, today.getDate())),
+            from: formatDate(new Date(today.getFullYear(), today.getMonth() - 6, 1)),
             to: t
         },
         'last-year': {
-            from: formatDate(new Date(today.getFullYear() - 1, today.getMonth(), today.getDate())),
+            from: formatDate(new Date(today.getFullYear() - 1, today.getMonth(), 1)),
             to: t
         }
     };

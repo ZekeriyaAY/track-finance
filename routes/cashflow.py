@@ -106,7 +106,7 @@ def dashboard():
     savings_change = calc_pct_change(net_savings, prev_net_savings)
 
     # Monthly income vs expense (uses filter dates, with minimum 4-month window)
-    default_monthly_from = today - relativedelta(months=3)
+    default_monthly_from = (today - relativedelta(months=3)).replace(day=1)
     monthly_from = min(d_from, default_monthly_from)
     monthly_to = max(d_to, today)
 
