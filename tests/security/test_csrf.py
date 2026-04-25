@@ -136,13 +136,6 @@ class TestCSRFProtectionMissingToken:
 
     # ---- Settings endpoints ----
 
-    def test_update_pgadmin_url_requires_csrf(self, auth_client):
-        """POST /settings/update-pgadmin-url without CSRF token returns 400."""
-        response = auth_client.post('/settings/update-pgadmin-url', data={
-            'pgadmin_url': 'http://localhost:5050',
-        })
-        assert response.status_code == 400
-
     def test_update_currency_requires_csrf(self, auth_client):
         """POST /settings/update-currency without CSRF token returns 400."""
         response = auth_client.post('/settings/update-currency', data={
@@ -210,14 +203,6 @@ class TestCSRFProtectionInvalidToken:
             'category_id': str(sample_category.id),
             'description': 'Test',
             'csrf_token': 'wrong-token-123',
-        })
-        assert response.status_code == 400
-
-    def test_settings_update_pgadmin_rejects_invalid_csrf(self, auth_client):
-        """POST /settings/update-pgadmin-url with invalid CSRF token returns 400."""
-        response = auth_client.post('/settings/update-pgadmin-url', data={
-            'pgadmin_url': 'http://localhost:5050',
-            'csrf_token': 'bogus-token',
         })
         assert response.status_code == 400
 

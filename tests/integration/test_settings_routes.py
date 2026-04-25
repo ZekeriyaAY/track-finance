@@ -18,93 +18,11 @@ class TestSettingsIndexRoute:
         response = auth_client.get('/settings/')
         assert response.status_code == 200
 
-    def test_index_shows_pgadmin_url(self, auth_client):
-        """GET /settings/ page includes pgadmin URL section."""
-        response = auth_client.get('/settings/')
-        assert response.status_code == 200
-        # Default pgadmin url should be present
-        assert b'pgadmin' in response.data.lower() or b'PgAdmin' in response.data
-
     def test_index_requires_auth(self, client, admin_user):
         """GET /settings/ redirects to login when not authenticated."""
         response = client.get('/settings/', follow_redirects=False)
         assert response.status_code == 302
         assert '/auth/login' in response.headers.get('Location', '')
-
-
-class TestUpdatePgAdminUrlRoute:
-    """Tests for POST /settings/update-pgadmin-url."""
-
-    def test_update_pgadmin_url_success(self, auth_client, app, db):
-        """POST /settings/update-pgadmin-url updates the URL."""
-        csrf = get_csrf_token(auth_client, '/settings/')
-        response = auth_client.post('/settings/update-pgadmin-url', data={
-            'pgadmin_url': 'http://myserver:5050',
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-        assert response.status_code == 200
-        assert b'PgAdmin URL saved' in response.data
-
-        with app.app_context():
-            url = Settings.get_setting('pgadmin_url')
-            assert url == 'http://myserver:5050'
-
-    def test_update_pgadmin_url_auto_prefix(self, auth_client, app, db):
-        """POST /settings/update-pgadmin-url auto-prefixes http:// if missing."""
-        csrf = get_csrf_token(auth_client, '/settings/')
-        response = auth_client.post('/settings/update-pgadmin-url', data={
-            'pgadmin_url': 'myserver:5050',
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-        assert response.status_code == 200
-        assert b'PgAdmin URL saved' in response.data
-
-        with app.app_context():
-            url = Settings.get_setting('pgadmin_url')
-            assert url == 'http://myserver:5050'
-
-    def test_update_pgadmin_url_https_preserved(self, auth_client, app, db):
-        """POST /settings/update-pgadmin-url preserves https:// prefix."""
-        csrf = get_csrf_token(auth_client, '/settings/')
-        response = auth_client.post('/settings/update-pgadmin-url', data={
-            'pgadmin_url': 'https://secure.server:5050',
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-        assert response.status_code == 200
-
-        with app.app_context():
-            url = Settings.get_setting('pgadmin_url')
-            assert url == 'https://secure.server:5050'
-
-    def test_update_pgadmin_url_empty(self, auth_client):
-        """POST /settings/update-pgadmin-url with empty URL shows error."""
-        csrf = get_csrf_token(auth_client, '/settings/')
-        response = auth_client.post('/settings/update-pgadmin-url', data={
-            'pgadmin_url': '',
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-        assert response.status_code == 200
-        assert b'cannot be empty' in response.data
-
-    def test_update_pgadmin_url_whitespace_only(self, auth_client):
-        """POST /settings/update-pgadmin-url with whitespace-only URL shows error."""
-        csrf = get_csrf_token(auth_client, '/settings/')
-        response = auth_client.post('/settings/update-pgadmin-url', data={
-            'pgadmin_url': '   ',
-            'csrf_token': csrf,
-        }, follow_redirects=True)
-        assert response.status_code == 200
-        assert b'cannot be empty' in response.data
-
-    def test_update_pgadmin_url_redirects_to_settings(self, auth_client):
-        """POST /settings/update-pgadmin-url redirects to settings index."""
-        csrf = get_csrf_token(auth_client, '/settings/')
-        response = auth_client.post('/settings/update-pgadmin-url', data={
-            'pgadmin_url': 'http://example.com:5050',
-            'csrf_token': csrf,
-        }, follow_redirects=False)
-        assert response.status_code == 302
-        assert '/settings/' in response.headers.get('Location', '')
 
 
 class TestUpdateCurrencyRoute:
@@ -296,7 +214,7 @@ class TestResetDatabaseRoute:
         """POST /settings/reset-database does NOT delete settings entries."""
         # First set a setting value
         with app.app_context():
-            Settings.set_setting('pgadmin_url', 'http://test:5050')
+            Settings.set_setting('currency_symbol', '€')
 
         csrf = get_csrf_token(auth_client, '/settings/')
         auth_client.post('/settings/reset-database', data={
@@ -305,8 +223,8 @@ class TestResetDatabaseRoute:
 
         # Settings should still be there (the reset SQL does not include settings table)
         with app.app_context():
-            url = Settings.get_setting('pgadmin_url')
-            assert url == 'http://test:5050'
+            val = Settings.get_setting('currency_symbol')
+            assert val == '€'
 
 
 class TestSettingsSeedDataIdempotency:

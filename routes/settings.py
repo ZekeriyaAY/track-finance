@@ -9,29 +9,6 @@ logger = logging.getLogger(__name__)
 
 settings_bp = Blueprint('settings', __name__, url_prefix='/settings')
 
-@settings_bp.route('/update-pgadmin-url', methods=['POST'])
-def update_pgadmin_url():
-    pgadmin_url = request.form.get('pgadmin_url', '').strip()
-    
-    if not pgadmin_url:
-        flash('PgAdmin URL cannot be empty.', 'error')
-        return redirect(url_for('settings.index'))
-    
-    # Validate URL format
-    if not pgadmin_url.startswith(('http://', 'https://')):
-        pgadmin_url = 'http://' + pgadmin_url
-    
-    try:
-        # Update PgAdmin URL in database
-        Settings.set_setting('pgadmin_url', pgadmin_url)
-        flash('PgAdmin URL saved.', 'success')
-    except Exception as e:
-        db.session.rollback()
-        logger.error(f"Error updating PgAdmin URL: {str(e)}")
-        flash('Something went wrong. Please try again.', 'error')
-    
-    return redirect(url_for('settings.index'))
-
 @settings_bp.route('/update-currency', methods=['POST'])
 def update_currency():
     currency_symbol = request.form.get('currency_symbol', '').strip()
@@ -52,10 +29,8 @@ def update_currency():
 
 @settings_bp.route('/')
 def index():
-    pgadmin_url = Settings.get_setting('pgadmin_url', 'http://localhost:5050')
     currency_symbol = Settings.get_setting('currency_symbol', '₺')
     return render_template('settings/index.html',
-                           pgadmin_url=pgadmin_url,
                            currency_symbol=currency_symbol)
 
 @settings_bp.route('/create-dummy-data', methods=['POST'])

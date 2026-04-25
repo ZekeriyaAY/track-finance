@@ -37,7 +37,6 @@ class TestUnauthenticatedAccessBlocked:
         '/cashflow/bulk-edit',
         '/categories/add',
         '/tags/add',
-        '/settings/update-pgadmin-url',
         '/settings/update-currency',
         '/settings/create-dummy-data',
         '/settings/create-default-categories',
