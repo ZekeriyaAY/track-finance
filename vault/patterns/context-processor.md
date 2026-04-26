@@ -1,11 +1,13 @@
 ---
 title: Context Processor Pattern
 created: 2026-04-24
-updated: 2026-04-24
+updated: 2026-04-26
 status: draft
 sources:
   - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
+  - raw/sessions/4fef5bde-9c63-451f-9e02-927c83d0e0af.jsonl
   - commit:45dc913
+  - commit:eee70c6
 ---
 
 # Context Processor Pattern
@@ -21,15 +23,15 @@ In `app.py` inside `create_app()`:
 def inject_global_settings():
     from models.settings import Settings
     return {
-        'currency_symbol': Settings.get_setting('currency_symbol', '₺'),
-        'pgadmin_url': Settings.get_setting('pgadmin_url', '')
+        'currency_symbol': Settings.get_setting('currency_symbol', '₺')
     }
 ```
 
 ## Where Used
 
 - **`currency_symbol`** — injected globally, used in dashboard KPIs, cashflow index amounts, counter animations (`data-suffix`), and summary bars
-- **`pgadmin_url`** — injected globally for sidebar link
+
+Note: `pgadmin_url` was previously injected here but was fully removed in commit `eee70c6` — [[2026-04-25-bugfixes-ui-polish]].
 
 ## Key Points
 
@@ -43,3 +45,4 @@ def inject_global_settings():
 - [[cashflow]]
 - [[design-system]]
 - [[2026-04-23-major-cleanup]]
+- [[2026-04-25-bugfixes-ui-polish]]

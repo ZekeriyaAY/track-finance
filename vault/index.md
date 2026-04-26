@@ -40,11 +40,14 @@
 - [[pre-computed-counts]] — GROUP BY counts in routes instead of N+1 model properties
 - [[context-processor]] — Flask context processor for global template variables
 - [[pagination]] — Server-side pagination with merged summary footer
+- [[row-selection]] — Clickable row selection without checkboxes
 
 ## Bugs
 
 - [[bulk-edit-pointer-events]] — Bulk edit bar blocking pagination clicks (resolved)
-- [[toast-visibility]] — Toast notifications nearly transparent (open)
+- [[toast-visibility]] — Toast notifications nearly transparent (resolved)
+- [[sticky-column-hover]] — Sticky column hover delay on amount cells (resolved)
+- [[date-preset-alignment]] — Dashboard date presets misaligned to month boundaries (resolved)
 
 ## Roadmap
 
@@ -55,6 +58,8 @@
 ## Sources
 
 - [[2026-04-23-major-cleanup]] — Large cleanup: removed bank sync/investment, added pagination, fixed N+1, UI improvements
+- [[2026-04-25-bugfixes-ui-polish]] — Bug fixes (sticky column, date presets, toasts), pgAdmin removal, title standardization
+- [[2026-04-25-design-review-ui-improvements]] — Design council review, Font Awesome removal, contrast fix, row selection
 
 ## Archived
 

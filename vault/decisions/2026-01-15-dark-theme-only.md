@@ -31,3 +31,4 @@ The application uses a **single dark theme**. No light mode, no theme switching.
 
 - [[design-system]]
 - [[2026-01-15-no-spa]]
+- [[2026-04-25-design-review-ui-improvements]]

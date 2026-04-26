@@ -1,7 +1,7 @@
 ---
 title: Cashflow Component
 created: 2026-04-23
-updated: 2026-04-24
+updated: 2026-04-26
 status: draft
 sources:
   - routes/cashflow.py
@@ -9,6 +9,8 @@ sources:
   - templates/cashflow/
   - commit:37a41c9
   - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
+  - raw/sessions/4fef5bde-9c63-451f-9e02-927c83d0e0af.jsonl
+  - raw/sessions/2ad8e597-2cdb-434c-a9cb-b6c17165c9d7.jsonl
 ---
 
 # Cashflow Component
@@ -37,7 +39,8 @@ The core component of track-finance. Handles income/expense transactions — CRU
 
 ### `GET /cashflow/dashboard`
 Dashboard with KPIs and charts. Features:
-- Date range filter (defaults to current month)
+- Date range filter (defaults to current month, starting from day 1)
+- Date presets (This Month, Last Month, 30 Days, 3 Months, 6 Months, 1 Year) — all month-based presets align to day 1 of month — [[date-preset-alignment]]
 - 4 KPIs: total income, total expense, net savings, transaction count
 - Period-over-period comparison (previous N days)
 - Charts: monthly income vs expense, category expense breakdown (doughnut with drill-down), daily trend with 7-day moving average, top 10 expense categories (horizontal bar)
@@ -76,9 +79,13 @@ JSON API for category chart drill-down. Modes: `parent` (aggregated), `children_
 - Daily trend fills gaps (no missing days in x-axis)
 - Import uses `db.session.flush()` to get IDs for auto-created category/tag before committing
 - Bulk edit preserves current filter state via hidden form fields
+- Row selection via clickable rows (no checkboxes) — [[row-selection]]
+- Filter button uses `btn-primary` (primary action on the page)
 - Bulk edit floating bar uses `pointer-events-none` when hidden to avoid blocking pagination — [[bulk-edit-pointer-events]]
 - Currency symbol injected globally via [[context-processor]]
 - Summary bar merges count + pagination + income/expense/net into single footer row
+- Sticky `.col-amount` uses explicit `var(--bg-surface)` background (not `inherit`) — [[sticky-column-hover]]
+- Page titles standardized: "Dashboard" (not "Cash Flow Dashboard"), "Transactions" (not "Cashflow Transactions"), "Import Transactions" (not "Excel Import") — [[2026-04-25-bugfixes-ui-polish]]
 
 ## Related
 
@@ -91,3 +98,8 @@ JSON API for category chart drill-down. Modes: `parent` (aggregated), `children_
 - [[context-processor]]
 - [[bulk-edit-pointer-events]]
 - [[2026-04-23-major-cleanup]]
+- [[2026-04-25-bugfixes-ui-polish]]
+- [[sticky-column-hover]]
+- [[date-preset-alignment]]
+- [[row-selection]]
+- [[2026-04-25-design-review-ui-improvements]]

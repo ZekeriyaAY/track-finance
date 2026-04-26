@@ -1,11 +1,12 @@
 ---
 title: Planned Features & Technical Debt
 created: 2026-04-23
-updated: 2026-04-24
+updated: 2026-04-26
 status: draft
 sources:
   - docs/PLAN.md
   - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
+  - raw/sessions/4fef5bde-9c63-451f-9e02-927c83d0e0af.jsonl
 ---
 
 # Planned Features & Technical Debt
@@ -26,9 +27,14 @@ The following items were completed in [[2026-04-23-major-cleanup]]:
 - ~~Database indexes~~ → added on frequently queried columns
 - ~~Legacy Query.get() cleanup~~ → replaced 14 occurrences with `db.session.get()`
 
-## Open Bug
+## Completed (Session 2026-04-25)
 
-- **Toast notification visibility** — Toast messages are nearly transparent and hard to read — [[toast-visibility]]
+The following items were completed in [[2026-04-25-bugfixes-ui-polish]]:
+- ~~Toast notification visibility~~ → fixed by removing 12% opacity overrides — [[toast-visibility]]
+- ~~pgAdmin external tools section~~ → fully removed (route, context processor, tests)
+- ~~Page title and button label standardization~~ → unified across all templates
+- ~~Sticky column hover delay~~ → explicit background color on sticky cells — [[sticky-column-hover]]
+- ~~Dashboard date preset alignment~~ → month-based presets use day 1 — [[date-preset-alignment]]
 
 ## Remaining UX Improvements
 
@@ -62,4 +68,7 @@ The following items were completed in [[2026-04-23-major-cleanup]]:
 - [[cashflow]]
 - [[settings]]
 - [[2026-04-23-major-cleanup]]
+- [[2026-04-25-bugfixes-ui-polish]]
 - [[toast-visibility]]
+- [[sticky-column-hover]]
+- [[date-preset-alignment]]

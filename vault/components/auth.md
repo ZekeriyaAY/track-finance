@@ -1,13 +1,14 @@
 ---
 title: Auth Component
 created: 2026-04-23
-updated: 2026-04-24
+updated: 2026-04-26
 status: draft
 sources:
   - routes/auth.py
   - models/user.py
   - app.py
   - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
+  - raw/sessions/4fef5bde-9c63-451f-9e02-927c83d0e0af.jsonl
 ---
 
 # Auth Component
@@ -45,7 +46,7 @@ Single-user authentication via Flask-Login. No registration — admin user auto-
 Requires login. Logs out and redirects to login page.
 
 ### `GET /auth/account`
-Account settings page (password/username change forms).
+Account settings page (password/username change forms). Extends `base.html` (not `base_minimal.html`) — Go Back button removed in commit `28e48f2` since this is a main navigation destination, not a sub-form. Uses `base.html` (not `base_minimal.html`) — this is a main nav destination, not a sub-form. Go Back button was removed in commit `28e48f2`.
 
 ### `POST /auth/change-password`
 Validates current password, minimum 6 chars, confirmation match. Friendly feedback messages.
@@ -64,3 +65,5 @@ Requires password re-entry. Validates minimum 3 chars, not same as current. Frie
 
 - [[route-handler]]
 - [[2026-04-23-major-cleanup]]
+- [[2026-04-25-bugfixes-ui-polish]]
+- [[2026-04-25-bugfixes-ui-polish]]

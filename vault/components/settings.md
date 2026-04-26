@@ -1,12 +1,13 @@
 ---
 title: Settings Component
 created: 2026-04-23
-updated: 2026-04-24
+updated: 2026-04-26
 status: draft
 sources:
   - routes/settings.py
   - models/settings.py
   - raw/sessions/878f22f8-2eaa-41b6-9f26-0afefba04885.jsonl
+  - raw/sessions/4fef5bde-9c63-451f-9e02-927c83d0e0af.jsonl
 ---
 
 # Settings Component
@@ -28,18 +29,18 @@ Key-value store for app configuration:
 - **key:** `String(100)`, unique
 - **value:** `Text`, nullable
 - Class methods: `get_setting(key, default)`, `set_setting(key, value)`
-- Currently stores: `pgadmin_url`, `currency_symbol`
+- Currently stores: `currency_symbol`
 
 ## Routes
 
 ### `GET /settings/`
-Main settings page. Shows PgAdmin URL, currency selector, seed data buttons.
+Main settings page. Shows currency selector and seed data buttons.
 
 ### `POST /settings/update-currency`
 Updates the `currency_symbol` setting. Dropdown with 10 currency options. Value injected globally via [[context-processor]].
 
 ### Seed Data Routes
-- `POST /settings/create-dummy-data` — test data
+- `POST /settings/create-dummy-data` — sample data (renamed from "Dummy Data" in commit `eee70c6`)
 - `POST /settings/create-default-categories` — default category tree
 - `POST /settings/create-default-tags` — default tags
 
@@ -48,7 +49,8 @@ Deletes all data from all tables (ordered by FK dependencies), resets PostgreSQL
 
 ## Key Behaviors
 
-- PgAdmin URL and currency symbol injected globally via `app.context_processor` — see [[context-processor]]
+- Currency symbol injected globally via `app.context_processor` — see [[context-processor]]
+- PgAdmin URL configuration was fully removed (route, context processor, settings section, tests) in commit `eee70c6` — [[2026-04-25-bugfixes-ui-polish]]
 - Reset deletes junction tables first, then child tables, then parent tables
 
 ## Related
@@ -58,3 +60,4 @@ Deletes all data from all tables (ordered by FK dependencies), resets PostgreSQL
 - [[context-processor]]
 - [[2026-04-23-remove-bank-sync-investment]]
 - [[2026-04-23-major-cleanup]]
+- [[2026-04-25-bugfixes-ui-polish]]
