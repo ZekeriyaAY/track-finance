@@ -50,3 +50,11 @@
 - 1 drift: root CLAUDE.md Font Awesome references (investment types removed)
 - 2 archived-target: hierarchical-data → investment-type, database-schema → investment/investment-type
 - 18 one-way-xref: route-handler hub (7), decision pages (5), component/architecture (6)
+
+## [2026-04-29] ingest | skip-batch
+- Reviewed 3 pending sessions, all skipped:
+  - f8f32178: vault-ingest meta-session (operated on already-ingested 4fef5bde + 2ad8e597), no project work
+  - d36bdc8b: brew upgrade only, 0 substantive exchanges
+  - ba5d2e07: /effort + /chrome + /exit, 0 substantive exchanges
+- Queue updated: 3 entries pending → skipped
+- 3 sessions remain pending (c465084a, 58e44bd8, 83881be3)
